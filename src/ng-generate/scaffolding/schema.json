@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "$id": "AngularSchematicKitSchema",
+  "title": "Create your initial scaffold configuration",
+  "type": "object",
+  "properties": {
+    "custom": {
+      "description": "Select a scaffold structure",
+      "type": "string",
+      "default": "CFS",
+      "enum": ["CFS", "ATOMIC-DESIGN", "CUSTOM"],
+      "alias": "c",
+      "x-prompt": {
+        "message": "Select an Scaffold structure",
+        "type": "list",
+        "items": [
+          {
+            "value": "CFS",
+            "label": "Core-Features-Shared   [ https://tomastrajan.medium.com/how-to-build-epic-angular-app-with-clean-architecture-91640ed1656                ]"
+          },
+          {
+            "value": "ATOMIC-DESIGN",
+            "label": "Atomic design   [ https://medium.com/weekly-webtips/angular-clean-arquitecture-d40e9c50f51 ]"
+          },
+          {
+            "value": "CUSTOM",
+            "label": "Custom Scaffold"
+          }
+        ]
+      },
+      "x-user-analytics": 5
+    },
+    "path": {
+      "description": "the base path",
+      "type": "string",
+      "visible": false,
+      "default": "src/app"
+    },
+    "project": {
+      "description": "Write the relative project url or empty to default project",
+      "type": "string",
+      "x-prompt": "Write the relative project url or empty to default project"
+    },
+    "customFilePath": {
+      "description": "Write the url of your files structure file json",
+      "type": "string",
+      "x-prompt": "Write the url of your files structure file json",
+      "default": "./customStructure.json"
+    }
+  },
+  "required": ["custom", "project"]
+}
