@@ -1,0 +1,5 @@
+<% if(exportPaths) { %>
+<% for(const exportPath of exportPaths) { %>
+export * from '<%= dasherize(exportPath) %>';
+<% } %>
+<% } %>

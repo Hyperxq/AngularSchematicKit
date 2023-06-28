@@ -1,0 +1,7 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "$id": "AngularSchematicKitSchema",
+  "title": "Add Git-hooks with Husky",
+  "type": "object",
+  "properties": {}
+}

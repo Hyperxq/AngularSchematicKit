@@ -1,5 +1,5 @@
 {
-  "name": "angular-schematic-kit",
+  "name": "@hyperxq/schematicskit",
   "version": "0.0.0",
   "description": "A blank schematics",
   "scripts": {

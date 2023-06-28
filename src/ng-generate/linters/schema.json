@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "$id": "AngularSchematicKitSchema",
+  "title": "Add linters",
+  "type": "object",
+  "properties": {
+    "preventConsole": {
+      "description": "prevent console.log",
+      "type": "boolean",
+      "x-prompt": "Would you like to prevent console.log?",
+      "default": false
+    }
+  }
+}

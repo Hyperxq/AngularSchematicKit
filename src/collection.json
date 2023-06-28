@@ -5,6 +5,21 @@
       "description": "A blank schematic.",
       "factory": "./ng-add/index",
       "schema": "./ng-add/schema.json"
+    },
+    "setup-linters": {
+      "description": "Add default linters",
+      "factory": "./ng-generate/linters/index",
+      "schema": "./ng-generate/linters/schema.json"
+    },
+    "gitHooks": {
+      "description": "Add Git-hooks with Husky",
+      "factory": "./ng-generate/gitHooks/index",
+      "schema": "./ng-generate/gitHooks/schema.json"
+    },
+    "newFeature": {
+      "description": "Add a new scaffold feature",
+      "factory": "./ng-generate/new-feature-structure/index",
+      "schema": "./ng-generate/new-feature-structure/schema.json"
     }
   }
 }
