@@ -1,22 +1,27 @@
-import {FolderStructure} from "../../scaffolding.interfaces";
+import { FolderStructure } from '../../scaffold.interfaces';
 
 export const ATOMICDESIGN: FolderStructure[] = [
-    {
-        name: 'pages',
-        hasShortPath: true,
-    },
-    {
-        name: 'shared',
-        hasShortPath: true,
-        hasModule: true,
+  {
+    name: 'pages',
+    hasShortPath: true,
+  },
+  {
+    name: 'shared',
+    hasShortPath: true,
+    hasModule: true,
+    children: [
+      {
+        name: 'components',
         children: [
-            {
-                name: 'components',
-                children: [{ name: 'atoms' }, { name: 'molecules' }, { name: 'organisms' }, { name: 'templates' }],
-            },
-            {
-                name: 'directives',
-            },
+          { name: 'atoms' },
+          { name: 'molecules' },
+          { name: 'organisms' },
+          { name: 'templates' },
         ],
-    },
+      },
+      {
+        name: 'directives',
+      },
+    ],
+  },
 ];

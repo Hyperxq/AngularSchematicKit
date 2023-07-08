@@ -11,7 +11,7 @@
       "factory": "./ng-generate/scaffolding/index#scaffolding",
       "schema": "./ng-generate/scaffolding/schema.json",
       "aliases": [
-        "l"
+        "s"
       ]
     },
     "add-linters": {
