@@ -64,6 +64,7 @@ export function addGitHooks(options: GitHooksOptions): Rule {
           script: 'eslint . --ext .ts',
         }),
         addDependency('husky', '^8.0.1'),
+        // TODO: this don't need to be a dependency
         addDependency('word-wrap', '^1.2.3'),
         installPackageJsonDependencies(),
       ]);

@@ -1,4 +1,4 @@
-import {FolderPath} from '../../utils/interfaces/folderPath.interface';
+import {FolderPath} from '@utils/interfaces/folderPath.interface';
 
 /**
  * Interface for folder structure schema.json options
@@ -21,10 +21,10 @@ export interface ScaffoldOptions {
  */
 export interface FolderStructure {
   name: string;
-  parent?: FolderStructure;
   children?: FolderStructure[];
-  path?: FolderPath;
   hasModule?: boolean;
   hasShortPath?: boolean;
   hasRouting?: boolean;
+  parent?: FolderStructure;
+  path?: FolderPath;
 }

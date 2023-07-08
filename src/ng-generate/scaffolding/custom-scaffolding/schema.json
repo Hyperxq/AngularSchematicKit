@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "$id": "AngularSchematicKitSchema",
+  "title": "Create your initial scaffold configuration",
+  "type": "object",
+  "properties": {
+    "customFilePath": {
+      "description": "Please provide the URL for your custom JSON file",
+      "type": "string",
+      "x-prompt": "Please provide the URL for your custom JSON file",
+      "default": "./customStructure.json"
+    }
+  },
+  "required": [
+    "custom",
+    "project"
+  ]
+}

@@ -18,25 +18,36 @@ import { readWorkspace } from '@utils/workspace';
 
 export function scaffolding(options: ScaffoldOptions): Rule {
   return async (tree: Tree) => {
+    /**
+     * Basic concepts
+     * Workspaces = Angular project root.
+     * Project = the default one or the selected one.
+     * Instructions to scaffolding
+     * 1. Get the workspace.
+     * 2. Use the project given or use the default project.
+     * 3. Create the base FolderPath.
+     * */
     const workspace = await readWorkspace(tree);
     options.project = options.project || getDefaultProject(workspace);
 
     const project = getProject(workspace, options.project);
     const path = new FolderPath(project.prefix ?? '', `${project.sourceRoot}/`);
-    let structures: FolderStructure[] = getFileStructure(tree, options);
+
+    let structures: FolderStructure[] = getPatternArchitecture(tree, options);
     structures = setStructurePaths(structures, path);
     structures = structures.map((structure) => setParentsStructure(structure));
     return scaffoldFoldersFactory(structures, options);
   };
 }
 
-function getFileStructure(tree: Tree, options: ScaffoldOptions): FolderStructure[] {
+function getPatternArchitecture(tree: Tree, options: ScaffoldOptions): FolderStructure[] {
   switch (options.custom) {
     case 'CFS':
       return CFS;
     case 'ATOMIC-DESIGN':
       return ATOMICDESIGN;
     case 'CUSTOM':
+      //TODO: invoke and test the sub-schema here
       if (!options.customFilePath) {
         throw new SchematicsException(`You need to specify the url of the custom file structure`);
       }
