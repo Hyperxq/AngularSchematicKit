@@ -19,7 +19,7 @@ import {
   NodeDependencyType,
 } from '../../utils/dependecies';
 
-export default function (options: LintersOptions): Rule {
+export function addLinters(options: LintersOptions): Rule {
   return (tree: Tree) => {
     if (!tree.exists(`.prettierrc.template`)) {
       const sourceTemplate = url('./files');

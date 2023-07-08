@@ -8,15 +8,15 @@
     },
     "add-linters": {
       "description": "Add default linters",
-      "factory": "./ng-generate/linters/index",
+      "factory": "./ng-generate/linters/index#addLinters",
       "schema": "./ng-generate/linters/schema.json",
       "aliases": [
         "l"
       ]
     },
-    "add-gitHooks": {
+    "add-git-hooks": {
       "description": "Add Git-hooks with Husky",
-      "factory": "./ng-generate/gitHooks/index",
+      "factory": "./ng-generate/gitHooks/index#addGitHooks",
       "schema": "./ng-generate/gitHooks/schema.json",
       "aliases": [
         "gh"

@@ -20,7 +20,7 @@ import {
 import { JSONFile } from '../../utils/json-file';
 import { GitHooksOptions } from './git-hooks.interface';
 
-export default function (options: GitHooksOptions): Rule {
+export function addGitHooks(options: GitHooksOptions): Rule {
   return (tree: Tree) => {
     if (!tree.exists(`husky/pre-push`)) {
       const sourceTemplate = url('./files/husky');
