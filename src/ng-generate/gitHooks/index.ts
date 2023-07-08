@@ -19,6 +19,7 @@ import {
 } from '../../utils/dependecies';
 import { JSONFile } from '../../utils/json-file';
 import { GitHooksOptions } from './git-hooks.interface';
+import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 
 export function addGitHooks(options: GitHooksOptions): Rule {
   return (tree: Tree) => {
@@ -64,6 +65,7 @@ export function addGitHooks(options: GitHooksOptions): Rule {
         }),
         addDependency('husky', '^8.0.1'),
         addDependency('word-wrap', '^1.2.3'),
+        installPackageJsonDependencies(),
       ]);
     }
   };
@@ -93,6 +95,14 @@ function addDependency(name: string, version: string): Rule {
     };
     addPackageJsonDependency(host, dependency);
     context.logger.log('info', `✅️ Added "${dependency.name}" into ${dependency.type}`);
+    return host;
+  };
+}
+
+function installPackageJsonDependencies(): Rule {
+  return (host: Tree, context: SchematicContext) => {
+    context.addTask(new NodePackageInstallTask());
+    context.logger.log('info', `🔍 Installing packages...`);
     return host;
   };
 }

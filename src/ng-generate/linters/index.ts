@@ -18,6 +18,7 @@ import {
   NodeDependency,
   NodeDependencyType,
 } from '../../utils/dependecies';
+import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 
 export function addLinters(options: LintersOptions): Rule {
   return (tree: Tree) => {
@@ -43,6 +44,7 @@ export function addLinters(options: LintersOptions): Rule {
         mergeWith(sourceParametrizeTemplate),
         addDependency('prettier', '^2.7.1'),
         addDependency('eslint', '^8.21.0'),
+        installPackageJsonDependencies(),
       ]);
     }
   };
@@ -58,6 +60,14 @@ function addDependency(name: string, version: string): Rule {
     };
     addPackageJsonDependency(host, dependency);
     context.logger.log('info', `✅️ Added "${dependency.name}" into ${dependency.type}`);
+    return host;
+  };
+}
+
+function installPackageJsonDependencies(): Rule {
+  return (host: Tree, context: SchematicContext) => {
+    context.addTask(new NodePackageInstallTask());
+    context.logger.log('info', `🔍 Installing packages...`);
     return host;
   };
 }
