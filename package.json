@@ -2,6 +2,7 @@
   "name": "@hyperxq/schematicskit",
   "version": "0.0.0",
   "description": "A blank schematics",
+  "private": false,
   "scripts": {
     "lint": "eslint . --ext .ts",
     "prettier:check": "prettier --config .prettierrc --check \"src/**/**/*.ts\" --ignore-path ./.prettierignore",
@@ -20,8 +21,7 @@
   "schematics": "./src/collection.json",
   "dependencies": {
     "@angular-devkit/core": "^16.1.1",
-    "@angular-devkit/schematics": "^16.1.1",
-    "typescript": "~5.1.3"
+    "@angular-devkit/schematics": "^16.1.1"
   },
   "devDependencies": {
     "@types/jasmine": "~4.3.0",
@@ -35,6 +35,7 @@
     "lint-staged": "^13.2.2",
     "ng-packagr": "^16.1.0",
     "prettier": "^2.8.8",
-    "ts-node": "^10.9.1"
+    "ts-node": "^10.9.1",
+    "word-wrap": "^1.2.3"
   }
 }

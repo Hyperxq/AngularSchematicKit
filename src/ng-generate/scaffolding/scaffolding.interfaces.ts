@@ -1,4 +1,4 @@
-import {FolderPath} from "../../utils/shared.interfaces";
+import {FolderPath} from "../../utils/interfaces/folderPath.interface";
 
 /**
  * Interface use to recreate the folder project tree.

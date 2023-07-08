@@ -1,6 +1,6 @@
 import { normalize, split } from '@angular-devkit/core';
-import {FolderPath} from "./shared.interfaces";
 import {FolderStructure} from "../ng-generate/scaffolding/scaffolding.interfaces";
+import {FolderPath} from "./interfaces/folderPath.interface";
 
 export function relativePathToWorkspaceRoot(projectRoot: string | undefined): string {
     const normalizedPath = split(normalize(projectRoot || ''));
@@ -68,9 +68,9 @@ export function getModulePath(
     return `${structure.path?.getPath(type, folderName)}${structure.name}.module`;
 }
 
-export function getModuleNamefromPath(path: string): string {
-    const pathSplitted = path.split('/');
-    return pathSplitted[pathSplitted.length - 1].split('.')[0];
+export function getModuleNameFromPath(path: string): string {
+    const pathSplit = path.split('/');
+    return pathSplit[pathSplit.length - 1].split('.')[0];
 }
 
 export function normalizePath(path: string): string {

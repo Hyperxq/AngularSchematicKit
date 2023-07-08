@@ -1,4 +1,4 @@
-import { normalizePath } from './paths';
+import { normalizePath } from '../paths';
 
 interface IFolderPath {
     nameFolder?: string;

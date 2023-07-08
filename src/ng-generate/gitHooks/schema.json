@@ -3,5 +3,6 @@
   "$id": "AngularSchematicKitSchema",
   "title": "Add Git-hooks with Husky",
   "type": "object",
+  "additionalProperties": false,
   "properties": {}
 }

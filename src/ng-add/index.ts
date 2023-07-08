@@ -1,7 +1,7 @@
-import { SchematicContext, Rule, Tree, chain } from '@angular-devkit/schematics';
+import { Rule, chain } from '@angular-devkit/schematics';
 
-export default function (_options: unknown): Rule {
-    return (_tree: Tree, _context: SchematicContext) => {
+export default function (): Rule {
+    return () => {
         return chain([]);
     };
 }
