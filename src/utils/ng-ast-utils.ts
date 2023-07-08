@@ -10,7 +10,7 @@ import {normalize} from '@angular-devkit/core';
 import {SchematicsException, Tree} from '@angular-devkit/schematics';
 import {dirname} from 'path';
 import * as ts from 'typescript';
-import {findNode, getSourceNodes} from '@utils/ast-utils';
+import {findNode, getSourceNodes} from './ast-utils';
 
 export function findBootstrapModuleCall(host: Tree, mainPath: string): ts.CallExpression | null {
     const mainText = host.readText(mainPath);

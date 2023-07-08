@@ -7,7 +7,7 @@
  */
 import {json, workspaces} from '@angular-devkit/core';
 import {noop, Rule, SchematicsException, Tree} from '@angular-devkit/schematics';
-import {ProjectType} from '@utils/workspace-models';
+import {ProjectType} from './workspace-models';
 
 const DEFAULT_WORKSPACE_PATH = '/angular.json';
 

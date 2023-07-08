@@ -1,6 +1,6 @@
 import { normalize, split } from '@angular-devkit/core';
 import { FolderStructure } from '../ng-generate/scaffolding/scaffold.interfaces';
-import { FolderPath } from '@utils/interfaces/folderPath.interface';
+import { FolderPath } from './interfaces/folderPath.interface';
 
 export function relativePathToWorkspaceRoot(projectRoot: string | undefined): string {
   const normalizedPath = split(normalize(projectRoot || ''));

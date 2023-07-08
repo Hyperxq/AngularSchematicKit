@@ -15,13 +15,13 @@ import {
   url,
 } from '@angular-devkit/schematics';
 import * as ts from 'typescript';
-import { addImportToModule, getSourceNodes, isImported } from '@utils/ast-utils';
-import { applyToUpdateRecorder, InsertChange } from '@utils/change';
-import { findBootstrapModulePath } from '@utils/ng-ast-utils';
-import { findShortPath } from '@utils/shortPaths';
-import { ProjectDefinition, readWorkspace, TargetDefinition } from '@utils/workspace';
+import { addImportToModule, getSourceNodes, isImported } from './ast-utils';
+import { applyToUpdateRecorder, InsertChange } from './change';
+import { findBootstrapModulePath } from './ng-ast-utils';
+import { findShortPath } from './shortPaths';
+import { ProjectDefinition, readWorkspace, TargetDefinition } from './workspace';
 import { FolderStructure, ScaffoldOptions } from '../ng-generate/scaffolding/scaffold.interfaces';
-import { findModuleParentPath, getModuleNameFromPath, getModulePath } from '@utils/paths';
+import { findModuleParentPath, getModuleNameFromPath, getModulePath } from './paths';
 
 /**
  *  @param host - the Tree object of the project

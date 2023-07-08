@@ -1,6 +1,7 @@
-import { ScaffoldOptions } from '../scaffold.interfaces';
-import { Rule, Tree } from '@angular-devkit/schematics';
+import { chain, Rule } from '@angular-devkit/schematics';
 
-export function scaffolding(_options: ScaffoldOptions): Rule {
-  return async (_tree: Tree) => {};
+export function scaffolding(): Rule {
+  return async () => {
+    return chain([]);
+  };
 }

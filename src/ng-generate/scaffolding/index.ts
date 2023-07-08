@@ -3,18 +3,20 @@ import { ATOMICDESIGN } from './files/defaultScaffolders/atomic-design';
 import { CFS } from './files/defaultScaffolders/core-feature-shared';
 import { FolderStructure, ScaffoldOptions } from './scaffold.interfaces';
 import {
+  addExportToNearbyIndexFile,
+  addShortPath,
   createEmptyFolder,
+  createIndexFile,
   createModuleFolder,
   createRoutingFile,
+  FolderPath,
   getDefaultProject,
   getJsonFile,
   getProject,
+  readWorkspace,
   setParentsStructure,
-} from '@utils/file-utils';
-import { FolderPath } from '@utils/interfaces/folderPath.interface';
-import { addExportToNearbyIndexFile, addShortPath, createIndexFile } from '@utils/shortPaths';
-import { setStructurePaths } from '@utils/paths';
-import { readWorkspace } from '@utils/workspace';
+  setStructurePaths,
+} from '../../utils';
 
 export function scaffolding(options: ScaffoldOptions): Rule {
   return async (tree: Tree) => {
