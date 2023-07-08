@@ -6,10 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import { Tree } from '@angular-devkit/schematics';
-import { JSONFile } from './json-file';
+import {Tree} from '@angular-devkit/schematics';
+import {JSONFile} from '@utils/json-file';
 
 const PKG_JSON_PATH = '/package.json';
+
 export enum NodeDependencyType {
     Default = 'dependencies',
     Dev = 'devDependencies',
@@ -34,7 +35,7 @@ const ALL_DEPENDENCY_TYPE = [
 export function addPackageJsonDependency(tree: Tree, dependency: NodeDependency, pkgJsonPath = PKG_JSON_PATH): void {
     const json = new JSONFile(tree, pkgJsonPath);
 
-    const { overwrite, type, name, version } = dependency;
+    const {overwrite, type, name, version} = dependency;
     const path = [type, name];
     if (overwrite || !json.get(path)) {
         json.modify(path, version);
