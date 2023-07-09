@@ -48,7 +48,7 @@ export function scaffolding(options: ScaffoldOptions): Rule {
     );
     return chain([
       scaffoldFoldersFactory(structures, options),
-      deleteFile(options),
+      options.deleteFile ? deleteFile(options) : noop(),
       printFinalMessage(),
     ]);
   };

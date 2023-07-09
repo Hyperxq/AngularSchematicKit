@@ -44,6 +44,18 @@
       "description": "Write the relative project url or empty to default project",
       "type": "string",
       "x-prompt": "Write the relative project url or empty to default project"
+    },
+    "customFilePath": {
+      "description": "Write the url of your files structure file json",
+      "type": "string",
+      "x-prompt": "Write the url of your files structure file json",
+      "default": "./customStructure.json"
+    },
+    "deleteFile": {
+      "description": "Would you like to remove the custom JSON structure file?",
+      "type": "boolean",
+      "x-prompt": "Would you like to remove the custom JSON structure file?",
+      "default": true
     }
   },
   "required": [
