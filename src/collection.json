@@ -7,16 +7,16 @@
       "schema": "./ng-add/schema.json"
     },
     "scaffolding": {
-      "description": "Add default linters",
-      "factory": "./ng-generate/scaffolding/index#customScaffolding",
+      "description": "recreate scaffold",
+      "factory": "./ng-generate/scaffolding/index#scaffolding",
       "schema": "./ng-generate/scaffolding/schema.json",
       "aliases": [
         "s"
       ]
     },
     "customScaffold": {
-      "description": "Add default linters",
-      "factory": "./ng-generate/scaffolding/custom-scaffolding/index#scaffolding",
+      "description": "recreate custom scaffold",
+      "factory": "./ng-generate/scaffolding/custom-scaffolding/index#customScaffolding",
       "schema": "./ng-generate/scaffolding/custom-scaffolding/schema.json",
       "private": true
     },
