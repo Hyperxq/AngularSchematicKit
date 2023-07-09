@@ -1,6 +1,6 @@
 {
   "name": "@hyperxq/schematicskit",
-  "version": "0.23.0",
+  "version": "0.23.1",
   "description": "A blank schematics",
   "private": false,
   "scripts": {
