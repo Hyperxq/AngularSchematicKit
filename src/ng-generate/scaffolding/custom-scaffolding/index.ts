@@ -7,10 +7,14 @@ import {
 } from '@angular-devkit/schematics';
 import { FolderStructure, ScaffoldOptions } from '../scaffold.interfaces';
 import { scaffoldFoldersFactory } from '../scaffoldingFactory';
-import { readWorkspace } from '@utils/workspace';
-import { getDefaultProject, getJsonFile, getProject } from '@utils/file-utils';
-import { FolderPath } from '@utils/interfaces/folderPath.interface';
-import { recreateTreeFolderStructure } from '@utils/paths';
+import {
+  FolderPath,
+  getDefaultProject,
+  getJsonFile,
+  getProject,
+  readWorkspace,
+  recreateTreeFolderStructure,
+} from '../../../utils';
 
 export function customScaffolding(options: ScaffoldOptions): Rule {
   return async (tree: Tree) => {
