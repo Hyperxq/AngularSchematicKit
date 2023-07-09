@@ -1,4 +1,11 @@
-import { chain, noop, Rule, SchematicsException, Tree } from '@angular-devkit/schematics';
+import {
+  chain,
+  noop,
+  Rule,
+  SchematicContext,
+  SchematicsException,
+  Tree,
+} from '@angular-devkit/schematics';
 import { ATOMICDESIGN } from './files/defaultScaffolders/atomic-design';
 import { CFS } from './files/defaultScaffolders/core-feature-shared';
 import { FolderStructure, ScaffoldOptions } from './scaffold.interfaces';
@@ -38,14 +45,27 @@ export function scaffolding(options: ScaffoldOptions): Rule {
       getPatternArchitecture(tree, options),
       path
     );
-    return chain([scaffoldFoldersFactory(structures, options), deleteFile(options)]);
+    return chain([
+      scaffoldFoldersFactory(structures, options),
+      deleteFile(options),
+      printFinalMessage(),
+    ]);
   };
 }
 
 function deleteFile(options: ScaffoldOptions): Rule {
-  return (tree: Tree) => {
-    if (options.custom === 'CUSTOM') tree.delete(options.customFilePath!);
+  return (tree: Tree, context: SchematicContext) => {
+    if (options.custom === 'CUSTOM') {
+      tree.delete(options.customFilePath!);
+      context.logger.log('info', `The custom file was deleted successfully ✔`);
+    }
     return tree;
+  };
+}
+
+function printFinalMessage(): Rule {
+  return (_tree: Tree, context: SchematicContext) => {
+    context.logger.log('info', `🚀 the scaffolding architecture was implemented successfully`);
   };
 }
 
