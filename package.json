@@ -1,7 +1,7 @@
 {
   "name": "@hyperxq/schematicskit",
   "version": "1.0.0",
-  "description": "A blank schematics",
+  "description": "A kit of schematics to start angular applications",
   "private": false,
   "scripts": {
     "lint": "eslint . --ext .ts",
@@ -15,9 +15,14 @@
     "test": "npm run build && ts-node node_modules/jasmine/bin/jasmine jasmine **/*_spec.ts"
   },
   "keywords": [
-    "schematics"
+    "Angular 16+",
+    "Schematics"
   ],
-  "author": "",
+  "author": "Hyperxq",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Hyperxq/AngularSchematicKit"
+  },
   "license": "MIT",
   "schematics": "./lib/schematics/collection.json",
   "dependencies": {
