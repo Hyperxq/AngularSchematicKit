@@ -10,12 +10,12 @@ import {
   Tree,
   url,
 } from '@angular-devkit/schematics';
-import { getSourceNodes } from '@utils/ast-utils';
-import { applyToUpdateRecorder, InsertChange } from '@utils/change';
-import { getBuildTarget, getMainModulePath, getProject, getSourceFile } from '@utils/file-utils';
-import { JSONFile } from '@utils/json-file';
-import { getModuleNameFromPath } from '@utils/paths';
-import { readWorkspace } from '@utils/workspace';
+import { getSourceNodes } from './ast-utils';
+import { applyToUpdateRecorder, InsertChange } from './change';
+import { getBuildTarget, getMainModulePath, getProject, getSourceFile } from './file-utils';
+import { JSONFile } from './json-file';
+import { getModuleNameFromPath } from './paths';
+import { readWorkspace } from './workspace';
 import { FolderStructure, ScaffoldOptions } from '../ng-generate/scaffolding/scaffold.interfaces';
 
 export function createIndexFile(
