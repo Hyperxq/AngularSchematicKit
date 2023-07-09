@@ -1,4 +1,4 @@
-import { chain, Rule, schematic, SchematicContext, Tree } from '@angular-devkit/schematics';
+import { chain, noop, Rule, schematic, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { ATOMICDESIGN } from './files/defaultScaffolders/atomic-design';
 import { CFS } from './files/defaultScaffolders/core-feature-shared';
 import { FolderStructure, ScaffoldOptions } from './scaffold.interfaces';
@@ -33,10 +33,10 @@ export function scaffolding(options: ScaffoldOptions): Rule {
       getPatternArchitecture(options),
       path
     );
+    if (options.custom === 'CUSTOM') schematic('customScaffold', options);
+
     return chain([
-      options.custom !== 'CUSTOM'
-        ? scaffoldFoldersFactory(structures, options)
-        : schematic('customScaffold', options),
+      options.custom !== 'CUSTOM' ? scaffoldFoldersFactory(structures, options) : noop(),
       printFinalMessage(),
     ]);
   };
