@@ -9,6 +9,7 @@ export interface ScaffoldOptions {
   custom: 'CFS' | 'ATOMIC-DESIGN' | 'CUSTOM';
   customFilePath?: string;
   project?: string;
+  deleteFile: boolean;
 }
 
 /**

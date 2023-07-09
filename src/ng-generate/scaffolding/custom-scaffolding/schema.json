@@ -1,14 +1,20 @@
 {
   "$schema": "http://json-schema.org/schema",
   "$id": "AngularSchematicKitSchema",
-  "title": "Create your initial scaffold configuration",
+  "title": "Create a custom scaffold",
   "type": "object",
   "properties": {
     "customFilePath": {
-      "description": "Please provide the URL for your custom JSON file",
+      "description": "Write the url of your files structure file json",
       "type": "string",
-      "x-prompt": "Please provide the URL for your custom JSON file",
+      "x-prompt": "Write the url of your files structure file json",
       "default": "./customStructure.json"
+    },
+    "deleteFile": {
+      "description": "Would you like to remove the custom JSON structure file?",
+      "type": "boolean",
+      "x-prompt": "Would you like to remove the custom JSON structure file?",
+      "default": true
     }
   },
   "required": [
