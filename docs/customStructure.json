@@ -1,0 +1,68 @@
+[
+  {
+    "name": "core",
+    "hasModule": true,
+    "hasShortPath": true,
+    "hasRouting": true,
+    "children": [
+      {
+        "name": "auth"
+      },
+      {
+        "name": "header"
+      },
+      {
+        "name": "footer"
+      }
+    ]
+  },
+  {
+    "name": "features",
+    "hasModule": true,
+    "hasShortPath": true,
+    "hasRouting": true,
+    "children": [
+      {
+        "name": "home",
+        "hasModule": true,
+        "hasShortPath": true,
+        "hasRouting": true,
+        "children": [
+          { "name": "components" },
+          { "name": "views" }
+        ]
+      },
+      {
+        "name": "users",
+        "hasModule": true,
+        "hasShortPath": true,
+        "hasRouting": true,
+        "children": [
+          { "name": "components" },
+          { "name": "views" }
+        ]
+      },
+      {
+        "name": "products",
+        "hasModule": true,
+        "hasShortPath": true,
+        "hasRouting": true,
+        "children": [
+          { "name": "components" },
+          { "name": "views" }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "shared",
+    "hasModule": true,
+    "hasShortPath": true,
+    "hasRouting": true,
+    "children": [
+      {
+        "name": "dialog"
+      }
+    ]
+  }
+]
