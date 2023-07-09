@@ -12,24 +12,26 @@ import {
 
 export function customScaffolding(options: ScaffoldOptions): Rule {
   return async (tree: Tree, context: SchematicContext) => {
-    context.logger.log('info', JSON.stringify(options));
-    const workspace = await readWorkspace(tree);
-    options.project = options.project || getDefaultProject(workspace);
+    try {
+      context.logger.log('info', JSON.stringify(options));
+      const workspace = await readWorkspace(tree);
+      options.project = options.project || getDefaultProject(workspace);
 
-    const project = getProject(workspace, options.project);
-    const path = new FolderPath(project.prefix ?? '', `${project.sourceRoot}/`);
+      const project = getProject(workspace, options.project);
+      const path = new FolderPath(project.prefix ?? '', `${project.sourceRoot}/`);
 
-    const structures: FolderStructure[] = recreateTreeFolderStructure(
-      getJsonFile<FolderStructure[]>(tree, options.customFilePath),
-      path
-    );
+      const structures: FolderStructure[] = recreateTreeFolderStructure(
+        getJsonFile<FolderStructure[]>(tree, options.customFilePath),
+        path
+      );
 
-    context.logger.log('info', 'this is passing');
-
-    return chain([
-      scaffoldFoldersFactory(structures, options),
-      options.deleteFile ? deleteFile(options) : noop(),
-    ]);
+      return chain([
+        scaffoldFoldersFactory(structures, options),
+        options.deleteFile ? deleteFile(options) : noop(),
+      ]);
+    } catch (err) {
+      context.logger.log('error', err);
+    }
   };
 }
 
