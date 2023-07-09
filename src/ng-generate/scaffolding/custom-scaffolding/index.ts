@@ -19,6 +19,11 @@ export function customScaffolding(options: ScaffoldOptions): Rule {
     const project = getProject(workspace, options.project);
     const path = new FolderPath(project.prefix ?? '', `${project.sourceRoot}/`);
 
+    context.logger.log(
+      'info',
+      JSON.stringify(getJsonFile<FolderStructure[]>(tree, options.customFilePath))
+    );
+
     const structures: FolderStructure[] = recreateTreeFolderStructure(
       getJsonFile<FolderStructure[]>(tree, options.customFilePath),
       path
