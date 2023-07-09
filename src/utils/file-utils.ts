@@ -320,19 +320,6 @@ export function getJsonFile<T>(tree: Tree, path: string): T {
   return JSON.parse(content);
 }
 
-export function setParentsStructure(structure: FolderStructure): FolderStructure {
-  if (!structure.children || structure.children.length === 0) {
-    return structure;
-  }
-  structure.children.map((structureChild) => {
-    structureChild.parent = structure;
-    structureChild = setParentsStructure(structureChild);
-    return structureChild;
-  });
-
-  return structure;
-}
-
 export async function getClientBuild(tree: Tree, projectName: string) {
     const workspace = await readWorkspace(tree);
     const project = getProject(workspace, projectName);

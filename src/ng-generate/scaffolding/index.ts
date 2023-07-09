@@ -36,7 +36,6 @@ export function scaffolding(options: ScaffoldOptions): Rule {
 
     let structures: FolderStructure[] = getPatternArchitecture(tree, options);
     structures = recreateTreeFolderStructure(structures, path);
-    // structures = structures.map((structure) => setParentsStructure(structure));
     return scaffoldFoldersFactory(structures, options);
   };
 }
