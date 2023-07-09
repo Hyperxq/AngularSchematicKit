@@ -24,7 +24,7 @@ export function customScaffolding(options: ScaffoldOptions): Rule {
       path
     );
 
-    context.logger.log('info', JSON.stringify(structures));
+    context.logger.log('info', 'this is passing');
 
     return chain([
       scaffoldFoldersFactory(structures, options),
