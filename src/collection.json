@@ -18,9 +18,7 @@
       "description": "Add default linters",
       "factory": "./ng-generate/scaffolding/custom-scaffolding/index#scaffolding",
       "schema": "./ng-generate/scaffolding/custom-scaffolding/schema.json",
-      "aliases": [
-        "s"
-      ]
+      "private": true
     },
     "add-linters": {
       "description": "Add default linters",
