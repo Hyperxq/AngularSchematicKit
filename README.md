@@ -7,14 +7,14 @@ specific configuration for your project. Feel free to contribute to improve them
 
 ## How to use this schematics package
 
-<code>ng add @hyperxq/schematicskit</code>
+<code>ng add @danils/schematicskit</code>
 
 When you have already installed the pattern to execute any schematics is:
-<code>ng g @hyperxq/schematicskit:[schematic-name]</code>
+<code>ng g @danils/schematicskit:[schematic-name]</code>
 
 ## Scaffolding schematic
 
-<code>ng g @hyperxq/schematicskit:scaffolding</code> or <code>ng g @hyperxq/schematicskit:s</code>
+<code>ng g @danils/schematicskit:scaffolding</code> or <code>ng g @danils/schematicskit:s</code>
 
 ### Problem to solve?
 
@@ -49,7 +49,7 @@ It's very important to mention that this file is an array of FolderStructure int
 
 ## Add Linters schematic
 
-<code>ng g @hyperxq/schematicskit:add-linters</code> or <code>ng g @hyperxq/schematicskit:l</code>
+<code>ng g @danils/schematicskit:add-linters</code> or <code>ng g @danils/schematicskit:l</code>
 
 ### Problem to solve?
 
@@ -58,5 +58,5 @@ This schematic allows you to immediately configure Prettier and EsLint to your p
 
 ## Add GitHooks schematic
 
-<code>ng g @hyperxq/schematicskit:add-git-hooks</code> or <code>ng g @hyperxq/schematicskit:gh</code>
+<code>ng g @danils/schematicskit:add-git-hooks</code> or <code>ng g @danils/schematicskit:gh</code>
 This schematic allows you to install husky and set all the configuration needed.
