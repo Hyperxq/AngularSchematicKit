@@ -7,7 +7,7 @@ import {FolderPath} from '@utils/interfaces/folderPath.interface';
  */
 export interface ScaffoldOptions {
   custom: 'CFS' | 'ATOMIC-DESIGN' | 'CUSTOM';
-  customFilePath?: string;
+  customFilePath: string;
   project?: string;
   deleteFile: boolean;
 }

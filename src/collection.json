@@ -17,8 +17,7 @@
     "customScaffold": {
       "description": "recreate custom scaffold",
       "factory": "./ng-generate/scaffolding/custom-scaffolding/index#customScaffolding",
-      "schema": "./ng-generate/scaffolding/custom-scaffolding/schema.json",
-      "private": true
+      "schema": "./ng-generate/scaffolding/custom-scaffolding/schema.json"
     },
     "add-linters": {
       "description": "Add default linters",
