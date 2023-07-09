@@ -1,5 +1,5 @@
 {
-  "name": "@hyperxq/schematicskit",
+  "name": "@danils/schematicskit",
   "version": "1.0.0",
   "description": "A kit of schematics to start angular applications",
   "private": false,
