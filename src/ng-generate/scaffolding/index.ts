@@ -34,9 +34,18 @@ export function scaffolding(options: ScaffoldOptions): Rule {
     const project = getProject(workspace, options.project);
     const path = new FolderPath(project.prefix ?? '', `${project.sourceRoot}/`);
 
-    let structures: FolderStructure[] = getPatternArchitecture(tree, options);
-    structures = recreateTreeFolderStructure(structures, path);
-    return scaffoldFoldersFactory(structures, options);
+    const structures: FolderStructure[] = recreateTreeFolderStructure(
+      getPatternArchitecture(tree, options),
+      path
+    );
+    return chain([scaffoldFoldersFactory(structures, options), deleteFile(options)]);
+  };
+}
+
+function deleteFile(options: ScaffoldOptions): Rule {
+  return (tree: Tree) => {
+    if (options.custom === 'CUSTOM') tree.delete(options.customFilePath!);
+    return tree;
   };
 }
 
@@ -104,6 +113,7 @@ function createFolder(structure: FolderStructure, options: ScaffoldOptions): Rul
         })
       );
     }
+
     if (structure.hasModule) {
       calls.push(createModuleFolder(structure, options));
       calls.push(
@@ -112,12 +122,14 @@ function createFolder(structure: FolderStructure, options: ScaffoldOptions): Rul
     } else {
       calls.push(createEmptyFolder(structure.path?.getPath() || ''));
     }
+
     if (structure.hasRouting) {
       calls.push(createRoutingFile(structure, options));
       calls.push(
         !structure.hasShortPath ? addExportToNearbyIndexFile(options, structure, 'routing') : noop()
       );
     }
+
     return chain(calls);
   };
 }

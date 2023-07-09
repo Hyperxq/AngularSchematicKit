@@ -8,7 +8,11 @@
       "description": "Select a scaffold structure",
       "type": "string",
       "default": "CFS",
-      "enum": ["CFS", "ATOMIC-DESIGN", "CUSTOM"],
+      "enum": [
+        "CFS",
+        "ATOMIC-DESIGN",
+        "CUSTOM"
+      ],
       "alias": "c",
       "x-prompt": {
         "message": "Select an Scaffold structure",
@@ -16,7 +20,7 @@
         "items": [
           {
             "value": "CFS",
-            "label": "Core-Features-Shared   [ https://tomastrajan.medium.com/how-to-build-epic-angular-app-with-clean-architecture-91640ed1656                ]"
+            "label": "Core-Features-Shared   [ https://tomastrajan.medium.com/how-to-build-epic-angular-app-with-clean-architecture-91640ed1656 ]"
           },
           {
             "value": "ATOMIC-DESIGN",
@@ -48,5 +52,8 @@
       "default": "./customStructure.json"
     }
   },
-  "required": ["custom", "project"]
+  "required": [
+    "custom",
+    "project"
+  ]
 }
