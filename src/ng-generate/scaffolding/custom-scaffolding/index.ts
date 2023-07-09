@@ -19,7 +19,7 @@ import {
 
 export function customScaffolding(options: ScaffoldOptions): Rule {
   return async (tree: Tree, context: SchematicContext) => {
-    context.logger.log('debug', JSON.stringify(options));
+    context.logger.log('info', JSON.stringify(options));
     const workspace = await readWorkspace(tree);
     options.project = options.project || getDefaultProject(workspace);
 
