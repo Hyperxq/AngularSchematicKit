@@ -14,8 +14,7 @@ import {
   getJsonFile,
   getProject,
   readWorkspace,
-  setParentsStructure,
-  setStructurePaths,
+  recreateTreeFolderStructure,
 } from '../../utils';
 
 export function scaffolding(options: ScaffoldOptions): Rule {
@@ -36,8 +35,8 @@ export function scaffolding(options: ScaffoldOptions): Rule {
     const path = new FolderPath(project.prefix ?? '', `${project.sourceRoot}/`);
 
     let structures: FolderStructure[] = getPatternArchitecture(tree, options);
-    structures = setStructurePaths(structures, path);
-    structures = structures.map((structure) => setParentsStructure(structure));
+    structures = recreateTreeFolderStructure(structures, path);
+    // structures = structures.map((structure) => setParentsStructure(structure));
     return scaffoldFoldersFactory(structures, options);
   };
 }

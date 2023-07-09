@@ -12,7 +12,7 @@ export function relativePathToWorkspaceRoot(projectRoot: string | undefined): st
   }
 }
 
-export function setStructurePaths(
+export function recreateTreeFolderStructure(
   structures: FolderStructure[],
   path: FolderPath
 ): FolderStructure[] {
@@ -36,6 +36,7 @@ function makeStructurePaths(structure: FolderStructure): FolderStructure {
   }
 
   structure.children.map((structureChild) => {
+    structureChild.parent = structure;
     structureChild.path = new FolderPath(
       structureChild.name,
       structure.path?.getPath() || '',
