@@ -1,5 +1,6 @@
 import {
   chain,
+  noop,
   Rule,
   SchematicContext,
   SchematicsException,
@@ -17,7 +18,8 @@ import {
 } from '../../../utils';
 
 export function customScaffolding(options: ScaffoldOptions): Rule {
-  return async (tree: Tree) => {
+  return async (tree: Tree, context: SchematicContext) => {
+    context.logger.log('debug', JSON.stringify(options));
     const workspace = await readWorkspace(tree);
     options.project = options.project || getDefaultProject(workspace);
 
@@ -32,7 +34,11 @@ export function customScaffolding(options: ScaffoldOptions): Rule {
       getJsonFile<FolderStructure[]>(tree, options.customFilePath),
       path
     );
-    return chain([scaffoldFoldersFactory(structures, options), deleteFile(options)]);
+
+    return chain([
+      scaffoldFoldersFactory(structures, options),
+      options.deleteFile ? deleteFile(options) : noop(),
+    ]);
   };
 }
 
