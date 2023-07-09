@@ -65,7 +65,7 @@ function deleteFile(options: ScaffoldOptions): Rule {
 
 function printFinalMessage(): Rule {
   return (_tree: Tree, context: SchematicContext) => {
-    context.logger.log('info', `🚀 the scaffolding architecture was implemented successfully`);
+    context.logger.info(`🚀 the scaffolding architecture was implemented successfully`);
   };
 }
 
