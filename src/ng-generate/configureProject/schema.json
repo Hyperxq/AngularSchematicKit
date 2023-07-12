@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/schema",
-  "id": "configure-project",
+  "$id": "configure-project",
   "title": "Configure Project",
   "type": "object",
   "description": "The wrapper schematic to execute every schematics in the kit",
