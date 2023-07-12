@@ -17,16 +17,16 @@ When you have already installed the pattern to execute any schematics is:
 
 * [🚀 Angular Schematics Kit Documentation](#angular-schematics-kit-documentation)
     * [How to use this schematics package](#how-to-use-this-schematics-package)
-    * [Initialize angular configuration schematic](#initialize-angular-configuration-schematic)
+    * [🕙 Initialize angular configuration schematic](#initialize-angular-configuration-schematic)
         * [Problem to solve?](#problem-to-solve)
-    * [Scaffolding schematic](#scaffolding-schematic)
+    * [🕙 Scaffolding schematic](#scaffolding-schematic)
         * [Problem to solve?](#problem-to-solve-1)
         * [Options when you execute the schematic](#options-when-you-execute-the-schematic)
         * [Structure of JSON File](#structure-of-json-file)
             * [Interface Name: FolderStructure](#interface-name-folderstructure)
-    * [Add Linters schematic](#add-linters-schematic)
+    * [🕙 Add Linters schematic](#add-linters-schematic)
         * [Problem to solve?](#problem-to-solve-2)
-    * [Add GitHooks schematic](#add-githooks-schematic)
+    * [🕙 Add GitHooks schematic](#add-githooks-schematic)
 
 ## Initialize angular configuration schematic
 
