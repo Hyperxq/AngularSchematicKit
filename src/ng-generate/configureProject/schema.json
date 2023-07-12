@@ -14,14 +14,14 @@
         "enum": [
           "scaffolding",
           "add-git-hooks",
-          "add-git-hooks"
+          "add-linters"
         ],
         "type": "string"
       },
       "default": [
         "scaffolding",
         "add-git-hooks",
-        "add-git-hooks"
+        "add-linters"
       ],
       "x-prompt": "Which schematic would you like to execute?"
     }
