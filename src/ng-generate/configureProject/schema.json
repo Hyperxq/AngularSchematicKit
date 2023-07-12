@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "id": "configure-project",
+  "title": "Configure Project",
+  "type": "object",
+  "description": "The wrapper schematic to execute every schematics in the kit",
+  "properties": {
+    "name": {
+      "type": "array",
+      "description": "Which schematic would you like to execute?",
+      "uniqueItems": true,
+      "minItems": 1,
+      "items": {
+        "enum": [
+          "scaffolding",
+          "add-git-hooks",
+          "add-git-hooks"
+        ],
+        "type": "string"
+      },
+      "default": [
+        "scaffolding",
+        "add-git-hooks",
+        "add-git-hooks"
+      ],
+      "x-prompt": "Which schematic would you like to execute?"
+    }
+  }
+}

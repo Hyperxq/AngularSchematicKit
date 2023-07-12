@@ -1,4 +1,4 @@
-# Schematics Kit Documentation
+# Angular Schematics Kit Documentation
 
 The purpose of this documentation is to provide a kit of simples but powerful schematics kit.
 When you need to start a new angular project you usually have to do the same thing everytime. For this reason every

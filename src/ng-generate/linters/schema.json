@@ -9,6 +9,18 @@
       "type": "boolean",
       "x-prompt": "Would you like to prevent console.log?",
       "default": false
+    },
+    "prettierVersion": {
+      "description": "Please provide the version number for Prettier.",
+      "type": "boolean",
+      "x-prompt": "Please provide the version number for Prettier.",
+      "default": "^2.7.1"
+    },
+    "esLintVersion": {
+      "description": "Please provide the version number for EsLint.",
+      "type": "boolean",
+      "x-prompt": "Please provide the version number for Prettier.",
+      "default": "^8.21.0"
     }
   }
 }

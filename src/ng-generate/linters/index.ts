@@ -42,8 +42,8 @@ export function addLinters(options: LintersOptions): Rule {
 
       return chain([
         mergeWith(sourceParametrizeTemplate),
-        addDependency('prettier', '^2.7.1'),
-        addDependency('eslint', '^8.21.0'),
+        addDependency('prettier', options.prettierVersion),
+        addDependency('eslint', options.eslintVersion),
         installPackageJsonDependencies(),
       ]);
     }

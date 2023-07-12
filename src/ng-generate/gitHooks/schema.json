@@ -4,5 +4,12 @@
   "title": "Add Git-hooks with Husky",
   "type": "object",
   "additionalProperties": false,
-  "properties": {}
+  "properties": {
+    "huskyVersion": {
+      "description": "Please provide the version number for Husky.",
+      "type": "boolean",
+      "x-prompt": "Please provide the version number for Husky.",
+      "default": "^8.0.1"
+    }
+  }
 }

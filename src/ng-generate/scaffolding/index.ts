@@ -2,7 +2,6 @@ import {
   chain,
   noop,
   Rule,
-  schematic,
   SchematicContext,
   SchematicsException,
   Tree,
@@ -81,7 +80,6 @@ function getPatternArchitecture(tree: Tree, options: ScaffoldOptions): FolderStr
       if (!options.customFilePath) {
         throw new SchematicsException(`You need to specify the url of the custom file structure`);
       }
-      schematic('otherSchematic', options);
       return getJsonFile<FolderStructure[]>(tree, options.customFilePath);
   }
 }
