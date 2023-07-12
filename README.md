@@ -1,4 +1,4 @@
-# 🚀 Angular Schematics Kit Documentation
+# Angular Schematics Kit Documentation
 
 Welcome to the Angular Schematic Kit npm library! This is your go-to resource for simple, yet incredibly powerful
 schematics, expertly designed to transform your Angular project setup process into a smooth sail. We understand that
@@ -15,7 +15,7 @@ power of our library, and remember - happy coding! 🎉
 When you have already installed the pattern to execute any schematics is:
 <code>ng g @danils/schematicskit:[schematic-name]</code>
 
-* [🚀 Angular Schematics Kit Documentation](#-angular-schematics-kit-documentation)
+* [🚀 Angular Schematics Kit Documentation](#angular-schematics-kit-documentation)
     * [How to use this schematics package](#how-to-use-this-schematics-package)
     * [Initialize angular configuration schematic](#initialize-angular-configuration-schematic)
         * [Problem to solve?](#problem-to-solve)
