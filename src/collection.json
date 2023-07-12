@@ -6,6 +6,14 @@
       "factory": "./ng-add/index",
       "schema": "./ng-add/schema.json"
     },
+    "start-configure": {
+      "description": "A blank schematic.",
+      "factory": "./configureProject/index#configureProject",
+      "schema": "./configureProject/schema.json",
+      "aliases": [
+        "sc"
+      ]
+    },
     "scaffolding": {
       "description": "recreate scaffold",
       "factory": "./ng-generate/scaffolding/index#scaffolding",
