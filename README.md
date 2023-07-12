@@ -15,6 +15,23 @@ power of our library, and remember - happy coding! 🎉
 When you have already installed the pattern to execute any schematics is:
 <code>ng g @danils/schematicskit:[schematic-name]</code>
 
+<!-- TOC -->
+
+* [🚀 Angular Schematics Kit Documentation](#-angular-schematics-kit-documentation)
+    * [How to use this schematics package](#how-to-use-this-schematics-package)
+    * [Initialize angular configuration schematic](#initialize-angular-configuration-schematic)
+        * [Problem to solve?](#problem-to-solve)
+    * [Scaffolding schematic](#scaffolding-schematic)
+        * [Problem to solve?](#problem-to-solve-1)
+        * [Options when you execute the schematic](#options-when-you-execute-the-schematic)
+        * [Structure of JSON File](#structure-of-json-file)
+            * [Interface Name: FolderStructure](#interface-name-folderstructure)
+    * [Add Linters schematic](#add-linters-schematic)
+        * [Problem to solve?](#problem-to-solve-2)
+    * [Add GitHooks schematic](#add-githooks-schematic)
+
+<!-- TOC -->
+
 ## Initialize angular configuration schematic
 
 <code>ng g @danils/schematicskit:initialize-angular-configuration</code> or
