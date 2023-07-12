@@ -22,7 +22,8 @@ import { GitHooksOptions } from './git-hooks.interface';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 
 export function addGitHooks(options: GitHooksOptions): Rule {
-  return (tree: Tree) => {
+  return (tree: Tree, context: SchematicContext) => {
+    context.logger.info(`🎉 Add-git-hooks Schematic Start!`);
     if (!tree.exists(`husky/pre-push`)) {
       const sourceTemplate = url('./files/husky');
       const sourceParametrizeTemplate = apply(sourceTemplate, [

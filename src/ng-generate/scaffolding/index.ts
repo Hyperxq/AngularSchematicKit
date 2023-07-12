@@ -25,7 +25,8 @@ import {
 } from '../../utils';
 
 export function scaffolding(options: ScaffoldOptions): Rule {
-  return async (tree: Tree) => {
+  return async (tree: Tree, context: SchematicContext) => {
+    context.logger.info(`🎉 Scaffolding Schematic Start!`);
     /**
      * Basic concepts
      * Workspaces = Angular project root.

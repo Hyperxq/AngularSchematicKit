@@ -21,7 +21,8 @@ import {
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 
 export function addLinters(options: LintersOptions): Rule {
-  return (tree: Tree) => {
+  return (tree: Tree, context: SchematicContext) => {
+    context.logger.info(`🎉 Add-linters Schematic Start!`);
     if (!tree.exists(`.prettierrc.template`)) {
       const sourceTemplate = url('./files');
       const sourceParametrizeTemplate = apply(sourceTemplate, [
