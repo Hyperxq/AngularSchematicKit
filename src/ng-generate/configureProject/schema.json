@@ -5,7 +5,7 @@
   "type": "object",
   "description": "The wrapper schematic to execute every schematics in the kit",
   "properties": {
-    "name": {
+    "schematicNames": {
       "type": "array",
       "description": "Which schematic would you like to execute?",
       "uniqueItems": true,
