@@ -6,12 +6,12 @@
       "factory": "./ng-add/index",
       "schema": "./ng-add/schema.json"
     },
-    "start-configure": {
+    "initialize-angular-configuration": {
       "description": "A blank schematic.",
-      "factory": "./configureProject/index#configureProject",
-      "schema": "./configureProject/schema.json",
+      "factory": "./ng-generate/configureProject/index#configureProject",
+      "schema": "./ng-generate/configureProject/schema.json",
       "aliases": [
-        "sc"
+        "start"
       ]
     },
     "scaffolding": {
