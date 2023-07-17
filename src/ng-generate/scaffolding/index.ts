@@ -28,13 +28,16 @@ export function scaffolding(options: ScaffoldOptions): Rule {
   return async (tree: Tree, context: SchematicContext) => {
     context.logger.info(`🎉 Scaffolding Schematic Start!`);
     /**
-     * Basic concepts
-     * Workspaces = Angular project root.
-     * Project = the default one or the selected one.
-     * Instructions to scaffolding
-     * 1. Get the workspace.
-     * 2. Use the project given or use the default project.
-     * 3. Create the base FolderPath.
+     * TODO: Re-structure scaffolding schematic
+     * */
+
+    /**
+     * New Custom structure
+     * Requirements
+     * 1. TODO: Supports all projects.
+     * 2. TODO: Supports global configurations.
+     * 3. TODO: Supports standalone components.
+     * 4. TODO: Supports create components.
      * */
     const workspace = await readWorkspace(tree);
     options.project = options.project || getDefaultProject(workspace);
