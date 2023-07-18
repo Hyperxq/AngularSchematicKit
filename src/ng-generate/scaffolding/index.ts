@@ -61,7 +61,9 @@ export function scaffolding(options: ScaffoldOptions): Rule {
       throw new SchematicsException(`The folder options need to be an array`);
     }
     patternArchitectureFile.projects.forEach((p: Project) => {
-      context.logger.info(JSON.stringify(p));
+      context.logger.info(`is project name is ${p.name.includes('default')}`);
+      context.logger.info(getDefaultProjectName(workspace));
+      context.logger.info(`project name: ${p.name}`);
       let project = getProject(
         workspace,
         p.name.includes('default') ? getDefaultProjectName(workspace) : p.name
