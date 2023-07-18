@@ -23,7 +23,6 @@ import {
   FolderPath,
   getDefaultProjectName,
   getJsonFile,
-  getProject,
   getProjectNames,
   readWorkspace,
   recreateTreeFolderStructure,
@@ -67,9 +66,10 @@ export function scaffolding(options: ScaffoldOptions): Rule {
       } else {
         projectName = p.name;
       }
-      let project = getProject(workspace, projectName);
+      let project = workspace.projects.get(projectName)!;
       if (!project) {
-        rules.push(externalSchematic('@schematics/angular', 'app', p.options));
+        externalSchematic('@schematics/angular', 'app', p.options);
+        project = workspace.projects.get(projectName)!;
       }
       const basePath = new FolderPath(project.prefix ?? '', `${project.sourceRoot}/`);
 
