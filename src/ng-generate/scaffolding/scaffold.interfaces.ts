@@ -1,4 +1,4 @@
-import {FolderPath} from '@utils';
+import {FolderPath} from '../../utils';
 
 /**
  * Interface for folder structure schema.json options

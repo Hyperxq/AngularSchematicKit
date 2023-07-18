@@ -30,9 +30,6 @@
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "paths": {
-      "@utils": [
-        "src/utils/index.ts"
-      ]
     }
   },
   "include": [

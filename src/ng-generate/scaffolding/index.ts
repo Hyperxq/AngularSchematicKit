@@ -28,7 +28,7 @@ import {
   ProjectDefinition,
   readWorkspace,
   recreateTreeFolderStructure,
-} from '@utils';
+} from '../../utils';
 
 export function scaffolding(options: ScaffoldOptions): Rule {
   return async (tree: Tree, context: SchematicContext) => {

@@ -6,7 +6,8 @@ import {
   createIndexFile,
   createModuleFolder,
   createRoutingFile,
-} from '@utils';
+} from '../../utils';
+
 // import { externalSchematic } from '@angular-devkit/schematics/src/rules/schematic';
 
 export type State = (structure: FolderStructure, options: ScaffoldOptions) => Rule[];
