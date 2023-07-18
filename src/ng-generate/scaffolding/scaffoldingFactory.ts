@@ -39,7 +39,13 @@ function createBranch(
   return chain(calls);
 }
 
-function createNode(structure: FolderStructure, options: ScaffoldOptions): Rule {
+function createNode(
+  structure: FolderStructure,
+  options: ScaffoldOptions,
+  globalSettings?: {
+    [option: string]: string;
+  }
+): Rule {
   let states: State[] = [];
   if (structure.hasModule) states.push(addModuleState);
   // if (structure.addComponent) states.push(addComponentState);
@@ -49,7 +55,7 @@ function createNode(structure: FolderStructure, options: ScaffoldOptions): Rule 
     states.push(addEmptyFolderState);
 
   const factory = new NodeFactory(states);
-  return chain(factory.execute(structure, options));
+  return chain(factory.execute(structure, options, globalSettings));
 }
 
 

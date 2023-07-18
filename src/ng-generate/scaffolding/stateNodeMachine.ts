@@ -1,5 +1,5 @@
-import {FolderStructure, ScaffoldOptions} from './scaffold.interfaces';
-import {noop, Rule} from '@angular-devkit/schematics';
+import { FolderStructure, ScaffoldOptions } from './scaffold.interfaces';
+import { noop, Rule } from '@angular-devkit/schematics';
 import {
   addExportToNearbyIndexFile,
   createEmptyFolder,
@@ -8,9 +8,15 @@ import {
   createRoutingFile,
 } from '../../utils';
 
-// import { externalSchematic } from '@angular-devkit/schematics/src/rules/schematic';
+import { externalSchematic } from '@angular-devkit/schematics/src/rules/schematic';
 
-export type State = (structure: FolderStructure, options: ScaffoldOptions) => Rule[];
+export type State = (
+  structure: FolderStructure,
+  options: ScaffoldOptions,
+  globalSettings?: {
+    [option: string]: string;
+  }
+) => Rule[];
 
 export class NodeFactory {
   private states: State[];
@@ -19,8 +25,14 @@ export class NodeFactory {
     this.states = states;
   }
 
-  public execute(structure: FolderStructure, options: ScaffoldOptions): Rule[] {
-    return this.states.map((state) => state(structure, options)).flat();
+  public execute(
+    structure: FolderStructure,
+    options: ScaffoldOptions,
+    globalSettings?: {
+      [option: string]: string;
+    }
+  ): Rule[] {
+    return this.states.map((state) => state(structure, options, globalSettings)).flat();
   }
 }
 
@@ -33,9 +45,26 @@ export const addEmptyFolderState: State = (
   _options: ScaffoldOptions
 ) => [createEmptyFolder(structure.path?.getPath() || '')];
 
-// export const addComponentState: State = (structure: FolderStructure, _options: ScaffoldOptions) => {
-//   return [externalSchematic('@schematics/angular', 'component', structure.addComponent)];
-// };
+export const addComponentState: State = (
+  structure: FolderStructure,
+  _options: ScaffoldOptions,
+  globalSettings: {
+    [option: string]: string;
+  }
+) => {
+  return [
+    externalSchematic(
+      '@schematics/angular',
+      'component',
+      !!globalSettings
+        ? {
+            ...(structure.addComponent as { [option: string]: string }),
+            ...globalSettings,
+          }
+        : (structure.addComponent as { [option: string]: string })
+    ),
+  ];
+};
 export const addRoutingState: State = (structure: FolderStructure, options: ScaffoldOptions) => [
   createRoutingFile(structure, options),
 ];
