@@ -33,8 +33,6 @@ export interface FolderStructure {
 
 export interface Project {
   name: string;
-  basePath: string;
-  options: { [key: string]: string };
   structure: FolderStructure[];
 }
 

@@ -1,6 +1,5 @@
 import {
   chain,
-  externalSchematic,
   noop,
   Rule,
   SchematicContext,
@@ -14,19 +13,15 @@ import {
   WorkspaceStructure,
 } from './scaffold.interfaces';
 import {
-  addExportToNearbyIndexFile,
-  addShortPath,
-  createEmptyFolder,
-  createIndexFile,
-  createModuleFolder,
-  createRoutingFile,
   FolderPath,
   getDefaultProjectName,
   getJsonFile,
+  getProject,
   getProjectNames,
   readWorkspace,
   recreateTreeFolderStructure,
 } from '../../utils';
+import { scaffoldFoldersFactory } from './scaffoldingFactory';
 
 export function scaffolding(options: ScaffoldOptions): Rule {
   return async (tree: Tree, context: SchematicContext) => {
@@ -66,11 +61,7 @@ export function scaffolding(options: ScaffoldOptions): Rule {
       } else {
         projectName = p.name;
       }
-      let project = workspace.projects.get(projectName)!;
-      if (!project) {
-        externalSchematic('@schematics/angular', 'app', p.options);
-        project = workspace.projects.get(projectName)!;
-      }
+      let project = getProject(workspace, projectName);
       const basePath = new FolderPath(project.prefix ?? '', `${project.sourceRoot}/`);
 
       const structures: FolderStructure[] = recreateTreeFolderStructure(p.structure, basePath);
@@ -119,74 +110,4 @@ function getPatternArchitecture(tree: Tree, options: ScaffoldOptions): Workspace
   //     return getJsonFile<FolderStructure[]>(tree, options.customFilePath);
   // }
   return getJsonFile<WorkspaceStructure>(tree, options.customFilePath);
-}
-
-export function scaffoldFoldersFactory(
-  structures: FolderStructure[],
-  options: ScaffoldOptions
-): Rule {
-  return () => {
-    return chain(structures.map((structure) => createStructure(structure, options)));
-  };
-}
-
-function createStructure(
-  structure: FolderStructure,
-  options: ScaffoldOptions,
-  calls: Rule[] = []
-): Rule {
-  if (!structure.name) {
-    throw new SchematicsException(`Name is mandatory`);
-  }
-
-  calls.push(createFolder(structure, options));
-
-  if (!structure.children || structure.children.length === 0) {
-    return chain(calls);
-  }
-  structure.children.map((structureChild) => {
-    createStructure(structureChild, options, calls);
-  });
-  return chain(calls);
-}
-
-function createFolder(structure: FolderStructure, options: ScaffoldOptions): Rule {
-  return async () => {
-    const calls = [];
-
-    if (structure.hasShortPath) {
-      const exportsPaths: string[] = [];
-      if (structure.hasModule) {
-        exportsPaths.push(`./${structure.name}.module`);
-      }
-      if (structure.hasRouting) {
-        exportsPaths.push(`./${structure.name}.routing`);
-      }
-      calls.push(createIndexFile(options, structure.path?.getPath() || '', exportsPaths));
-      calls.push(
-        addShortPath({
-          packageName: `@${structure.name}`,
-          paths: [structure.path?.getPath() || ''],
-        })
-      );
-    }
-
-    if (structure.hasModule) {
-      calls.push(createModuleFolder(structure, options));
-      calls.push(
-        !structure.hasShortPath ? addExportToNearbyIndexFile(options, structure, 'module') : noop()
-      );
-    } else {
-      calls.push(createEmptyFolder(structure.path?.getPath() || ''));
-    }
-
-    if (structure.hasRouting) {
-      calls.push(createRoutingFile(structure, options));
-      calls.push(
-        !structure.hasShortPath ? addExportToNearbyIndexFile(options, structure, 'routing') : noop()
-      );
-    }
-
-    return chain(calls);
-  };
 }
