@@ -1,6 +1,7 @@
 import { FolderStructure, ScaffoldOptions } from './scaffold.interfaces';
 import { chain, Rule, SchematicsException } from '@angular-devkit/schematics';
 import {
+  addComponentState,
   addEmptyFolderState,
   addModuleState,
   addRoutingState,
@@ -48,7 +49,7 @@ function createNode(
 ): Rule {
   let states: State[] = [];
   if (structure.hasModule) states.push(addModuleState);
-  // if (structure.addComponent) states.push(addComponentState);
+  if (structure.addComponent) states.push(addComponentState);
   if (structure.hasRouting) states.push(addRoutingState);
   states.push(addShortPathState);
   if (!structure.hasShortPath && !structure.hasRouting && !structure.hasModule)
