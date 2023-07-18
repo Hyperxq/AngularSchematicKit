@@ -68,7 +68,6 @@ export function getDefaultProjectName(workspace: WorkspaceDefinition): string {
 
 export function getDefaultProject(workspace: WorkspaceDefinition): ProjectDefinition {
   const projectName: string = getDefaultProjectName(workspace);
-  console.log(projectName);
   return getProject(workspace, projectName);
 }
 
