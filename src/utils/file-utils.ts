@@ -66,11 +66,6 @@ export function getDefaultProjectName(workspace: WorkspaceDefinition): string {
   return projectName;
 }
 
-export function getDefaultProject(workspace: WorkspaceDefinition): ProjectDefinition {
-  const projectName: string = getDefaultProjectName(workspace);
-  return getProject(workspace, projectName);
-}
-
 /**
  *To get the project's names from the workspace.
  *  @param workspace

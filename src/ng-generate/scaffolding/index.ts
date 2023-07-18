@@ -21,11 +21,10 @@ import {
   createModuleFolder,
   createRoutingFile,
   FolderPath,
-  getDefaultProject,
+  getDefaultProjectName,
   getJsonFile,
   getProject,
   getProjectNames,
-  ProjectDefinition,
   readWorkspace,
   recreateTreeFolderStructure,
 } from '../../utils';
@@ -63,8 +62,10 @@ export function scaffolding(options: ScaffoldOptions): Rule {
     }
     patternArchitectureFile.projects.forEach((p: Project) => {
       context.logger.info(JSON.stringify(p));
-      const project: ProjectDefinition =
-        p.name === 'default' ? getDefaultProject(workspace) : getProject(workspace, p.name);
+      let project = getProject(
+        workspace,
+        p.name === 'default' ? getDefaultProjectName(workspace) : p.name
+      );
       if (!project) {
         rules.push(externalSchematic('@schematics/angular', 'app', p.options));
       }
