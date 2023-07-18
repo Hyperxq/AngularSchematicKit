@@ -64,10 +64,13 @@ export function scaffolding(options: ScaffoldOptions): Rule {
       context.logger.info(`is project name is ${p.name.includes('default')}`);
       context.logger.info(getDefaultProjectName(workspace));
       context.logger.info(`project name: ${p.name}`);
-      let project = getProject(
-        workspace,
-        p.name.includes('default') ? getDefaultProjectName(workspace) : p.name
-      );
+      let projectName = '';
+      if (p.name.includes('default')) {
+        projectName = getDefaultProjectName(workspace);
+      } else {
+        projectName = p.name;
+      }
+      let project = getProject(workspace, projectName);
       if (!project) {
         rules.push(externalSchematic('@schematics/angular', 'app', p.options));
       }
