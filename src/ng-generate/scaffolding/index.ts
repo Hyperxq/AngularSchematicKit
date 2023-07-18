@@ -46,11 +46,11 @@ export function scaffolding(options: ScaffoldOptions): Rule {
      * 4. TODO: Supports create components.
      * */
     const workspace = await readWorkspace(tree);
-    const projectsName: string[] = getProjectNames(workspace);
     let rules: Rule[] = [];
 
     if (options.kindArchitecture === 'CUSTOM') {
       context.logger.info(`You have the following projects:`);
+      const projectsName: string[] = getProjectNames(workspace);
       projectsName.forEach((projectName: string) => {
         context.logger.log('info', `⚓ ${projectName}`);
       });
@@ -58,6 +58,10 @@ export function scaffolding(options: ScaffoldOptions): Rule {
     }
 
     const patternArchitectureFile = getPatternArchitecture(tree, options);
+    if (!Array.isArray(patternArchitectureFile.projects)) {
+      throw new SchematicsException(`The folder options need to be an array`);
+    }
+
     patternArchitectureFile.projects.forEach((p: Project) => {
       const project: ProjectDefinition =
         p.name === 'default' ? getDefaultProject(workspace) : getProject(workspace, p.name);

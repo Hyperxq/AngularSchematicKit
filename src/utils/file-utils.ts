@@ -77,12 +77,7 @@ export function getDefaultProject(workspace: WorkspaceDefinition): ProjectDefini
  *  @returns the Project's name list.
  */
 export function getProjectNames(workspace: WorkspaceDefinition): string[] {
-  let projectNames = [];
-  let key = workspace.projects.keys();
-  while (key.next().done) {
-    projectNames.push(key.next().value);
-  }
-  return projectNames;
+  return Array.from(workspace.projects.entries(), ([key]) => key);
 }
 
 /**
