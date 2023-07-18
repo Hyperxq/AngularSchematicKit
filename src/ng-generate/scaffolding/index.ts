@@ -51,7 +51,6 @@ export function scaffolding(options: ScaffoldOptions): Rule {
     if (options.kindArchitecture === 'CUSTOM') {
       context.logger.info(`You have the following projects:`);
       const projectsName: string[] = getProjectNames(workspace);
-      context.logger.info(projectsName.join(', '));
       projectsName.forEach((projectName: string) => {
         context.logger.info(`⚓ ${projectName}`);
       });
@@ -62,9 +61,8 @@ export function scaffolding(options: ScaffoldOptions): Rule {
     if (!Array.isArray(patternArchitectureFile.projects)) {
       throw new SchematicsException(`The folder options need to be an array`);
     }
-
     patternArchitectureFile.projects.forEach((p: Project) => {
-      context.logger.info(Array.from(workspace.projects.entries(), ([key]) => key).join(', 📦'));
+      context.logger.info(JSON.stringify(p));
       const project: ProjectDefinition =
         p.name === 'default' ? getDefaultProject(workspace) : getProject(workspace, p.name);
       if (!project) {
