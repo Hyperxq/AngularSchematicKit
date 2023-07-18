@@ -44,11 +44,10 @@
       "description": "Would you like to remove the custom JSON structure file?",
       "type": "boolean",
       "x-prompt": "Would you like to remove the custom JSON structure file?",
-      "default": true
+      "default": false
     }
   },
   "required": [
-    "custom",
-    "project"
+    "kindArchitecture"
   ]
 }

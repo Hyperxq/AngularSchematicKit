@@ -8,7 +8,6 @@ import {FolderPath} from '../../utils';
 export interface ScaffoldOptions {
   kindArchitecture: 'CFS' | 'ATOMIC-DESIGN' | 'CUSTOM';
   customFilePath: string;
-  project?: string;
   deleteFile: boolean;
 }
 
