@@ -1,4 +1,4 @@
-import {FolderPath} from '@utils/interfaces/folderPath.interface';
+import {FolderPath} from '@utils';
 
 /**
  * Interface for folder structure schema.json options
@@ -6,7 +6,7 @@ import {FolderPath} from '@utils/interfaces/folderPath.interface';
  * @public
  */
 export interface ScaffoldOptions {
-  custom: 'CFS' | 'ATOMIC-DESIGN' | 'CUSTOM';
+  kindArchitecture: 'CFS' | 'ATOMIC-DESIGN' | 'CUSTOM';
   customFilePath: string;
   project?: string;
   deleteFile: boolean;
@@ -15,7 +15,7 @@ export interface ScaffoldOptions {
 /**
  * Interface use to recreate the folder project tree.
  * The first parent is always app folder.
- * You can go from the end or from the begin of the tree with parent or children attribute
+ * You can go from the end or from the beginning of the tree with parent or children attribute
  * @Interface FolderStructure
  * @attribute
  * @category Interface
@@ -28,4 +28,18 @@ export interface FolderStructure {
   hasRouting?: boolean;
   parent?: FolderStructure;
   path?: FolderPath;
+  addComponent?: { [option: string]: string } | true;
+}
+
+export interface Project {
+  name: string;
+  basePath: string;
+  options: { [key: string]: string };
+  structure: FolderStructure[];
+}
+
+export interface WorkspaceStructure {
+  globalSettings: { [key: string]: string };
+  projects: Project[];
+  readLocalSettings?: boolean;
 }

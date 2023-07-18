@@ -1,24 +1,25 @@
 import { FolderStructure, ScaffoldOptions } from './scaffold.interfaces';
-import { chain, noop, Rule, SchematicsException } from '@angular-devkit/schematics';
+import { chain, Rule, SchematicsException } from '@angular-devkit/schematics';
 import {
-  addExportToNearbyIndexFile,
-  addShortPath,
-  createEmptyFolder,
-  createIndexFile,
-  createModuleFolder,
-  createRoutingFile,
-} from '../../utils';
+  addEmptyFolderState,
+  addModuleState,
+  addRoutingState,
+  addShortPathState,
+  NodeFactory,
+  State,
+} from './stateNodeMachine';
 
 export function scaffoldFoldersFactory(
   structures: FolderStructure[],
   options: ScaffoldOptions
 ): Rule {
   return () => {
-    return chain(structures.map((structure) => createStructure(structure, options)));
+    return chain(structures.map((structure) => createBranch(structure, options)));
   };
 }
 
-function createStructure(
+// Rename to createBranch
+function createBranch(
   structure: FolderStructure,
   options: ScaffoldOptions,
   calls: Rule[] = []
@@ -27,54 +28,29 @@ function createStructure(
     throw new SchematicsException(`Name is mandatory`);
   }
 
-  calls.push(createFolder(structure, options));
+  calls.push(createNode(structure, options));
 
   if (!structure.children || structure.children.length === 0) {
     return chain(calls);
   }
   structure.children.map((structureChild) => {
-    createStructure(structureChild, options, calls);
+    createBranch(structureChild, options, calls);
   });
   return chain(calls);
 }
 
-function createFolder(structure: FolderStructure, options: ScaffoldOptions): Rule {
-  return async () => {
-    const calls = [];
+function createNode(structure: FolderStructure, options: ScaffoldOptions): Rule {
+  let states: State[] = [];
+  if (structure.hasModule) states.push(addModuleState);
+  // if (structure.addComponent) states.push(addComponentState);
+  if (structure.hasRouting) states.push(addRoutingState);
+  states.push(addShortPathState);
+  if (!structure.hasShortPath && !structure.hasRouting && !structure.hasModule)
+    states.push(addEmptyFolderState);
 
-    if (structure.hasShortPath) {
-      const exportsPaths: string[] = [];
-      if (structure.hasModule) {
-        exportsPaths.push(`./${structure.name}.module`);
-      }
-      if (structure.hasRouting) {
-        exportsPaths.push(`./${structure.name}.routing`);
-      }
-      calls.push(createIndexFile(options, structure.path?.getPath() || '', exportsPaths));
-      calls.push(
-        addShortPath({
-          packageName: `@${structure.name}`,
-          paths: [structure.path?.getPath() || ''],
-        })
-      );
-    }
-
-    if (structure.hasModule) {
-      calls.push(createModuleFolder(structure, options));
-      calls.push(
-        !structure.hasShortPath ? addExportToNearbyIndexFile(options, structure, 'module') : noop()
-      );
-    } else {
-      calls.push(createEmptyFolder(structure.path?.getPath() || ''));
-    }
-
-    if (structure.hasRouting) {
-      calls.push(createRoutingFile(structure, options));
-      calls.push(
-        !structure.hasShortPath ? addExportToNearbyIndexFile(options, structure, 'routing') : noop()
-      );
-    }
-
-    return chain(calls);
-  };
+  const factory = new NodeFactory(states);
+  return chain(factory.execute(structure, options));
 }
+
+
+

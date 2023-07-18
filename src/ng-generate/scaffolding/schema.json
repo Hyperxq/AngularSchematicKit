@@ -4,7 +4,7 @@
   "title": "Create your initial scaffold configuration",
   "type": "object",
   "properties": {
-    "custom": {
+    "kindArchitecture": {
       "description": "Select a scaffold structure",
       "type": "string",
       "default": "CFS",
@@ -33,17 +33,6 @@
         ]
       },
       "x-user-analytics": 5
-    },
-    "path": {
-      "description": "the base path",
-      "type": "string",
-      "visible": false,
-      "default": "src/app"
-    },
-    "project": {
-      "description": "Write the relative project url or empty to default project",
-      "type": "string",
-      "x-prompt": "Write the relative project url or empty to default project"
     },
     "customFilePath": {
       "description": "Write the url of your files structure file json",

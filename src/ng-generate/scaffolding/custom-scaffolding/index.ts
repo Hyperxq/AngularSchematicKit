@@ -3,7 +3,7 @@ import { FolderStructure, ScaffoldOptions } from '../scaffold.interfaces';
 import { scaffoldFoldersFactory } from '../scaffoldingFactory';
 import {
   FolderPath,
-  getDefaultProject,
+  getDefaultProjectName,
   getJsonFile,
   getProject,
   readWorkspace,
@@ -15,7 +15,7 @@ export function customScaffolding(options: ScaffoldOptions): Rule {
     try {
       context.logger.log('info', JSON.stringify(options));
       const workspace = await readWorkspace(tree);
-      options.project = options.project || getDefaultProject(workspace);
+      options.project = options.project || getDefaultProjectName(workspace);
 
       const project = getProject(workspace, options.project);
       const path = new FolderPath(project.prefix ?? '', `${project.sourceRoot}/`);
@@ -37,7 +37,7 @@ export function customScaffolding(options: ScaffoldOptions): Rule {
 
 function deleteFile(options: ScaffoldOptions): Rule {
   return (tree: Tree, context: SchematicContext) => {
-    if (options.custom === 'CUSTOM') {
+    if (options.kindArchitecture === 'CUSTOM') {
       tree.delete(options.customFilePath!);
       context.logger.log('info', `The custom file was deleted successfully ✔`);
     }

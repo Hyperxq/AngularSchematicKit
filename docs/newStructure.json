@@ -1,9 +1,9 @@
 {
   "global-settings": {
   },
-  "default": {},
-  "ui": {},
-  "graphql": {},
   "projects": {
+    "default": {},
+    "ui": {},
+    "graphql": {}
   }
 }

@@ -1,14 +1,18 @@
 import {
   chain,
+  externalSchematic,
   noop,
   Rule,
   SchematicContext,
   SchematicsException,
   Tree,
 } from '@angular-devkit/schematics';
-import { ATOMICDESIGN } from './files/defaultScaffolders/atomic-design';
-import { CFS } from './files/defaultScaffolders/core-feature-shared';
-import { FolderStructure, ScaffoldOptions } from './scaffold.interfaces';
+import {
+  FolderStructure,
+  Project,
+  ScaffoldOptions,
+  WorkspaceStructure,
+} from './scaffold.interfaces';
 import {
   addExportToNearbyIndexFile,
   addShortPath,
@@ -20,9 +24,11 @@ import {
   getDefaultProject,
   getJsonFile,
   getProject,
+  getProjectNames,
+  ProjectDefinition,
   readWorkspace,
   recreateTreeFolderStructure,
-} from '../../utils';
+} from '@utils';
 
 export function scaffolding(options: ScaffoldOptions): Rule {
   return async (tree: Tree, context: SchematicContext) => {
@@ -40,17 +46,31 @@ export function scaffolding(options: ScaffoldOptions): Rule {
      * 4. TODO: Supports create components.
      * */
     const workspace = await readWorkspace(tree);
-    options.project = options.project || getDefaultProject(workspace);
+    const projectsName: string[] = getProjectNames(workspace);
+    let rules: Rule[] = [];
 
-    const project = getProject(workspace, options.project);
-    const path = new FolderPath(project.prefix ?? '', `${project.sourceRoot}/`);
+    if (options.kindArchitecture === 'CUSTOM') {
+      context.logger.info(`You have the following projects:`);
+      projectsName.forEach((projectName: string) => {
+        context.logger.log('info', `⚓ ${projectName}`);
+      });
+      context.logger.info(`🤓 Please check if you custom json has the right project's name`);
+    }
 
-    const structures: FolderStructure[] = recreateTreeFolderStructure(
-      getPatternArchitecture(tree, options),
-      path
-    );
+    const patternArchitectureFile = getPatternArchitecture(tree, options);
+    patternArchitectureFile.projects.forEach((p: Project) => {
+      const project: ProjectDefinition =
+        p.name === 'default' ? getDefaultProject(workspace) : getProject(workspace, p.name);
+      if (!project) {
+        rules.push(externalSchematic('@schematics/angular', 'app', p.options));
+      }
+      const basePath = new FolderPath(project.prefix ?? '', `${project.sourceRoot}/`);
+
+      const structures: FolderStructure[] = recreateTreeFolderStructure(p.structure, basePath);
+      rules.push(scaffoldFoldersFactory(structures, options));
+    });
     return chain([
-      scaffoldFoldersFactory(structures, options),
+      ...rules,
       options.deleteFile ? deleteFile(options) : noop(),
       printFinalMessage(),
     ]);
@@ -59,7 +79,7 @@ export function scaffolding(options: ScaffoldOptions): Rule {
 
 function deleteFile(options: ScaffoldOptions): Rule {
   return (tree: Tree, context: SchematicContext) => {
-    if (options.custom === 'CUSTOM') {
+    if (options.kindArchitecture === 'CUSTOM') {
       tree.delete(options.customFilePath!);
       context.logger.log('info', `The custom file was deleted successfully ✔`);
     }
@@ -73,19 +93,20 @@ function printFinalMessage(): Rule {
   };
 }
 
-function getPatternArchitecture(tree: Tree, options: ScaffoldOptions): FolderStructure[] {
-  switch (options.custom) {
-    case 'CFS':
-      return CFS;
-    case 'ATOMIC-DESIGN':
-      return ATOMICDESIGN;
-    case 'CUSTOM':
-      //TODO: invoke and test the sub-schema here
-      if (!options.customFilePath) {
-        throw new SchematicsException(`You need to specify the url of the custom file structure`);
-      }
-      return getJsonFile<FolderStructure[]>(tree, options.customFilePath);
-  }
+function getPatternArchitecture(tree: Tree, options: ScaffoldOptions): WorkspaceStructure {
+  // switch (options.custom) {
+  //   case 'CFS':
+  //     return CFS;
+  //   case 'ATOMIC-DESIGN':
+  //     return ATOMICDESIGN;
+  //   case 'CUSTOM':
+  //     //TODO: invoke and test the sub-schema here
+  //     if (!options.customFilePath) {
+  //       throw new SchematicsException(`You need to specify the url of the custom file structure`);
+  //     }
+  //     return getJsonFile<FolderStructure[]>(tree, options.customFilePath);
+  // }
+  return getJsonFile<WorkspaceStructure>(tree, options.customFilePath);
 }
 
 export function scaffoldFoldersFactory(

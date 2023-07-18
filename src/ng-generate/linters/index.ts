@@ -13,11 +13,7 @@ import {
   url,
 } from '@angular-devkit/schematics';
 import { LintersOptions } from './linters.interface';
-import {
-  addPackageJsonDependency,
-  NodeDependency,
-  NodeDependencyType,
-} from '../../utils/dependecies';
+import { addPackageJsonDependency, NodeDependency, NodeDependencyType } from '@utils';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 
 export function addLinters(options: LintersOptions): Rule {

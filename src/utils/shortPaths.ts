@@ -119,6 +119,7 @@ export function findShortPath(
   return findStructureWithShortPath(structure, moduleNameToAdd)?.path?.shortPath;
 }
 
+//TODO: Allow export many paths
 export function addExportToNearbyIndexFile(
   options: ScaffoldOptions,
   structure: FolderStructure,
@@ -134,13 +135,13 @@ export function addExportToNearbyIndexFile(
       project.sourceRoot || '',
       structure.parent
     );
-    const findedStructure = findStructureWithShortPath(
+    const foundStructure = findStructureWithShortPath(
       structure,
       getModuleNameFromPath(bootstrapModulePath)
     );
-    if (findedStructure !== undefined) {
-      const exportPath = makeExportPath(structure, type, findedStructure?.name);
-      return addExportToIndexFile(`${findedStructure.path?.getPath()}index.ts`, exportPath);
+    if (foundStructure !== undefined) {
+      const exportPath = makeExportPath(structure, type, foundStructure?.name);
+      return addExportToIndexFile(`${foundStructure.path?.getPath()}index.ts`, exportPath);
     }
   };
 }

@@ -58,12 +58,31 @@ export function getProject(workspace: WorkspaceDefinition, projectName: string):
  *  @param workspace
  *  @returns the default project
  */
-export function getDefaultProject(workspace: WorkspaceDefinition): string {
+export function getDefaultProjectName(workspace: WorkspaceDefinition): string {
   const projectName = workspace.projects.keys().next().value;
   if (!projectName) {
     throw new SchematicsException(`You don't have any project in your workspace`);
   }
   return projectName;
+}
+
+export function getDefaultProject(workspace: WorkspaceDefinition): ProjectDefinition {
+  const projectName: string = getDefaultProjectName(workspace);
+  return getProject(workspace, projectName);
+}
+
+/**
+ *To get the project's names from the workspace.
+ *  @param workspace
+ *  @returns the Project's name list.
+ */
+export function getProjectNames(workspace: WorkspaceDefinition): string[] {
+  let projectNames = [];
+  let key = workspace.projects.keys();
+  while (key.next().done) {
+    projectNames.push(key.next().value);
+  }
+  return projectNames;
 }
 
 /**
@@ -79,14 +98,14 @@ export function getBuildTarget(project: ProjectDefinition): TargetDefinition {
 }
 
 /**
- *  add an import to imports section of a module, if you already has the import it'll be skipped.
+ *  add an import to the imports section of a module, if you already has the import it'll be skipped.
  *  @param tree
  *  @param bootstrapModuleDestinyPath - the path of the destiny module, for example: 'src/app/app.module.ts'
  *  @param dependencyPath - the path of the import, for example: `'@angular/common/http'`
  *  @param dependencyName - the name of the import, for example: `HttpClientModule`
  *  @param addToMetadataField - when you don't want to add the import to the imports sections.
  */
-export function addDepencendyToModule(
+export function addDependencyToModule(
   tree: Tree,
   bootstrapModuleDestinyPath: string,
   dependencyPath: string,
@@ -168,8 +187,8 @@ export function createRoutingFile(structure: FolderStructure, options: ScaffoldO
 
       const modulePathParent = findModuleParentPath(structure);
 
-      addDepencendyToModule(tree, modulePathParent ?? '', '@angular/router', 'RouterModule');
-      addDepencendyToModule(
+      addDependencyToModule(tree, modulePathParent ?? '', '@angular/router', 'RouterModule');
+      addDependencyToModule(
         tree,
         modulePathParent || '',
         structure.hasShortPath ? structure.path?.shortPath ?? '' : `./${structure.name}.routing`,
@@ -278,7 +297,7 @@ export function addImportToAppModule(
     const path =
       findShortPath(structure, getModuleNameFromPath(bootstrapModulePath)) ??
       getModulePath(structure, 'relative', getModuleNameFromPath(bootstrapModulePath));
-    addDepencendyToModule(tree, bootstrapModulePath, path, dependencyName);
+    addDependencyToModule(tree, bootstrapModulePath, path, dependencyName);
   };
 }
 

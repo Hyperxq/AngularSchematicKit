@@ -51,7 +51,7 @@ implementation.
 
 ### Options when you execute the schematic
 
-1. **Select a Scaffold structure:** select defaults o custom scaffold pattern.
+1. **Select a Scaffold structure:** select defaults o kindArchitecture scaffold pattern.
 2. **Write the relative project url:** if you have many projects in the same workspace you need to write for example:
    projects/secondary-application.
 3. **Write the url of your files structure file json:** By default, the system will search in the root of the workspace
