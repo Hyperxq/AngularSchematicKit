@@ -58,7 +58,7 @@ export const addComponentState: State = (
       'component',
       !!globalSettings
         ? {
-            ...(structure.addComponent as { [option: string]: string }),
+            ...((structure.addComponent as { [option: string]: string }) ?? {}),
             ...globalSettings,
             name: structure.name,
           }
