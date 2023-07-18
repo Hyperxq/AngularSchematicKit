@@ -61,6 +61,7 @@ export function scaffolding(options: ScaffoldOptions): Rule {
     patternArchitectureFile.projects.forEach((p: Project) => {
       const project: ProjectDefinition =
         p.name === 'default' ? getDefaultProject(workspace) : getProject(workspace, p.name);
+      options.project = p.name;
       if (!project) {
         rules.push(externalSchematic('@schematics/angular', 'app', p.options));
       }
