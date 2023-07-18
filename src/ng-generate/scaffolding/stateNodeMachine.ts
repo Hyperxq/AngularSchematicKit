@@ -60,8 +60,12 @@ export const addComponentState: State = (
         ? {
             ...(structure.addComponent as { [option: string]: string }),
             ...globalSettings,
+            name: structure.name,
           }
-        : (structure.addComponent as { [option: string]: string })
+        : {
+            ...(structure.addComponent as { [option: string]: string }),
+            name: structure.name,
+          }
     ),
   ];
 };
