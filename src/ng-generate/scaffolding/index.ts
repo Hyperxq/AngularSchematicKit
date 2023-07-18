@@ -22,7 +22,6 @@ import {
   createRoutingFile,
   FolderPath,
   getDefaultProject,
-  getDefaultProjectName,
   getJsonFile,
   getProject,
   getProjectNames,
@@ -65,7 +64,8 @@ export function scaffolding(options: ScaffoldOptions): Rule {
     }
 
     patternArchitectureFile.projects.forEach((p: Project) => {
-      context.logger.info(getDefaultProjectName(workspace));
+      context.logger.info(Array.from(workspace.projects.entries(), ([key]) => key).join(','));
+      workspace.projects.get('angular-poc-test');
       const project: ProjectDefinition =
         p.name === 'default' ? getDefaultProject(workspace) : getProject(workspace, p.name);
       options.project = p.name;
