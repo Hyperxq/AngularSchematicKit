@@ -1,105 +1,43 @@
 {
   "globalSettings": {
-    "standalone": true,
-    "skipTests": true,
-    "prefix": "test"
+    "component": {
+      "standalone": true,
+      "skipTests": true,
+      "prefix": "test"
+    }
   },
   "projects": [
     {
       "name": "default",
       "structure": [
         {
-          "name": "core",
-          "hasModule": true,
-          "hasShortPath": true,
-          "hasRouting": true,
-          "children": [
-            {
-              "name": "auth"
-            },
-            {
-              "name": "header"
-            },
-            {
-              "name": "footer"
-            }
-          ]
-        },
-        {
-          "name": "features",
-          "hasModule": true,
-          "hasShortPath": true,
-          "hasRouting": true,
-          "children": [
-            {
-              "name": "home",
-              "hasModule": true,
-              "hasShortPath": true,
-              "hasRouting": true,
-              "children": [
-                {
-                  "name": "components"
-                },
-                {
-                  "name": "views"
-                }
-              ]
-            },
-            {
-              "name": "users",
-              "hasModule": true,
-              "hasShortPath": true,
-              "hasRouting": true,
-              "children": [
-                {
-                  "name": "components"
-                },
-                {
-                  "name": "views"
-                }
-              ]
-            },
-            {
-              "name": "products",
-              "hasModule": true,
-              "hasShortPath": true,
-              "hasRouting": true,
-              "children": [
-                {
-                  "name": "components"
-                },
-                {
-                  "name": "views"
-                }
-              ]
-            }
-          ]
-        },
-        {
           "name": "shared",
-          "hasModule": true,
           "hasShortPath": true,
-          "hasRouting": true,
           "children": [
             {
               "name": "dialog",
-              "addComponent": {}
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "ui",
-      "structure": [
-        {
-          "name": "codepen",
-          "hasModule": true,
-          "hasShortPath": true,
-          "hasRouting": true,
-          "children": [
-            {
-              "name": "dialog"
+              "component": [
+                {
+                  "name": "dialog-special"
+                },
+                {
+                  "name": "dialog-ultra-special"
+                },
+                {
+                  "name": "dialog-mega-special"
+                }
+              ],
+              "service": {},
+              "navigation": {
+                "collection": "@angular/material",
+                "name": "navigation",
+                "standalone": true
+              },
+              "address-form": {
+                "name": "address-form",
+                "collection": "@angular/material",
+                "standalone": true
+              }
             }
           ]
         }

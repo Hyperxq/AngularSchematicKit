@@ -1,19 +1,18 @@
-import { WorkspaceStructure } from '../../scaffold.interfaces';
-
-export const CFS: WorkspaceStructure = {
+export const CFS: unknown = {
   projects: [
     {
       name: 'default',
       structure: [
         {
           name: 'core',
-
-          hasModule: true,
+          module: {
+            routing: true,
+          },
           children: [
             {
               name: 'service',
-              component: [{ name: 'auth' }],
-              service: { name: 'auth' },
+              component: [{ name: 'header' }, { name: 'footer' }, { name: 'breadcrumb' }],
+              service: [{ name: 'auth' }, { name: 'logger' }],
               children: [{ name: 'data' }, { name: 'logic' }],
             },
           ],
@@ -24,7 +23,9 @@ export const CFS: WorkspaceStructure = {
         },
         {
           name: 'shared',
-          hasModule: true,
+          module: {
+            routing: true,
+          },
         },
       ],
     },

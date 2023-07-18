@@ -1,6 +1,4 @@
-import { WorkspaceStructure } from '../../scaffold.interfaces';
-
-export const ATOMIC_DESIGN: WorkspaceStructure = {
+export const ATOMIC_DESIGN: unknown = {
   projects: [
     {
       name: 'default',
@@ -12,7 +10,9 @@ export const ATOMIC_DESIGN: WorkspaceStructure = {
         {
           name: 'shared',
           hasShortPath: true,
-          hasModule: true,
+          module: {
+            name: 'shared',
+          },
           children: [
             {
               name: 'components',

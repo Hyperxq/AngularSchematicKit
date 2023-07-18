@@ -85,9 +85,9 @@ function printFinalMessage(): Rule {
 function getPatternArchitecture(tree: Tree, options: ScaffoldOptions): WorkspaceStructure {
   switch (options.kindArchitecture) {
     case 'CFS':
-      return CFS;
+      return CFS as WorkspaceStructure;
     case 'ATOMIC-DESIGN':
-      return ATOMIC_DESIGN;
+      return ATOMIC_DESIGN as WorkspaceStructure;
     case 'CUSTOM':
       return getJsonFile<WorkspaceStructure>(tree, options.customFilePath);
   }
