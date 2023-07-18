@@ -64,18 +64,21 @@ export function scaffolding(options: ScaffoldOptions): Rule {
     }
 
     patternArchitectureFile.projects.forEach((p: Project) => {
-      context.logger.info(Array.from(workspace.projects.entries(), ([key]) => key).join(','));
-      workspace.projects.get('angular-poc-test');
+      context.logger.info(Array.from(workspace.projects.entries(), ([key]) => key).join(', 📦'));
       const project: ProjectDefinition =
         p.name === 'default' ? getDefaultProject(workspace) : getProject(workspace, p.name);
-      options.project = p.name;
       if (!project) {
         rules.push(externalSchematic('@schematics/angular', 'app', p.options));
       }
       const basePath = new FolderPath(project.prefix ?? '', `${project.sourceRoot}/`);
 
       const structures: FolderStructure[] = recreateTreeFolderStructure(p.structure, basePath);
-      rules.push(scaffoldFoldersFactory(structures, options));
+      rules.push(
+        scaffoldFoldersFactory(structures, {
+          ...options,
+          project: p.name,
+        })
+      );
     });
     return chain([
       ...rules,
