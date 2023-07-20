@@ -55,14 +55,15 @@ export const addEmptyFolderState: State = (
 export const addComponentState: State = (
   structure: FolderStructure,
   _options: ScaffoldOptions,
-  project: ProjectDefinition,
+  _project: ProjectDefinition,
   globalSettings: { [key: string]: string }
 ): Rule[] => {
   return [
     externalSchematic('@schematics/angular', 'component', {
-      name: structure.path?.getPath('absolute', project.sourceRoot),
       ...(structure.addComponent ?? {}),
       ...(globalSettings ?? {}),
+      path: structure.path?.getPath(),
+      name: structure.name,
     }),
   ];
 };
