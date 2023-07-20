@@ -1,6 +1,6 @@
 import { WorkspaceStructure } from '../../scaffold.interfaces';
 
-export const ATOMICDESIGN: WorkspaceStructure = {
+export const ATOMIC_DESIGN: WorkspaceStructure = {
   projects: [
     {
       name: 'default',

@@ -6,9 +6,9 @@ initiating a new project often means retracing the same steps, which can be quit
 each schematic in this library is geared towards automating and customizing configurations to align perfectly with your
 project's specific needs. But it doesn't stop there! This library thrives on evolution and growth, so your contributions
 towards enhancing existing schematics or creating new ones are more than welcome. Dive in, enjoy the simplicity and
-power of our library, and remember - happy coding! 🎉
+power of our library, and remember—happy coding! 🎉
 
-## How to use this schematics package
+## How to use this schematics' package
 
 <code>ng add @danils/schematicskit</code>
 
@@ -60,15 +60,32 @@ implementation.
 
 ### Structure of JSON File
 
-#### Interface Name: FolderStructure
+#### Custom Structure File
 
-| Attribute    | Type                     | Optional |
-|--------------|--------------------------|:---------|
-| name         | string                   | false    |
-| hasModule    | boolean                  | true     |
-| hasShortPath | boolean                  | true     |
-| hasRouting   | boolean                  | true     |
-| children     | Array of FolderStructure | true     |
+WorkspaceStructure
+
+| Attribute      | Type         | Optional | Description                               |
+|----------------|--------------|:---------|-------------------------------------------|
+| globalSettings | {key: value} | true     | Global flags/configuration for components |
+| projects       | Project[]    | false    |                                           |
+
+Project
+
+| Attribute | Type              | Optional |
+|-----------|-------------------|:---------|
+| name      | string            | false    |
+| structure | FolderStructure[] | false    |
+
+FolderStructure
+
+| Attribute    | Type                     | Optional | Description                                    |
+|--------------|--------------------------|:---------|:-----------------------------------------------|
+| name         | string                   | false    |                                                |
+| hasModule    | boolean                  | true     |                                                |
+| hasShortPath | boolean                  | true     |                                                |
+| hasRouting   | boolean                  | true     |                                                |
+| children     | Array of FolderStructure | true     |                                                |
+| addComponent | {key: value}             | true     | Add all the flags that the component will need |
 
 It's very important to mention that this file is an array of FolderStructure interfaces. You can see and example here:
 [Custom JSON File](docs/customStructure.json).

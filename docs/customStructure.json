@@ -1,68 +1,110 @@
-[
-  {
-    "name": "core",
-    "hasModule": true,
-    "hasShortPath": true,
-    "hasRouting": true,
-    "children": [
-      {
-        "name": "auth"
-      },
-      {
-        "name": "header"
-      },
-      {
-        "name": "footer"
-      }
-    ]
+{
+  "globalSettings": {
+    "standalone": true,
+    "skipTests": true,
+    "prefix": "test"
   },
-  {
-    "name": "features",
-    "hasModule": true,
-    "hasShortPath": true,
-    "hasRouting": true,
-    "children": [
-      {
-        "name": "home",
-        "hasModule": true,
-        "hasShortPath": true,
-        "hasRouting": true,
-        "children": [
-          { "name": "components" },
-          { "name": "views" }
-        ]
-      },
-      {
-        "name": "users",
-        "hasModule": true,
-        "hasShortPath": true,
-        "hasRouting": true,
-        "children": [
-          { "name": "components" },
-          { "name": "views" }
-        ]
-      },
-      {
-        "name": "products",
-        "hasModule": true,
-        "hasShortPath": true,
-        "hasRouting": true,
-        "children": [
-          { "name": "components" },
-          { "name": "views" }
-        ]
-      }
-    ]
-  },
-  {
-    "name": "shared",
-    "hasModule": true,
-    "hasShortPath": true,
-    "hasRouting": true,
-    "children": [
-      {
-        "name": "dialog"
-      }
-    ]
-  }
-]
+  "projects": [
+    {
+      "name": "default",
+      "structure": [
+        {
+          "name": "core",
+          "hasModule": true,
+          "hasShortPath": true,
+          "hasRouting": true,
+          "children": [
+            {
+              "name": "auth"
+            },
+            {
+              "name": "header"
+            },
+            {
+              "name": "footer"
+            }
+          ]
+        },
+        {
+          "name": "features",
+          "hasModule": true,
+          "hasShortPath": true,
+          "hasRouting": true,
+          "children": [
+            {
+              "name": "home",
+              "hasModule": true,
+              "hasShortPath": true,
+              "hasRouting": true,
+              "children": [
+                {
+                  "name": "components"
+                },
+                {
+                  "name": "views"
+                }
+              ]
+            },
+            {
+              "name": "users",
+              "hasModule": true,
+              "hasShortPath": true,
+              "hasRouting": true,
+              "children": [
+                {
+                  "name": "components"
+                },
+                {
+                  "name": "views"
+                }
+              ]
+            },
+            {
+              "name": "products",
+              "hasModule": true,
+              "hasShortPath": true,
+              "hasRouting": true,
+              "children": [
+                {
+                  "name": "components"
+                },
+                {
+                  "name": "views"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "shared",
+          "hasModule": true,
+          "hasShortPath": true,
+          "hasRouting": true,
+          "children": [
+            {
+              "name": "dialog",
+              "addComponent": {}
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "ui",
+      "structure": [
+        {
+          "name": "codepen",
+          "hasModule": true,
+          "hasShortPath": true,
+          "hasRouting": true,
+          "children": [
+            {
+              "name": "dialog"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+

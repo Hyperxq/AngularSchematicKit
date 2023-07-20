@@ -22,7 +22,7 @@ import {
   recreateTreeFolderStructure,
 } from '../../utils';
 import { scaffoldFoldersFactory } from './scaffoldingFactory';
-import { ATOMICDESIGN } from './files/defaultScaffolders/atomic-design';
+import { ATOMIC_DESIGN } from './files/defaultScaffolders/atomic-design';
 import { CFS } from './files/defaultScaffolders/core-feature-shared';
 
 export function scaffolding(options: ScaffoldOptions): Rule {
@@ -98,7 +98,7 @@ function getPatternArchitecture(tree: Tree, options: ScaffoldOptions): Workspace
     case 'CFS':
       return CFS;
     case 'ATOMIC-DESIGN':
-      return ATOMICDESIGN;
+      return ATOMIC_DESIGN;
     case 'CUSTOM':
       return getJsonFile<WorkspaceStructure>(tree, options.customFilePath);
   }
