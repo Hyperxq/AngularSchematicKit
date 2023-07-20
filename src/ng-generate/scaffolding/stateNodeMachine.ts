@@ -7,6 +7,7 @@ import {
   createIndexFile,
   createModuleFolder,
   createRoutingFile,
+  ProjectDefinition,
 } from '../../utils';
 
 import { externalSchematic } from '@angular-devkit/schematics/src/rules/schematic';
@@ -14,6 +15,7 @@ import { externalSchematic } from '@angular-devkit/schematics/src/rules/schemati
 export type State = (
   structure: FolderStructure,
   options: ScaffoldOptions,
+  project: ProjectDefinition,
   globalSettings?: {
     [option: string]: string;
   }
@@ -29,11 +31,14 @@ export class NodeFactory {
   public execute(
     structure: FolderStructure,
     options: ScaffoldOptions,
+    project: ProjectDefinition,
     globalSettings?: {
       [option: string]: string;
     }
   ): Rule[] {
-    return this.states.map((state: State) => state(structure, options, globalSettings)).flat();
+    return this.states
+      .map((state: State) => state(structure, options, project, globalSettings))
+      .flat();
   }
 }
 
@@ -50,11 +55,12 @@ export const addEmptyFolderState: State = (
 export const addComponentState: State = (
   structure: FolderStructure,
   _options: ScaffoldOptions,
+  project: ProjectDefinition,
   globalSettings: { [key: string]: string }
 ): Rule[] => {
   return [
     externalSchematic('@schematics/angular', 'component', {
-      name: `${structure.path?.getPath('absolute', 'app')}/${structure.name}`,
+      name: `${structure.path?.getPath('absolute', project.prefix)}/${structure.name}`,
       ...(structure.addComponent ?? {}),
       ...(globalSettings ?? {}),
     }),
