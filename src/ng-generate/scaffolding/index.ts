@@ -22,6 +22,8 @@ import {
   recreateTreeFolderStructure,
 } from '../../utils';
 import { scaffoldFoldersFactory } from './scaffoldingFactory';
+import { ATOMICDESIGN } from './files/defaultScaffolders/atomic-design';
+import { CFS } from './files/defaultScaffolders/core-feature-shared';
 
 export function scaffolding(options: ScaffoldOptions): Rule {
   return async (tree: Tree, context: SchematicContext) => {
@@ -55,18 +57,13 @@ export function scaffolding(options: ScaffoldOptions): Rule {
       throw new SchematicsException(`The folder options need to be an array`);
     }
     patternArchitectureFile.projects.forEach((p: Project) => {
-      let projectName = '';
-      if (p.name.includes('default')) {
-        projectName = getDefaultProjectName(workspace);
-      } else {
-        projectName = p.name;
-      }
+      const projectName = p.name.includes('default') ? getDefaultProjectName(workspace) : p.name;
       let project = getProject(workspace, projectName);
       const basePath = new FolderPath(project.prefix ?? '', `${project.sourceRoot}/`);
 
       const structures: FolderStructure[] = recreateTreeFolderStructure(p.structure, basePath);
       rules.push(
-        scaffoldFoldersFactory(project, patternArchitectureFile.globalSettings, structures, {
+        scaffoldFoldersFactory(project, patternArchitectureFile.globalSettings ?? {}, structures, {
           ...options,
           project: projectName,
         })
@@ -97,17 +94,12 @@ function printFinalMessage(): Rule {
 }
 
 function getPatternArchitecture(tree: Tree, options: ScaffoldOptions): WorkspaceStructure {
-  // switch (options.custom) {
-  //   case 'CFS':
-  //     return CFS;
-  //   case 'ATOMIC-DESIGN':
-  //     return ATOMICDESIGN;
-  //   case 'CUSTOM':
-  //     //TODO: invoke and test the sub-schema here
-  //     if (!options.customFilePath) {
-  //       throw new SchematicsException(`You need to specify the url of the custom file structure`);
-  //     }
-  //     return getJsonFile<FolderStructure[]>(tree, options.customFilePath);
-  // }
-  return getJsonFile<WorkspaceStructure>(tree, options.customFilePath);
+  switch (options.kindArchitecture) {
+    case 'CFS':
+      return CFS;
+    case 'ATOMIC-DESIGN':
+      return ATOMICDESIGN;
+    case 'CUSTOM':
+      return getJsonFile<WorkspaceStructure>(tree, options.customFilePath);
+  }
 }

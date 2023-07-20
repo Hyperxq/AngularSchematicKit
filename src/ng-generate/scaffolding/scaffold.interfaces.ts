@@ -37,7 +37,7 @@ export interface Project {
 }
 
 export interface WorkspaceStructure {
-  globalSettings: { [key: string]: string };
+  globalSettings?: { [key: string]: string };
   projects: Project[];
   readLocalSettings?: boolean;
 }
