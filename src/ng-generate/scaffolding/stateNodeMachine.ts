@@ -62,7 +62,7 @@ export const addComponentState: State = (
     externalSchematic('@schematics/angular', 'component', {
       ...(structure.addComponent ?? {}),
       ...(globalSettings ?? {}),
-      path: `${structure.path?.sourceRoot.replace('/', '')}`,
+      path: `${structure.path?.sourceRoot.substring(0, structure.path?.sourceRoot.length - 1)}`,
       name: structure.name,
     }),
   ];
