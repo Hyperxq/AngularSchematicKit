@@ -23,7 +23,7 @@ When you have already installed the pattern to execute any schematics is:
         * [Problem to solve?](#problem-to-solve-1)
         * [Options when you execute the schematic](#options-when-you-execute-the-schematic)
         * [Structure of JSON File](#structure-of-json-file)
-            * [Interface Name: FolderStructure](#interface-name-folderstructure)
+            * [Interface Name: FolderStructure](#custom-structure-file)
     * [🕙 Add Linters schematic](#add-linters-schematic)
         * [Problem to solve?](#problem-to-solve-2)
     * [🕙 Add GitHooks schematic](#add-githooks-schematic)
