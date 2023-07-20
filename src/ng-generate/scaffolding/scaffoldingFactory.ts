@@ -51,14 +51,15 @@ function createNode(
   if (structure.hasModule) states.push(addModuleState);
   if (structure.addComponent) states.push(addComponentState);
   if (structure.hasRouting) states.push(addRoutingState);
-  states.push(addShortPathState);
+  if (structure.hasShortPath) states.push(addShortPathState);
   if (
     !structure.hasShortPath &&
     !structure.hasRouting &&
     !structure.hasModule &&
     !Boolean(structure.addComponent)
-  )
+  ) {
     states.push(addEmptyFolderState);
+  }
 
   const factory = new NodeFactory(states);
   return chain(factory.execute(structure, options, globalSettings));
