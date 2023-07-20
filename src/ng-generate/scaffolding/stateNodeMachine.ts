@@ -61,17 +61,19 @@ export const addComponentState: State = (
 export const addRoutingState: State = (structure: FolderStructure, options: ScaffoldOptions) => [
   createRoutingFile(structure, options),
 ];
-export const addShortPathState: State = (structure: FolderStructure, options: ScaffoldOptions) => {
-  const exportsPaths: string[] = [];
-
+export const addShortPathState: State = (
+  structure: FolderStructure,
+  options: ScaffoldOptions
+): Rule[] => {
   if (structure.hasShortPath) {
+    const exportsPaths: string[] = [];
     if (structure.hasModule) exportsPaths.push(`./${structure.name}.module`);
     if (structure.hasRouting) exportsPaths.push(`./${structure.name}.routing`);
     return [createIndexFile(options, structure.path?.getPath() || '', exportsPaths)];
   } else {
     return [
-      structure.hasModule ? addExportToNearbyIndexFile(options, structure, 'routing') : noop(),
-      structure.hasShortPath ? addExportToNearbyIndexFile(options, structure, 'module') : noop(),
+      structure.hasModule ? addExportToNearbyIndexFile(options, structure, 'module') : noop(),
+      structure.hasRouting ? addExportToNearbyIndexFile(options, structure, 'routing') : noop(),
     ];
   }
 };

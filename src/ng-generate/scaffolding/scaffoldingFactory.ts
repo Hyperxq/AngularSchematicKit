@@ -48,10 +48,16 @@ function createNode(
   globalSettings: { [key: string]: string }
 ): Rule {
   let states: State[] = [];
-  if (structure.hasModule) states.push(addModuleState);
-  if (structure.addComponent) states.push(addComponentState);
-  if (structure.hasRouting) states.push(addRoutingState);
-  if (structure.hasShortPath) states.push(addShortPathState);
+  if (structure.hasModule) {
+    states.push(addModuleState);
+  }
+  if (structure.addComponent) {
+    states.push(addComponentState);
+  }
+  if (structure.hasRouting) {
+    states.push(addRoutingState);
+  }
+  states.push(addShortPathState);
   if (
     !structure.hasShortPath &&
     !structure.hasRouting &&
