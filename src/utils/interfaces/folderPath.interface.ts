@@ -10,7 +10,7 @@ interface IFolderPath {
 }
 
 /**
- * This class represent everything about the current folder path.
+ * This class represents everything about the current folder path.
  * and you can see the relative or absolute path of the current folder.
  * @implements IFolderPath
  * @category Class

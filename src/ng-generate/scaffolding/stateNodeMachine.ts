@@ -2,6 +2,7 @@ import { FolderStructure, ScaffoldOptions } from './scaffold.interfaces';
 import { noop, Rule } from '@angular-devkit/schematics';
 import {
   addExportsToNearestIndex,
+  addShortPath,
   createEmptyFolder,
   createIndexFile,
   createModuleFolder,
@@ -32,24 +33,25 @@ export class NodeFactory {
       [option: string]: string;
     }
   ): Rule[] {
-    return this.states.map((state) => state(structure, options, globalSettings)).flat();
+    return this.states.map((state: State) => state(structure, options, globalSettings)).flat();
   }
 }
 
-export const addModuleState: State = (structure: FolderStructure, options: ScaffoldOptions) => [
-  createModuleFolder(structure, options),
-];
+export const addModuleState: State = (
+  structure: FolderStructure,
+  options: ScaffoldOptions
+): Rule[] => [createModuleFolder(structure, options)];
 
 export const addEmptyFolderState: State = (
   structure: FolderStructure,
   _options: ScaffoldOptions
-) => [createEmptyFolder(structure.path?.getPath() || '')];
+): Rule[] => [createEmptyFolder(structure.path?.getPath() || '')];
 
 export const addComponentState: State = (
   structure: FolderStructure,
   _options: ScaffoldOptions,
   globalSettings: { [key: string]: string }
-) => {
+): Rule[] => {
   return [
     externalSchematic('@schematics/angular', 'component', {
       ...(structure.addComponent ?? {}),
@@ -58,9 +60,10 @@ export const addComponentState: State = (
     }),
   ];
 };
-export const addRoutingState: State = (structure: FolderStructure, options: ScaffoldOptions) => [
-  createRoutingFile(structure, options),
-];
+export const addRoutingState: State = (
+  structure: FolderStructure,
+  options: ScaffoldOptions
+): Rule[] => [createRoutingFile(structure, options)];
 export const addShortPathState: State = (
   structure: FolderStructure,
   options: ScaffoldOptions
@@ -71,6 +74,12 @@ export const addShortPathState: State = (
     if (structure.hasModule) exportsPaths.push(`./${structure.name}.module`);
     if (structure.hasRouting) exportsPaths.push(`./${structure.name}.routing`);
     calls.push(createIndexFile(options, structure.path?.getPath() || '', exportsPaths));
+    calls.push(
+      addShortPath({
+        packageName: `@${structure.name}`,
+        paths: [structure.path?.getPath() || ''],
+      })
+    );
   } else {
     calls.push(
       structure.hasModule ? addExportsToNearestIndex(options, structure, 'module') : noop()
