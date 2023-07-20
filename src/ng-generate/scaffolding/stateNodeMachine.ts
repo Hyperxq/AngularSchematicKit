@@ -54,9 +54,9 @@ export const addComponentState: State = (
 ): Rule[] => {
   return [
     externalSchematic('@schematics/angular', 'component', {
+      name: `${structure.path?.getPath()}/${structure.name}`,
       ...(structure.addComponent ?? {}),
       ...(globalSettings ?? {}),
-      name: `${structure.path?.getPath()}${structure.name}`,
     }),
   ];
 };
