@@ -6,6 +6,7 @@ import {
   addModuleState,
   addRoutingState,
   addShortPathState,
+  emptyState,
   NodeFactory,
   State,
 } from './stateNodeMachine';
@@ -48,24 +49,18 @@ function createNode(
   globalSettings: { [key: string]: string }
 ): Rule {
   let states: State[] = [];
-  if (structure.hasModule) {
-    states.push(addModuleState);
-  }
-  if (structure.addComponent) {
-    states.push(addComponentState);
-  }
-  if (structure.hasRouting) {
-    states.push(addRoutingState);
-  }
+  states.push(structure.hasModule ? addModuleState : emptyState);
+  states.push(structure.addComponent ? addComponentState : emptyState);
+  states.push(structure.hasRouting ? addRoutingState : emptyState);
   states.push(addShortPathState);
-  if (
+  states.push(
     !structure.hasShortPath &&
-    !structure.hasRouting &&
-    !structure.hasModule &&
-    !Boolean(structure.addComponent)
-  ) {
-    states.push(addEmptyFolderState);
-  }
+      !structure.hasRouting &&
+      !structure.hasModule &&
+      !Boolean(structure.addComponent)
+      ? addEmptyFolderState
+      : emptyState
+  );
 
   const factory = new NodeFactory(states);
   return chain(factory.execute(structure, options, globalSettings));

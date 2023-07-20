@@ -120,7 +120,7 @@ export function findShortPath(
 }
 
 //TODO: Allow export many paths
-export function addExportToNearbyIndexFile(
+export function addExportsToNearestIndex(
   options: ScaffoldOptions,
   structure: FolderStructure,
   type: string

@@ -1,7 +1,7 @@
 import { FolderStructure, ScaffoldOptions } from './scaffold.interfaces';
 import { noop, Rule } from '@angular-devkit/schematics';
 import {
-  addExportToNearbyIndexFile,
+  addExportsToNearestIndex,
   createEmptyFolder,
   createIndexFile,
   createModuleFolder,
@@ -65,16 +65,22 @@ export const addShortPathState: State = (
   structure: FolderStructure,
   options: ScaffoldOptions
 ): Rule[] => {
+  const calls: Rule[] = [];
   if (structure.hasShortPath) {
     const exportsPaths: string[] = [];
     if (structure.hasModule) exportsPaths.push(`./${structure.name}.module`);
     if (structure.hasRouting) exportsPaths.push(`./${structure.name}.routing`);
-    return [createIndexFile(options, structure.path?.getPath() || '', exportsPaths)];
+    calls.push(createIndexFile(options, structure.path?.getPath() || '', exportsPaths));
   } else {
-    return [
-      structure.hasModule ? addExportToNearbyIndexFile(options, structure, 'module') : noop(),
-      structure.hasRouting ? addExportToNearbyIndexFile(options, structure, 'routing') : noop(),
-    ];
+    calls.push(
+      structure.hasModule ? addExportsToNearestIndex(options, structure, 'module') : noop()
+    );
+    calls.push(
+      structure.hasRouting ? addExportsToNearestIndex(options, structure, 'routing') : noop()
+    );
   }
+  return calls;
 };
 
+
+export const emptyState: State = () => [];
