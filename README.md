@@ -60,23 +60,21 @@ implementation.
 
 ### Structure of JSON File
 
-#### Custom Structure File
-
-WorkspaceStructure
+**WorkspaceStructure**
 
 | Attribute      | Type         | Optional | Description                               |
 |----------------|--------------|:---------|-------------------------------------------|
 | globalSettings | {key: value} | true     | Global flags/configuration for components |
 | projects       | Project[]    | false    |                                           |
 
-Project
+**Project**
 
 | Attribute | Type              | Optional |
 |-----------|-------------------|:---------|
 | name      | string            | false    |
 | structure | FolderStructure[] | false    |
 
-FolderStructure
+**FolderStructure**
 
 | Attribute    | Type                     | Optional | Description                                    |
 |--------------|--------------------------|:---------|:-----------------------------------------------|
