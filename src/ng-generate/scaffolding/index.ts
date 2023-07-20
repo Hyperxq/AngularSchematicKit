@@ -66,7 +66,7 @@ export function scaffolding(options: ScaffoldOptions): Rule {
 
       const structures: FolderStructure[] = recreateTreeFolderStructure(p.structure, basePath);
       rules.push(
-        scaffoldFoldersFactory(structures, {
+        scaffoldFoldersFactory(patternArchitectureFile.globalSettings, structures, {
           ...options,
           project: projectName,
         })

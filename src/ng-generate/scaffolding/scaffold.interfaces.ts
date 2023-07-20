@@ -28,7 +28,7 @@ export interface FolderStructure {
   hasRouting?: boolean;
   parent?: FolderStructure;
   path?: FolderPath;
-  addComponent?: { [option: string]: string } | true;
+  addComponent?: { [option: string]: string };
 }
 
 export interface Project {

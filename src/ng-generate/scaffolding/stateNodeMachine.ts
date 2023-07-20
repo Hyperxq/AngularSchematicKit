@@ -48,25 +48,14 @@ export const addEmptyFolderState: State = (
 export const addComponentState: State = (
   structure: FolderStructure,
   _options: ScaffoldOptions,
-  globalSettings: {
-    [option: string]: string;
-  }
+  globalSettings: { [key: string]: string }
 ) => {
   return [
-    externalSchematic(
-      '@schematics/angular',
-      'component',
-      !!globalSettings
-        ? {
-            ...(structure.addComponent as { [option: string]: string }),
-            ...globalSettings,
-            name: structure.name,
-          }
-        : {
-            ...(structure.addComponent as { [option: string]: string }),
-            name: structure.name,
-          }
-    ),
+    externalSchematic('@schematics/angular', 'component', {
+      ...(structure.addComponent ?? {}),
+      ...(globalSettings ?? {}),
+      name: structure.name,
+    }),
   ];
 };
 export const addRoutingState: State = (structure: FolderStructure, options: ScaffoldOptions) => [
