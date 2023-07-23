@@ -56,7 +56,7 @@ implementation.
    projects/secondary-application.
 3. **Write the url of your files structure file json:** By default, the system will search in the root of the workspace
    the file _customStructure.json_. Remember that when you create this json file you need to create inside the project.
-   If you write an url that is outside you will see an error.
+   If you write an url that is outside, you will see an error.
 
 ### Structure of JSON File
 
@@ -94,7 +94,7 @@ It's very important to mention that this file is an array of FolderStructure int
 
 ### Problem to solve?
 
-If you work on a team you need to make the code standards for this reason formatters and linters are needed.
+If you work on a team, you need to make the code standards for this reason formatters and linters are needed.
 This schematic allows you to immediately configure Prettier and EsLint to your project.
 
 ## Add GitHooks schematic
