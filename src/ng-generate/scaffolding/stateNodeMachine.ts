@@ -109,7 +109,7 @@ export const addExternalSchematic: State = (
     const key = schematic[0];
     const value = schematic[1];
     const settings = deepCopy(globalSettings[key]) ?? {};
-    const sourceRoot = structure.path?.getPath();
+    const path = structure.path?.getPath();
 
     let collection = settings?.collection;
     if (settings.collection) delete settings.collection;
@@ -122,7 +122,7 @@ export const addExternalSchematic: State = (
         externalSchematic(collection, key, {
           ...settings,
           name: structure.name,
-          path: `${sourceRoot?.substring(0, sourceRoot.length - 1)}`,
+          path: path,
           ...value,
         })
       );
@@ -134,7 +134,7 @@ export const addExternalSchematic: State = (
           externalSchematic(collection, key, {
             ...settings,
             name: structure.name,
-            path: `${sourceRoot?.substring(0, sourceRoot.length - 1)}`,
+            path: path,
             ...v,
           })
         );
