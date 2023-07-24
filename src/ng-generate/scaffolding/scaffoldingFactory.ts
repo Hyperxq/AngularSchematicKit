@@ -59,10 +59,7 @@ function createNode(
   states.push(addShortPathState);
   states.push(addExternalSchematic);
   states.push(
-    !structure.hasShortPath &&
-      !structure.hasRouting &&
-      !structure.hasModule &&
-      !Boolean(structure.addComponent)
+    !structure.hasShortPath && !structure.hasRouting && !Boolean(structure.addComponent)
       ? addEmptyFolderState
       : emptyState
   );

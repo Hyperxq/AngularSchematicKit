@@ -1,7 +1,6 @@
 import { FolderStructure, GlobalSettings, ScaffoldOptions } from './scaffold.interfaces';
-import { noop, Rule } from '@angular-devkit/schematics';
+import { Rule } from '@angular-devkit/schematics';
 import {
-  addExportsToNearestIndex,
   addShortPath,
   createEmptyFolder,
   createIndexFile,
@@ -68,6 +67,8 @@ export const addRoutingState: State = (
   structure: FolderStructure,
   options: ScaffoldOptions
 ): Rule[] => [createRoutingFile(structure, options)];
+
+//TODO: Refactor, maybe move to another schematic.
 export const addShortPathState: State = (
   structure: FolderStructure,
   options: ScaffoldOptions
@@ -75,8 +76,6 @@ export const addShortPathState: State = (
   const calls: Rule[] = [];
   if (structure.hasShortPath) {
     const exportsPaths: string[] = [];
-    if (structure.hasModule) exportsPaths.push(`./${structure.name}.module`);
-    if (structure.hasRouting) exportsPaths.push(`./${structure.name}.routing`);
     calls.push(createIndexFile(options, structure.path?.getPath() || '', exportsPaths));
     calls.push(
       addShortPath({
@@ -84,14 +83,15 @@ export const addShortPathState: State = (
         paths: [structure.path?.getPath() || ''],
       })
     );
-  } else {
-    calls.push(
-      structure.hasModule ? addExportsToNearestIndex(options, structure, 'module') : noop()
-    );
-    calls.push(
-      structure.hasRouting ? addExportsToNearestIndex(options, structure, 'routing') : noop()
-    );
   }
+  // else {
+  //   calls.push(
+  //     structure.hasModule ? addExportsToNearestIndex(options, structure, 'module') : noop()
+  //   );
+  //   calls.push(
+  //     structure.hasRouting ? addExportsToNearestIndex(options, structure, 'routing') : noop()
+  //   );
+  // }
   return calls;
 };
 
