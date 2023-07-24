@@ -128,7 +128,7 @@ export const addExternalSchematic: State = (
       });
     }
 
-    if (typeof schematic === 'object' && schematic !== null) {
+    if (typeof schematic === 'object' && schematic !== null && !Array.isArray(value)) {
       collection =
         (value as { [prop: string]: string })?.collection ?? collection ?? '@schematics/angular';
 
