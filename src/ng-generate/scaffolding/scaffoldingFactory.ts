@@ -1,7 +1,6 @@
-import { FolderStructure, ScaffoldOptions } from './scaffold.interfaces';
+import { FolderStructure, GlobalSettings, ScaffoldOptions } from './scaffold.interfaces';
 import { chain, Rule, SchematicsException } from '@angular-devkit/schematics';
 import {
-  addComponentState,
   addEmptyFolderState,
   addExternalSchematic,
   addModuleState,
@@ -15,7 +14,7 @@ import { ProjectDefinition } from '../../utils';
 
 export function scaffoldFoldersFactory(
   project: ProjectDefinition,
-  globalSettings: { [key: string]: string },
+  globalSettings: GlobalSettings,
   structures: FolderStructure[],
   options: ScaffoldOptions
 ): Rule {
@@ -30,7 +29,7 @@ export function scaffoldFoldersFactory(
 function createBranch(
   structure: FolderStructure,
   options: ScaffoldOptions,
-  globalSettings: { [key: string]: string },
+  globalSettings: GlobalSettings,
   project: ProjectDefinition,
   calls: Rule[] = []
 ): Rule {
@@ -52,12 +51,12 @@ function createBranch(
 function createNode(
   structure: FolderStructure,
   options: ScaffoldOptions,
-  globalSettings: { [key: string]: string },
+  globalSettings: GlobalSettings,
   project: ProjectDefinition
 ): Rule {
   let states: State[] = [];
   states.push(structure.hasModule ? addModuleState : emptyState);
-  states.push(structure.addComponent ? addComponentState : emptyState);
+  // states.push(structure.addComponent ? addComponentState : emptyState);
   states.push(structure.hasRouting ? addRoutingState : emptyState);
   states.push(addShortPathState);
   states.push(addExternalSchematic);

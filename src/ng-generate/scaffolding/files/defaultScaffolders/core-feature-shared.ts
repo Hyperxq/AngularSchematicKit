@@ -12,6 +12,8 @@ export const CFS: WorkspaceStructure = {
           children: [
             {
               name: 'service',
+              component: [{ name: 'auth' }],
+              service: { name: 'auth' },
               children: [{ name: 'data' }, { name: 'logic' }],
             },
           ],
@@ -22,7 +24,6 @@ export const CFS: WorkspaceStructure = {
         },
         {
           name: 'shared',
-
           hasModule: true,
         },
       ],

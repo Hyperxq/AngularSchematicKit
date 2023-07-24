@@ -1,4 +1,4 @@
-import { externalSchematics, FolderStructure, ScaffoldOptions } from './scaffold.interfaces';
+import { FolderStructure, GlobalSettings, ScaffoldOptions } from './scaffold.interfaces';
 import { noop, Rule } from '@angular-devkit/schematics';
 import {
   addExportsToNearestIndex,
@@ -16,9 +16,7 @@ export type State = (
   structure: FolderStructure,
   options: ScaffoldOptions,
   project: ProjectDefinition,
-  globalSettings?: {
-    [option: string]: string;
-  }
+  globalSettings?: GlobalSettings
 ) => Rule[];
 
 export class NodeFactory {
@@ -32,9 +30,7 @@ export class NodeFactory {
     structure: FolderStructure,
     options: ScaffoldOptions,
     project: ProjectDefinition,
-    globalSettings?: {
-      [option: string]: string;
-    }
+    globalSettings?: GlobalSettings
   ): Rule[] {
     return this.states
       .map((state: State) => state(structure, options, project, globalSettings))
@@ -52,22 +48,22 @@ export const addEmptyFolderState: State = (
   _options: ScaffoldOptions
 ): Rule[] => [createEmptyFolder(structure.path?.getPath() || '')];
 
-export const addComponentState: State = (
-  structure: FolderStructure,
-  _options: ScaffoldOptions,
-  _project: ProjectDefinition,
-  globalSettings: { [key: string]: string }
-): Rule[] => {
-  const sourceRoot = structure.path?.sourceRoot;
-  return [
-    externalSchematic('@schematics/angular', 'component', {
-      ...structure.addComponent,
-      ...globalSettings,
-      path: `${sourceRoot?.substring(0, sourceRoot.length - 1)}`,
-      name: structure.name,
-    }),
-  ];
-};
+// export const addComponentState: State = (
+//   structure: FolderStructure,
+//   _options: ScaffoldOptions,
+//   _project: ProjectDefinition,
+//   globalSettings: { [key: string]: string }
+// ): Rule[] => {
+//   const sourceRoot = structure.path?.sourceRoot;
+//   return [
+//     externalSchematic('@schematics/angular', 'component', {
+//       ...structure.addComponent,
+//       ...globalSettings,
+//       path: `${sourceRoot?.substring(0, sourceRoot.length - 1)}`,
+//       name: structure.name,
+//     }),
+//   ];
+// };
 export const addRoutingState: State = (
   structure: FolderStructure,
   options: ScaffoldOptions
@@ -103,7 +99,7 @@ export const addExternalSchematic: State = (
   structure: FolderStructure,
   _options: ScaffoldOptions,
   _project: ProjectDefinition,
-  globalSettings: { [key: string]: string }
+  globalSettings: GlobalSettings
 ): Rule[] => {
   const calls: Rule[] = [];
   const externalSchematics = Object.entries(filterNotSchematic(structure));
@@ -111,22 +107,34 @@ export const addExternalSchematic: State = (
   externalSchematics.forEach((schematic) => {
     const key = schematic[0];
     const value = schematic[1];
+    const settings = globalSettings[key];
+    const sourceRoot = structure.path?.sourceRoot;
+
     let collection = '';
+
     if (typeof schematic === 'object' && schematic !== null) {
       collection =
-        globalSettings.colection ??
-        (
-          value as {
-            [prop: string]: string;
-          }
-        ).collection ??
+        settings.collection ??
+        (value as { [prop: string]: string }).collection ??
         '@schematics/angular';
-      calls.push(externalSchematic(collection, key, value));
+      calls.push(
+        externalSchematic(collection, key, {
+          name: structure.name,
+          path: `${sourceRoot?.substring(0, sourceRoot.length - 1)}`,
+          ...value,
+        })
+      );
     }
     if (Array.isArray(value)) {
       value.forEach((v) => {
-        collection = globalSettings.colection ?? v.collection ?? '@schematics/angular';
-        calls.push(externalSchematic(collection, key, v));
+        collection = settings.collection ?? v.collection ?? '@schematics/angular';
+        calls.push(
+          externalSchematic(collection, key, {
+            name: structure.name,
+            path: `${sourceRoot?.substring(0, sourceRoot.length - 1)}`,
+            ...v,
+          })
+        );
       });
     }
   });
@@ -134,8 +142,14 @@ export const addExternalSchematic: State = (
   return calls;
 };
 
-const filterNotSchematic = (structure: FolderStructure): externalSchematics => {
-  let externalSchematics: externalSchematics = {};
+const filterNotSchematic = (
+  structure: FolderStructure
+): {
+  [prop: string]: { [prop: string]: string } | { [prop: string]: string }[];
+} => {
+  let externalSchematics: {
+    [prop: string]: { [prop: string]: string } | { [prop: string]: string }[];
+  } = {};
   for (let key in structure) {
     // check if the property is not a built-in FolderStructure property
     if (
@@ -150,9 +164,15 @@ const filterNotSchematic = (structure: FolderStructure): externalSchematics => {
         'addComponent',
       ].includes(key)
     ) {
-      externalSchematics[key] = structure[key];
+      externalSchematics[key] = structure[key] as
+        | { [prop: string]: string }
+        | { [prop: string]: string }[];
     }
   }
+  /**
+   * { [prop: string]: { [prop: string]: string; } | { [prop: string]: string; }[]; }
+   * '{ [prop: string]: string; } | { [prop: string]: string; }[]
+   * */
   return externalSchematics;
 };
 
