@@ -122,7 +122,7 @@ export const addExternalSchematic: State = (
         externalSchematic(collection, key, {
           ...settings,
           name: structure.name,
-          path: path,
+          path: `${path?.substring(0, path.length - 1)}`,
           ...value,
         })
       );
@@ -134,7 +134,7 @@ export const addExternalSchematic: State = (
           externalSchematic(collection, key, {
             ...settings,
             name: structure.name,
-            path: path,
+            path: `${path?.substring(0, path.length - 1)}`,
             ...v,
           })
         );
