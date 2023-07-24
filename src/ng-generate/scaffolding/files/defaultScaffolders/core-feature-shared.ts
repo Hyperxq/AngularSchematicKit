@@ -7,31 +7,49 @@ export const CFS: unknown = {
           name: 'core',
           module: {
             flat: true,
-            routing: true,
           },
           children: [
             {
-              name: 'services',
-              component: [{ name: 'header' }, { name: 'footer' }, { name: 'breadcrumb' }],
-
-              children: [
-                {
-                  name: 'services',
-                  service: [{ name: 'auth' }, { name: 'logger' }],
-                },
-              ],
+              name: 'layout',
+              component: {
+                name: 'main-layout',
+              },
             },
           ],
         },
         {
           name: 'features',
           hasShortPath: true,
+          children: [
+            {
+              name: 'home',
+              component: {
+                flat: true,
+              },
+              module: {
+                flat: true,
+                routing: true,
+              },
+            },
+            {
+              name: 'admin',
+              component: {
+                flat: true,
+              },
+              module: {
+                flat: true,
+                routing: true,
+              },
+            },
+          ],
         },
         {
           name: 'shared',
+          component: {
+            name: 'tag-list',
+          },
           module: {
             flat: true,
-            routing: true,
           },
         },
       ],
