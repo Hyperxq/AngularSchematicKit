@@ -20,7 +20,7 @@ export interface ScaffoldOptions {
  * @attribute
  * @category Interface
  */
-export interface FolderStructure {
+export interface IFolderStructure {
   name: string;
   children?: FolderStructure[];
   hasModule?: boolean;
@@ -30,6 +30,12 @@ export interface FolderStructure {
   path?: FolderPath;
   addComponent?: { [option: string]: string };
 }
+
+export type externalSchematics = {
+  [prop: string]: { [prop: string]: string } | { [prop: string]: string }[];
+};
+
+export type FolderStructure = IFolderStructure & externalSchematics;
 
 export interface Project {
   name: string;

@@ -1,4 +1,4 @@
-import { FolderStructure, ScaffoldOptions } from './scaffold.interfaces';
+import { externalSchematics, FolderStructure, ScaffoldOptions } from './scaffold.interfaces';
 import { noop, Rule } from '@angular-devkit/schematics';
 import {
   addExportsToNearestIndex,
@@ -99,5 +99,61 @@ export const addShortPathState: State = (
   return calls;
 };
 
+export const addExternalSchematic: State = (
+  structure: FolderStructure,
+  _options: ScaffoldOptions,
+  _project: ProjectDefinition,
+  globalSettings: { [key: string]: string }
+): Rule[] => {
+  const calls: Rule[] = [];
+  const externalSchematics = Object.entries(filterNotSchematic(structure));
+
+  externalSchematics.forEach((schematic) => {
+    const key = schematic[0];
+    const value = schematic[1];
+    let collection = '';
+    if (typeof schematic === 'object' && schematic !== null) {
+      collection =
+        globalSettings.colection ??
+        (
+          value as {
+            [prop: string]: string;
+          }
+        ).collection ??
+        '@schematics/angular';
+      calls.push(externalSchematic(collection, key, value));
+    }
+    if (Array.isArray(value)) {
+      value.forEach((v) => {
+        collection = globalSettings.colection ?? v.collection ?? '@schematics/angular';
+        calls.push(externalSchematic(collection, key, v));
+      });
+    }
+  });
+
+  return calls;
+};
+
+const filterNotSchematic = (structure: FolderStructure): externalSchematics => {
+  let externalSchematics: externalSchematics = {};
+  for (let key in structure) {
+    // check if the property is not a built-in FolderStructure property
+    if (
+      ![
+        'name',
+        'path',
+        'parent',
+        'children',
+        'hasModule',
+        'hasShortPath',
+        'hasRouting',
+        'addComponent',
+      ].includes(key)
+    ) {
+      externalSchematics[key] = structure[key];
+    }
+  }
+  return externalSchematics;
+};
 
 export const emptyState: State = () => [];

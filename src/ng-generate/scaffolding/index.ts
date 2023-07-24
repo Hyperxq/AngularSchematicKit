@@ -28,21 +28,10 @@ import { CFS } from './files/defaultScaffolders/core-feature-shared';
 export function scaffolding(options: ScaffoldOptions): Rule {
   return async (tree: Tree, context: SchematicContext) => {
     context.logger.info(`🎉 Scaffolding Schematic Start!`);
-    /**
-     * TODO: Re-structure scaffolding schematic
-     * */
-
-    /**
-     * New Custom structure
-     * Requirements
-     * 1. TODO: Supports all projects.
-     * 2. TODO: Supports global configurations.
-     * 3. TODO: Supports standalone components.
-     * 4. TODO: Supports create components.
-     * */
     const workspace = await readWorkspace(tree);
     let rules: Rule[] = [];
 
+    //TODO: move because this happens after schematic start.
     if (options.kindArchitecture === 'CUSTOM') {
       context.logger.info(`You have the following projects:`);
       const projectsName: string[] = getProjectNames(workspace);
@@ -53,8 +42,8 @@ export function scaffolding(options: ScaffoldOptions): Rule {
     }
 
     const patternArchitectureFile = getPatternArchitecture(tree, options);
-    if (!Array.isArray(patternArchitectureFile.projects)) {
-      throw new SchematicsException(`The folder options need to be an array`);
+    if (patternArchitectureFile.projects && !Array.isArray(patternArchitectureFile.projects)) {
+      throw new SchematicsException(`Projects need to be an array`);
     }
     patternArchitectureFile.projects.forEach((p: Project) => {
       const projectName = p.name.includes('default') ? getDefaultProjectName(workspace) : p.name;
