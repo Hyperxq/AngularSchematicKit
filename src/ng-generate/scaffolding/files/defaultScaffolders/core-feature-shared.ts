@@ -6,6 +6,7 @@ export const CFS: unknown = {
         {
           name: 'core',
           module: {
+            flat: true,
             routing: true,
           },
           children: [
@@ -24,6 +25,7 @@ export const CFS: unknown = {
         {
           name: 'shared',
           module: {
+            flat: true,
             routing: true,
           },
         },

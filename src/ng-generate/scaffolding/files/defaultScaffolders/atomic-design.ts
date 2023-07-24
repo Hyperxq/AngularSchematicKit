@@ -11,7 +11,8 @@ export const ATOMIC_DESIGN: unknown = {
           name: 'shared',
           hasShortPath: true,
           module: {
-            name: 'shared',
+            flat: true,
+            routing: true,
           },
           children: [
             {
