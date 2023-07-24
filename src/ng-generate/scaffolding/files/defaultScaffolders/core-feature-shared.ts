@@ -11,10 +11,15 @@ export const CFS: unknown = {
           },
           children: [
             {
-              name: 'service',
+              name: 'services',
               component: [{ name: 'header' }, { name: 'footer' }, { name: 'breadcrumb' }],
-              service: [{ name: 'auth' }, { name: 'logger' }],
-              children: [{ name: 'data' }, { name: 'logic' }],
+
+              children: [
+                {
+                  name: 'services',
+                  service: [{ name: 'auth' }, { name: 'logger' }],
+                },
+              ],
             },
           ],
         },
