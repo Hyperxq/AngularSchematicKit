@@ -47,9 +47,9 @@ export function getProject(workspace: WorkspaceDefinition, projectName: string):
   if (!project) {
     throw new SchematicsException(`The project ${projectName} doesn't exist`);
   }
-  if (project.extensions.projectType !== 'application') {
-    throw new SchematicsException(`It's required that the project type be a "application".`);
-  }
+  // if (project.extensions.projectType !== 'application') {
+  //   throw new SchematicsException(`It's required that the project type be a "application".`);
+  // }
   return project;
 }
 

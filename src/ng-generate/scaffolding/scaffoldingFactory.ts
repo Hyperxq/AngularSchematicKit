@@ -3,7 +3,6 @@ import { chain, Rule, SchematicsException } from '@angular-devkit/schematics';
 import {
   addEmptyFolderState,
   addExternalSchematic,
-  addModuleState,
   addRoutingState,
   addShortPathState,
   emptyState,
@@ -55,7 +54,6 @@ function createNode(
   project: ProjectDefinition
 ): Rule {
   let states: State[] = [];
-  states.push(structure.hasModule ? addModuleState : emptyState);
   // states.push(structure.addComponent ? addComponentState : emptyState);
   states.push(structure.hasRouting ? addRoutingState : emptyState);
   states.push(addShortPathState);

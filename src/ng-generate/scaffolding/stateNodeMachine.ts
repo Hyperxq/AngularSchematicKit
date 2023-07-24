@@ -5,7 +5,6 @@ import {
   addShortPath,
   createEmptyFolder,
   createIndexFile,
-  createModuleFolder,
   createRoutingFile,
   ProjectDefinition,
 } from '../../utils';
@@ -39,10 +38,10 @@ export class NodeFactory {
   }
 }
 
-export const addModuleState: State = (
-  structure: FolderStructure,
-  options: ScaffoldOptions
-): Rule[] => [createModuleFolder(structure, options)];
+// export const addModuleState: State = (
+//   structure: FolderStructure,
+//   options: ScaffoldOptions
+// ): Rule[] => [createModuleFolder(structure, options)];
 
 export const addEmptyFolderState: State = (
   structure: FolderStructure,
@@ -173,10 +172,6 @@ const filterNotSchematic = (
         | { [prop: string]: string }[];
     }
   }
-  /**
-   * { [prop: string]: { [prop: string]: string; } | { [prop: string]: string; }[]; }
-   * '{ [prop: string]: string; } | { [prop: string]: string; }[]
-   * */
   return externalSchematics;
 };
 

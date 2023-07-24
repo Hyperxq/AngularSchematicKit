@@ -22,9 +22,7 @@ export interface ScaffoldOptions {
  */
 export type IFolderStructure = Partial<{
   children?: FolderStructure[];
-  hasModule?: boolean;
   hasShortPath?: boolean;
-  hasRouting?: boolean;
   parent?: FolderStructure;
   path?: FolderPath;
 }>;
