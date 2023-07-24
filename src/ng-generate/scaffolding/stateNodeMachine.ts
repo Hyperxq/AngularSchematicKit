@@ -108,11 +108,11 @@ export const addExternalSchematic: State = (
   externalSchematics.forEach((schematic) => {
     const key = schematic[0];
     const value = schematic[1];
-    const settings = deepCopy(globalSettings[key]);
+    const settings = deepCopy(globalSettings[key]) ?? {};
     const sourceRoot = structure.path?.getPath();
 
     let collection = settings?.collection;
-    delete settings.collection;
+    if (settings.collection) delete settings.collection;
 
     if (typeof schematic === 'object' && schematic !== null) {
       collection =
