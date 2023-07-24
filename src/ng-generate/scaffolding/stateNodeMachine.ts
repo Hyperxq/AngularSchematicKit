@@ -11,6 +11,7 @@ import {
 } from '../../utils';
 
 import { externalSchematic } from '@angular-devkit/schematics/src/rules/schematic';
+import { deepCopy } from '@angular-devkit/core';
 
 export type State = (
   structure: FolderStructure,
@@ -107,18 +108,19 @@ export const addExternalSchematic: State = (
   externalSchematics.forEach((schematic) => {
     const key = schematic[0];
     const value = schematic[1];
-    const settings = globalSettings[key];
+    const settings = deepCopy(globalSettings[key]);
     const sourceRoot = structure.path?.getPath();
 
-    let collection = '';
+    let collection = settings?.collection;
+    delete settings.collection;
 
     if (typeof schematic === 'object' && schematic !== null) {
       collection =
-        settings?.collection ??
-        (value as { [prop: string]: string })?.collection ??
-        '@schematics/angular';
+        (value as { [prop: string]: string })?.collection ?? collection ?? '@schematics/angular';
+
       calls.push(
         externalSchematic(collection, key, {
+          ...settings,
           name: structure.name,
           path: `${sourceRoot?.substring(0, sourceRoot.length - 1)}`,
           ...value,
@@ -127,9 +129,10 @@ export const addExternalSchematic: State = (
     }
     if (Array.isArray(value)) {
       value.forEach((v) => {
-        collection = settings.collection ?? v.collection ?? '@schematics/angular';
+        collection = v.collection ?? collection ?? '@schematics/angular';
         calls.push(
           externalSchematic(collection, key, {
+            ...settings,
             name: structure.name,
             path: `${sourceRoot?.substring(0, sourceRoot.length - 1)}`,
             ...v,
