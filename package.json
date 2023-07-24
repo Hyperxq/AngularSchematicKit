@@ -1,6 +1,6 @@
 {
   "name": "@danils/schematicskit",
-  "version": "3.0.6",
+  "version": "3.0.7",
   "description": "A kit of angular schematics to configure angular applications",
   "private": false,
   "scripts": {
