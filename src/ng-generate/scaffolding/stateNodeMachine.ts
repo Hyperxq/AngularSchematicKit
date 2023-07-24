@@ -108,7 +108,7 @@ export const addExternalSchematic: State = (
     const key = schematic[0];
     const value = schematic[1];
     const settings = globalSettings[key];
-    const sourceRoot = structure.path?.sourceRoot;
+    const sourceRoot = structure.path?.getPath();
 
     let collection = '';
 
