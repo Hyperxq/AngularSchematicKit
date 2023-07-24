@@ -145,7 +145,7 @@ export const addExternalSchematic: State = (
   return calls;
 };
 
-const filterNotSchematic = (
+export const filterNotSchematic = (
   structure: FolderStructure
 ): {
   [prop: string]: { [prop: string]: string } | { [prop: string]: string }[];

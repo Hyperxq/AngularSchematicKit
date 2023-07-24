@@ -6,6 +6,7 @@ import {
   addRoutingState,
   addShortPathState,
   emptyState,
+  filterNotSchematic,
   NodeFactory,
   State,
 } from './stateNodeMachine';
@@ -59,7 +60,9 @@ function createNode(
   states.push(addShortPathState);
   states.push(addExternalSchematic);
   states.push(
-    !structure.hasShortPath && !structure.hasRouting && !Boolean(structure.addComponent)
+    !structure.hasShortPath &&
+      !structure.hasRouting &&
+      Object.keys(filterNotSchematic(structure)).length < 1
       ? addEmptyFolderState
       : emptyState
   );
