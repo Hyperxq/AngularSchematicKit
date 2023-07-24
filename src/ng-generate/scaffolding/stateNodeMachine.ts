@@ -114,8 +114,8 @@ export const addExternalSchematic: State = (
 
     if (typeof schematic === 'object' && schematic !== null) {
       collection =
-        settings.collection ??
-        (value as { [prop: string]: string }).collection ??
+        settings?.collection ??
+        (value as { [prop: string]: string })?.collection ??
         '@schematics/angular';
       calls.push(
         externalSchematic(collection, key, {
