@@ -114,19 +114,6 @@ export const addExternalSchematic: State = (
     let collection = settings?.collection;
     if (settings.collection) delete settings.collection;
 
-    if (typeof schematic === 'object' && schematic !== null) {
-      collection =
-        (value as { [prop: string]: string })?.collection ?? collection ?? '@schematics/angular';
-
-      calls.push(
-        externalSchematic(collection, key, {
-          ...settings,
-          name: structure.name,
-          path: `${path?.substring(0, path.length - 1)}`,
-          ...value,
-        })
-      );
-    }
     if (Array.isArray(value)) {
       value.forEach((v) => {
         collection = v.collection ?? collection ?? '@schematics/angular';
@@ -139,6 +126,20 @@ export const addExternalSchematic: State = (
           })
         );
       });
+    }
+
+    if (typeof schematic === 'object' && schematic !== null) {
+      collection =
+        (value as { [prop: string]: string })?.collection ?? collection ?? '@schematics/angular';
+
+      calls.push(
+        externalSchematic(collection, key, {
+          ...settings,
+          name: structure.name,
+          path: `${path?.substring(0, path.length - 1)}`,
+          ...value,
+        })
+      );
     }
   });
 
