@@ -49,23 +49,44 @@ project, you have to manually create the same scaffolding structure. However, wi
 creation of your personalized architecture. Alternatively, you can opt for a pre-defined default structure for
 implementation.
 
+**Notes:** Now you can call external schematics inside the scaffolding. You only need to specify the schematic name and
+set the configuration. For example:
+
+```json
+{
+  "name": "dialog",
+  "component": [
+    {
+      "name": "dialog-special"
+    }
+  ],
+  "navigation": {
+    "collection": "@angular/material",
+    "name": "navigation",
+    "standalone": true
+  }
+}
+```
+
 ### Options when you execute the schematic
 
 1. **Select a Scaffold structure:** select defaults o kindArchitecture scaffold pattern.
-2. **Write the relative project url:** if you have many projects in the same workspace you need to write for example:
+2. **Write the relative project url:** if you have many projects in the same workspace, you need to write, for example,
    projects/secondary-application.
+   **If you don't select a custom scaffold structure, you can press enter.**
 3. **Write the url of your files structure file json:** By default, the system will search in the root of the workspace
    the file _customStructure.json_. Remember that when you create this json file you need to create inside the project.
-   If you write an url that is outside, you will see an error.
+   If you write an url that is outside, you will see an error. **If you don't select a custom scaffold structure you can
+   press enter.**
 
 ### Structure of JSON File
 
 **WorkspaceStructure**
 
-| Attribute      | Type         | Optional | Description                               |
-|----------------|--------------|:---------|-------------------------------------------|
-| globalSettings | {key: value} | true     | Global flags/configuration for components |
-| projects       | Project[]    | false    |                                           |
+| Attribute      | Type                                         | Optional | Description                                                                                                                           |
+|----------------|----------------------------------------------|:---------|---------------------------------------------------------------------------------------------------------------------------------------|
+| globalSettings | [option: string]: { [prop: string]: string } | true     | Global flags/configuration for schematics using the schematic name, <br/>you can specify the collection with the the flag: collection |
+| projects       | Project[]                                    | false    |                                                                                                                                       |
 
 **Project**
 
@@ -76,16 +97,23 @@ implementation.
 
 **FolderStructure**
 
-| Attribute    | Type                     | Optional | Description                                    |
-|--------------|--------------------------|:---------|:-----------------------------------------------|
-| name         | string                   | false    |                                                |
-| hasModule    | boolean                  | true     |                                                |
-| hasShortPath | boolean                  | true     |                                                |
-| hasRouting   | boolean                  | true     |                                                |
-| children     | Array of FolderStructure | true     |                                                |
-| addComponent | {key: value}             | true     | Add all the flags that the component will need |
+| Attribute                | Type                                                                         | Optional | Description                                                                                                                                                       |
+|--------------------------|------------------------------------------------------------------------------|:---------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| name                     | string                                                                       | false    |                                                                                                                                                                   |
+| hasShortPath             | boolean                                                                      | true     |                                                                                                                                                                   |
+| hasRouting               | boolean                                                                      | true     |                                                                                                                                                                   |
+| children                 | Array of FolderStructure                                                     | true     |                                                                                                                                                                   |
+| [externalSchematicsName] | [option: string]: { [prop: string]: string } or { [prop: string]: string }[] | true     | Use the schematic name only to set the configuration for this schematic <br/>or an array to execute many times this schematics <br/>with different configurations |
 
-It's very important to mention that this file is an array of FolderStructure interfaces. You can see and example here:
+The ability to call every external schematic is so powerful.
+If you don't specify the collection by default, it will find into @angular/schematics.
+
+This schematic will send the configuration that you set in global settings or in the specified configuration.
+Additionally, It will send the path base on the 'json.'
+<Br/>
+If you don't specify the name attribute, it will take the folder name.
+
+It's very important to mention that you can see an example here:
 [Custom JSON File](docs/customStructure.json).
 
 ## Add Linters schematic
