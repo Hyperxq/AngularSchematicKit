@@ -42,6 +42,9 @@ kit. For such instances, this specific schematic has been designed to fulfill th
 
 <code>ng g @danils/schematicskit:scaffolding</code> or <code>ng g @danils/schematicskit:s</code>
 
+Example here:
+[Custom JSON File](docs/customStructure.json).
+
 ### Problem to solve?
 
 Having a reliable scaffolding architecture that suits to your project is beneficial. Typically, whenever you start a new
@@ -50,7 +53,15 @@ creation of your personalized architecture. Alternatively, you can opt for a pre
 implementation.
 
 **Notes:** Now you can call external schematics inside the scaffolding. You only need to specify the schematic name and
-set the configuration. For example:
+set the configuration.
+The ability to call every external schematic is so powerful.
+If you don't specify the collection by default, it will find into **@angular/schematics**.
+
+This schematic will send the configuration that you set in global settings or in the specified configuration.
+Additionally, It will send the path base on the 'json.'
+<Br/>
+If you don't specify the name attribute, it will take the folder name.
+For example:
 
 ```json
 {
@@ -104,17 +115,6 @@ set the configuration. For example:
 | hasRouting               | boolean                                                                      | true     |                                                                                                                                                                   |
 | children                 | Array of FolderStructure                                                     | true     |                                                                                                                                                                   |
 | [externalSchematicsName] | [option: string]: { [prop: string]: string } or { [prop: string]: string }[] | true     | Use the schematic name only to set the configuration for this schematic <br/>or an array to execute many times this schematics <br/>with different configurations |
-
-The ability to call every external schematic is so powerful.
-If you don't specify the collection by default, it will find into @angular/schematics.
-
-This schematic will send the configuration that you set in global settings or in the specified configuration.
-Additionally, It will send the path base on the 'json.'
-<Br/>
-If you don't specify the name attribute, it will take the folder name.
-
-It's very important to mention that you can see an example here:
-[Custom JSON File](docs/customStructure.json).
 
 ## Add Linters schematic
 
