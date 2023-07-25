@@ -21,7 +21,7 @@
   "author": "Hyperxq",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Hyperxq/AngularSchematicKit"
+    "url": "https://github.com/Hyperxq/AngularSchematicKit.git"
   },
   "license": "MIT",
   "schematics": "./lib/schematics/collection.json",
