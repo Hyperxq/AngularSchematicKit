@@ -11,12 +11,10 @@ export function scanProject(): Rule {
 
     const projects = Object.entries(await getProjectsPaths(tree, context));
 
-    projects.forEach(([_key, path]) => {
+    projects.forEach(([key, path]) => {
       const root = tree.getDir(path);
       const allDirectories = getDirectoriesRecursively(root);
-      const structure = generateNestedStructureFromDirectories(allDirectories);
-      context.logger.log('info', JSON.stringify(structure));
-      json.projects = structure;
+      json.projects[key] = generateNestedStructureFromDirectories(allDirectories);
     });
 
     const jsonContent = JSON.stringify(json, null, 2);
@@ -34,8 +32,8 @@ async function getProjectsPaths(tree: Tree, context: SchematicContext) {
   const projects = getProjectsIterator(workspace);
   const paths: { [key: string]: string } = {};
   for (const [string, projectDefinition] of projects) {
-    context.logger.log('info', string);
-    context.logger.log('info', projectDefinition.root);
+    context.logger.log('info', `Project name: ${string}`);
+    context.logger.log('info', `Path: ${projectDefinition.root}`);
     paths[string] = projectDefinition.root;
   }
   return paths;
@@ -71,7 +69,16 @@ function getSettings(): { [key: string]: {} } {
 
 function getDirectoriesRecursively(
   dir: DirEntry,
-  ignore: string[] = ['.idea', 'node_modules', '.angular', 'dist', '.git', '.vscode', 'docs']
+  ignore: string[] = [
+    '.idea',
+    'node_modules',
+    '.angular',
+    'dist',
+    '.git',
+    '.vscode',
+    'docs',
+    'projects',
+  ]
 ): string[] {
   let directories: string[] = [];
 
@@ -92,17 +99,29 @@ function generateNestedStructureFromDirectories(directories: string[]): { [key: 
   const structure: { [key: string]: {} } = {};
 
   directories.forEach((directory) => {
+    const ignore = [
+      '.idea',
+      'node_modules',
+      '.angular',
+      'dist',
+      '.git',
+      '.vscode',
+      'docs',
+      'projects',
+    ];
     const segments = directory.split('/').filter((segment) => segment); // filter out empty segments
     let currentLevel = structure;
 
-    segments.forEach((segment) => {
-      if (!currentLevel[segment]) {
-        currentLevel[segment] = {
-          type: 'folder',
-        };
-      }
-      currentLevel = currentLevel[segment];
-    });
+    segments
+      .filter((s) => ignore.some((i) => i === s))
+      .forEach((segment) => {
+        if (!currentLevel[segment]) {
+          currentLevel[segment] = {
+            type: 'folder',
+          };
+        }
+        currentLevel = currentLevel[segment];
+      });
   });
 
   return structure;
