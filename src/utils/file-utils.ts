@@ -1,5 +1,4 @@
 import {normalize, strings} from '@angular-devkit/core';
-import {capitalize} from '@angular-devkit/core/src/utils/strings';
 import {WorkspaceDefinition} from '@angular-devkit/core/src/workspace';
 import {
   apply,
@@ -18,10 +17,9 @@ import * as ts from 'typescript';
 import {addImportToModule, getSourceNodes, isImported} from './ast-utils';
 import {applyToUpdateRecorder, InsertChange} from './change';
 import {findBootstrapModulePath} from './ng-ast-utils';
-import {findShortPath} from './shortPaths';
 import {ProjectDefinition, readWorkspace, TargetDefinition} from './workspace';
 import {FolderStructure, ScaffoldOptions} from '../ng-generate/scaffolding/scaffold.interfaces';
-import {findModuleParentPath, getModuleNameFromPath, getModulePath} from './paths';
+import {findModuleParentPath} from './paths';
 
 /**
  *  @param host - the Tree object of the project
@@ -122,41 +120,7 @@ export function addDependencyToModule(
   }
 }
 
-/**
- * Create an empty and basic Module from a template
- * @param structure - the folder structure of this module
- * @param options
- */
-export function createModuleFolder(structure: FolderStructure, options: ScaffoldOptions): Rule {
-  return (tree: Tree) => {
-    const path = makeModulePathFile(structure);
-    if (!tree.exists(path)) {
-      const sourceTemplate = url('./files');
-      const sourceParametrizeTemplate = apply(sourceTemplate, [
-        filter((pathModule) => pathModule.endsWith('/__name@dasherize__.module.ts.template')),
-        template({
-          ...strings,
-          ...options,
-          name: capitalize(structure.name),
-        }),
-        renameTemplateFiles(),
-        move(structure.path?.sourceRoot ?? ''),
-      ]);
-      return chain([
-        mergeWith(sourceParametrizeTemplate),
-        addImportToAppModule(capitalize(`${structure.name}Module`), structure, options),
-      ]);
-    }
-    return tree;
-  };
-}
-
-/**
- * Add an basic routing file. It'll be added to the nearest module
- * @param structure
- * @param options
- */
-/**
+/*
  * It creates a routing file for the folder structure
  * @param {FolderStructure} structure - FolderStructure
  * @param {ScaffoldOptions} options - FolderStructureOptions - this is the options object that
@@ -255,44 +219,6 @@ function addRoutesToModule(
 
 export function makeModulePath(structure: FolderStructure) {
   return normalize(`${structure.path?.getPath()}${structure.name}.module`);
-}
-
-export function makeModulePathFile(structure: FolderStructure) {
-  return `${makeModulePath(structure)}.ts`;
-}
-
-export function addRelativePath(path: string) {
-  return `../${removeCharacters('./', path)}`;
-}
-
-export function makeRelativePath(parentFolder: string, childFolder: string) {
-  return `./${removeCharacters('./', parentFolder)}/${childFolder}`;
-}
-
-function removeCharacters(toRemove: string, string: string): string {
-  return string.replace(new RegExp(toRemove), '');
-}
-
-export function addImportToAppModule(
-  dependencyName: string,
-  structure: FolderStructure,
-  options: ScaffoldOptions
-): Rule {
-  return async (tree: Tree) => {
-    const workspace = await readWorkspace(tree);
-    const project = getProject(workspace, options.project ?? '');
-    const clientBuildTarget = getBuildTarget(project);
-    const bootstrapModulePath = getMainModulePath(
-      tree,
-      clientBuildTarget,
-      project.sourceRoot ?? '',
-      structure.parent
-    );
-    const path =
-      findShortPath(structure, getModuleNameFromPath(bootstrapModulePath)) ??
-      getModulePath(structure, 'relative', getModuleNameFromPath(bootstrapModulePath));
-    addDependencyToModule(tree, bootstrapModulePath, path, dependencyName);
-  };
 }
 
 export function getMainModulePath(

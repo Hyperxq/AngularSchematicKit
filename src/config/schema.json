@@ -6,6 +6,50 @@
       "type": "string"
     },
     "settings": {
+      "$ref": "#/definitions/settings"
+    },
+    "projects": {
+      "type": "object",
+      "patternProperties": {
+        ".*": {
+          "$ref": "#/definitions/project"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "projects"
+  ],
+  "patternProperties": {
+    "^(?!settings|projects$).*": {
+      "$ref": "#/definitions/schematic"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "project": {
+      "type": "object",
+      "properties": {
+        "settings": {
+          "$ref": "#/definitions/settings"
+        }
+      },
+      "patternProperties": {
+        ".*": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/folder"
+            },
+            {
+              "$ref": "#/definitions/schematic"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "settings": {
       "type": "object",
       "patternProperties": {
         ".*": {
@@ -24,39 +68,6 @@
         }
       }
     },
-    "projects": {
-      "type": "object",
-      "properties": {
-        "default": {
-          "$ref": "#/definitions/project"
-        }
-      },
-      "patternProperties": {
-        "^(?!default$).*": {
-          "$ref": "#/definitions/project"
-        }
-      }
-    }
-  },
-  "additionalProperties": {
-    "$ref": "#/definitions/schematic"
-  },
-  "definitions": {
-    "project": {
-      "type": "object",
-      "patternProperties": {
-        ".*": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/folder"
-            },
-            {
-              "$ref": "#/definitions/schematic"
-            }
-          ]
-        }
-      }
-    },
     "folder": {
       "type": "object",
       "properties": {
@@ -67,6 +78,9 @@
           ]
         }
       },
+      "required": [
+        "type"
+      ],
       "patternProperties": {
         ".*": {
           "anyOf": [
@@ -78,7 +92,8 @@
             }
           ]
         }
-      }
+      },
+      "additionalProperties": false
     },
     "schematic": {
       "type": "object",
@@ -93,6 +108,9 @@
           "type": "string"
         }
       },
+      "required": [
+        "type"
+      ],
       "additionalProperties": true
     }
   }

@@ -1,22 +1,16 @@
 import { DirEntry, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
-import { getProjectsIterator, readWorkspace } from '../../utils';
+import { getProjectsIterator, ProjectDefinition, readWorkspace } from '../../utils';
+import { JsonValue } from '@angular-devkit/core/src/json';
+
+const SCHEMA_JSON = './node_modules/@danils/schematicskit/lib/schematics/config/schema.json';
 
 export function scanProject(): Rule {
   return async (tree: Tree, context: SchematicContext) => {
     const json: any = {
-      $schema: './node_modules/@test/schematics/lib/schematics/docs/schema.json',
+      $schema: SCHEMA_JSON,
       settings: getSettings(),
-      projects: {},
+      projects: await getProjectsStructures(tree, context),
     };
-
-    const projects = Object.entries(await getProjectsPaths(tree, context));
-
-    projects.forEach(([key, path]) => {
-      const root = tree.getDir(path);
-      const allDirectories = getDirectoriesRecursively(root);
-      json.projects[key] = generateNestedStructureFromDirectories(allDirectories);
-    });
-
     const jsonContent = JSON.stringify(json, null, 2);
     if (tree.exists('./project-structure.json')) {
       tree.overwrite('./project-structure.json', jsonContent);
@@ -27,16 +21,44 @@ export function scanProject(): Rule {
   };
 }
 
-async function getProjectsPaths(tree: Tree, context: SchematicContext) {
+async function getProjectsStructures(tree: Tree, context: SchematicContext) {
+  const response: { [key: string]: unknown } = {};
+  const projects = Object.entries(await getProjectsPaths(tree));
+
+  projects.forEach(([key, project]) => {
+    const root = tree.getDir(project.root);
+    const allDirectories = getDirectoriesRecursively(root);
+    response[key] = {
+      settings: getProjectSettings(project.extensions.schematics, context),
+      ...generateNestedStructureFromDirectories(allDirectories, project.root),
+    };
+  });
+  return response;
+}
+
+function getProjectSettings(schematics: JsonValue | undefined, _context: SchematicContext): {} {
+  if (!schematics && typeof schematics !== 'object') return {};
+
+  const settings: { [key: string]: {} } = {};
+
+  const items = Object.entries(schematics as { [key: string]: { [key: string]: string } });
+  items.forEach(([key, setting]) => {
+    const [collection, schematicName] = key.split(':', 2);
+    settings[collection] = {
+      [schematicName]: setting,
+    };
+  });
+  return settings;
+}
+
+async function getProjectsPaths(tree: Tree) {
   const workspace = await readWorkspace(tree);
   const projects = getProjectsIterator(workspace);
-  const paths: { [key: string]: string } = {};
+  const projectsInfo: { [key: string]: ProjectDefinition } = {};
   for (const [string, projectDefinition] of projects) {
-    context.logger.log('info', `Project name: ${string}`);
-    context.logger.log('info', `Path: ${projectDefinition.root}`);
-    paths[string] = projectDefinition.root;
+    projectsInfo[string] = projectDefinition;
   }
-  return paths;
+  return projectsInfo;
 }
 
 function getSettings(): { [key: string]: {} } {
@@ -44,9 +66,6 @@ function getSettings(): { [key: string]: {} } {
     '@schematics/angular': {
       component: {
         alias: 'components',
-        standalone: true,
-        skipTests: true,
-        prefix: 'app',
       },
       service: {
         alias: 'services',
@@ -95,33 +114,27 @@ function getDirectoriesRecursively(
   return directories;
 }
 
-function generateNestedStructureFromDirectories(directories: string[]): { [key: string]: {} } {
+function generateNestedStructureFromDirectories(
+  directories: string[],
+  basePath: string
+): { [key: string]: {} } {
   const structure: { [key: string]: {} } = {};
 
   directories.forEach((directory) => {
-    const ignore = [
-      '.idea',
-      'node_modules',
-      '.angular',
-      'dist',
-      '.git',
-      '.vscode',
-      'docs',
-      'projects',
-    ];
-    const segments = directory.split('/').filter((segment) => segment); // filter out empty segments
+    const segments = directory
+      .replace(basePath, '')
+      .split('/')
+      .filter((segment) => segment); // filter out empty segments
     let currentLevel = structure;
 
-    segments
-      .filter((s) => ignore.some((i) => i === s))
-      .forEach((segment) => {
-        if (!currentLevel[segment]) {
-          currentLevel[segment] = {
-            type: 'folder',
-          };
-        }
-        currentLevel = currentLevel[segment];
-      });
+    segments.forEach((segment) => {
+      if (!currentLevel[segment]) {
+        currentLevel[segment] = {
+          type: 'folder',
+        };
+      }
+      currentLevel = currentLevel[segment];
+    });
   });
 
   return structure;
