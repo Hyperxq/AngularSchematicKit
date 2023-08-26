@@ -1,0 +1,99 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "settings": {
+      "type": "object",
+      "patternProperties": {
+        ".*": {
+          "type": "object",
+          "patternProperties": {
+            ".*": {
+              "type": "object",
+              "properties": {
+                "alias": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": true
+            }
+          }
+        }
+      }
+    },
+    "projects": {
+      "type": "object",
+      "properties": {
+        "default": {
+          "$ref": "#/definitions/project"
+        }
+      },
+      "patternProperties": {
+        "^(?!default$).*": {
+          "$ref": "#/definitions/project"
+        }
+      }
+    }
+  },
+  "additionalProperties": {
+    "$ref": "#/definitions/schematic"
+  },
+  "definitions": {
+    "project": {
+      "type": "object",
+      "patternProperties": {
+        ".*": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/folder"
+            },
+            {
+              "$ref": "#/definitions/schematic"
+            }
+          ]
+        }
+      }
+    },
+    "folder": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "folder"
+          ]
+        }
+      },
+      "patternProperties": {
+        ".*": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/folder"
+            },
+            {
+              "$ref": "#/definitions/schematic"
+            }
+          ]
+        }
+      }
+    },
+    "schematic": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "schematic"
+          ]
+        },
+        "collection": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

@@ -1,6 +1,6 @@
-import { normalize, strings } from '@angular-devkit/core';
-import { capitalize } from '@angular-devkit/core/src/utils/strings';
-import { WorkspaceDefinition } from '@angular-devkit/core/src/workspace';
+import {normalize, strings} from '@angular-devkit/core';
+import {capitalize} from '@angular-devkit/core/src/utils/strings';
+import {WorkspaceDefinition} from '@angular-devkit/core/src/workspace';
 import {
   apply,
   chain,
@@ -15,13 +15,13 @@ import {
   url,
 } from '@angular-devkit/schematics';
 import * as ts from 'typescript';
-import { addImportToModule, getSourceNodes, isImported } from './ast-utils';
-import { applyToUpdateRecorder, InsertChange } from './change';
-import { findBootstrapModulePath } from './ng-ast-utils';
-import { findShortPath } from './shortPaths';
-import { ProjectDefinition, readWorkspace, TargetDefinition } from './workspace';
-import { FolderStructure, ScaffoldOptions } from '../ng-generate/scaffolding/scaffold.interfaces';
-import { findModuleParentPath, getModuleNameFromPath, getModulePath } from './paths';
+import {addImportToModule, getSourceNodes, isImported} from './ast-utils';
+import {applyToUpdateRecorder, InsertChange} from './change';
+import {findBootstrapModulePath} from './ng-ast-utils';
+import {findShortPath} from './shortPaths';
+import {ProjectDefinition, readWorkspace, TargetDefinition} from './workspace';
+import {FolderStructure, ScaffoldOptions} from '../ng-generate/scaffolding/scaffold.interfaces';
+import {findModuleParentPath, getModuleNameFromPath, getModulePath} from './paths';
 
 /**
  *  @param host - the Tree object of the project
@@ -73,6 +73,10 @@ export function getDefaultProjectName(workspace: WorkspaceDefinition): string {
  */
 export function getProjectNames(workspace: WorkspaceDefinition): string[] {
   return Array.from(workspace.projects.entries(), ([key]) => key);
+}
+
+export function getProjectsIterator(workspace: WorkspaceDefinition) {
+  return workspace.projects.entries();
 }
 
 /**
@@ -330,7 +334,7 @@ export function getJsonFile<T>(tree: Tree, path: string): T {
 }
 
 export async function getClientBuild(tree: Tree, projectName: string) {
-    const workspace = await readWorkspace(tree);
-    const project = getProject(workspace, projectName);
-    return getBuildTarget(project);
+  const workspace = await readWorkspace(tree);
+  const project = getProject(workspace, projectName);
+  return getBuildTarget(project);
 }

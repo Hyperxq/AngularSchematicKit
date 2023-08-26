@@ -14,6 +14,14 @@
         "start"
       ]
     },
+    "scan-project": {
+      "description": "Scan project and represent into a json file",
+      "factory": "./ng-generate/scan-project/index#scanProject",
+      "schema": "./ng-generate/scan-project/schema.json",
+      "aliases": [
+        "scan"
+      ]
+    },
     "scaffolding": {
       "description": "recreate scaffold",
       "factory": "./ng-generate/scaffolding/index#scaffolding",

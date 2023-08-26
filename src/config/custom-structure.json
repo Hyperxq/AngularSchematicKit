@@ -1,0 +1,40 @@
+{
+  "$schema": "./schema.json",
+  "settings": {
+    "@my-custom-schematic": {
+      "root": {
+      }
+    },
+    "@schematics/angular": {
+      "component": {
+        "alias": "components",
+        "standalone": true,
+        "skipTests": true,
+        "prefix": "app"
+      },
+      "service": {
+        "alias": "services"
+      },
+      "module": {
+        "alias": "modules"
+      },
+      "directive": {
+        "alias": "directives"
+      },
+      "pipe": {
+        "alias": "pipes"
+      },
+      "class": {
+        "alias": "classes"
+      }
+    }
+  },
+  "projects": {
+    "default": {},
+    "graphql": {
+      "root": {
+        "type": "schematic"
+      }
+    }
+  }
+}
