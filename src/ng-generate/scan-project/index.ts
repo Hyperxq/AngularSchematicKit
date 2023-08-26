@@ -11,12 +11,12 @@ export function scanProject(): Rule {
 
     const projects = Object.entries(await getProjectsPaths(tree, context));
 
-    projects.forEach(([key, path]) => {
+    projects.forEach(([_key, path]) => {
       const root = tree.getDir(path);
       const allDirectories = getDirectoriesRecursively(root);
       const structure = generateNestedStructureFromDirectories(allDirectories);
       context.logger.log('info', JSON.stringify(structure));
-      json.projects[key] = structure;
+      json.projects = structure;
     });
 
     const jsonContent = JSON.stringify(json, null, 2);
