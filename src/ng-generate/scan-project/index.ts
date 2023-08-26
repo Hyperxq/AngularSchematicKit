@@ -21,9 +21,9 @@ export function scanProject(): Rule {
 
     const jsonContent = JSON.stringify(json, null, 2);
     if (tree.exists('./project-structure.json')) {
-      tree.create('./project-structure.json', jsonContent);
-    } else {
       tree.overwrite('./project-structure.json', jsonContent);
+    } else {
+      tree.create('./project-structure.json', jsonContent);
     }
     return () => tree;
   };
