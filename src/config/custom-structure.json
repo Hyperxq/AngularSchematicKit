@@ -1,7 +1,15 @@
 {
   "$schema": "./schema.json",
+  "settings": {
+    "colection": {
+      "sdfa": {
+        "alias": ""
+      }
+    }
+  },
   "projects": {
     "POC-internal-schematics": {
+      "type": "application",
       "settings": {
         "@schematics/angular": {
           "component": {
@@ -32,11 +40,15 @@
           }
         },
         "assets": {
-          "type": "folder"
+          "type": "folder",
+          "component": {
+            "type": "schematic"
+          }
         }
       }
     },
     "schematics": {
+      "type": "library",
       "settings": {},
       "src": {
         "type": "folder",

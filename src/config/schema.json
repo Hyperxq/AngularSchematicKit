@@ -31,10 +31,20 @@
     "project": {
       "type": "object",
       "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "application",
+            "library"
+          ]
+        },
         "settings": {
           "$ref": "#/definitions/settings"
         }
       },
+      "required": [
+        "type"
+      ],
       "patternProperties": {
         ".*": {
           "anyOf": [
@@ -106,6 +116,10 @@
         },
         "collection": {
           "type": "string"
+        },
+        "instances": {
+          "type": "object",
+          "additionalProperties": true
         }
       },
       "required": [

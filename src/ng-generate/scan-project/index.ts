@@ -29,6 +29,7 @@ async function getProjectsStructures(tree: Tree, context: SchematicContext) {
     const root = tree.getDir(project.root);
     const allDirectories = getDirectoriesRecursively(root);
     response[key] = {
+      type: project.extensions.projectType,
       settings: getProjectSettings(project.extensions.schematics, context),
       ...generateNestedStructureFromDirectories(allDirectories, project.root),
     };
