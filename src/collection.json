@@ -24,7 +24,7 @@
     },
     "build": {
       "description": "Execute all the schematics in the json file",
-      "factory": "./ng-generate/build/index#buildJSON",
+      "factory": "./ng-generate/build/index#readJSON",
       "schema": "./ng-generate/build/schema.json",
       "aliases": [
         "b"
@@ -35,7 +35,7 @@
       "factory": "./ng-generate/scaffolding/index#scaffolding",
       "schema": "./ng-generate/scaffolding/schema.json",
       "aliases": [
-        "s"
+        "sc"
       ]
     },
     "customScaffold": {

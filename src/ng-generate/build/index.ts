@@ -22,6 +22,9 @@ export function readJSON({ customFilePath }: { customFilePath: string }): Rule {
       tree,
       customFilePath ?? './project-structure.json'
     );
+    _context.logger.info('log', globalSettings);
+    _context.logger.info('log', projects);
+    _context.logger.info('log', schematics);
     calls.push(...executeGlobalSchematics(globalSettings ?? {}, schematics));
     // Object.entries(projects).forEach((project) => {});
     return chain(calls);
