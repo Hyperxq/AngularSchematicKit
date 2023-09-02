@@ -14,12 +14,20 @@
         "start"
       ]
     },
-    "scan-project": {
+    "scan": {
       "description": "Scan project and represent into a json file",
-      "factory": "./ng-generate/scan-project/index#scanProject",
+      "factory": "./ng-generate/scan-project/index#scan",
       "schema": "./ng-generate/scan-project/schema.json",
       "aliases": [
-        "scan"
+        "s"
+      ]
+    },
+    "build": {
+      "description": "Execute all the schematics in the json file",
+      "factory": "./ng-generate/build/index#buildJSON",
+      "schema": "./ng-generate/build/schema.json",
+      "aliases": [
+        "b"
       ]
     },
     "scaffolding": {

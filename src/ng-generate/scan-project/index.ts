@@ -4,7 +4,7 @@ import { JsonValue } from '@angular-devkit/core/src/json';
 
 const SCHEMA_JSON = './node_modules/@danils/schematicskit/lib/schematics/config/schema.json';
 
-export function scanProject(): Rule {
+export function scan(): Rule {
   return async (tree: Tree, context: SchematicContext) => {
     const json: any = {
       $schema: SCHEMA_JSON,
