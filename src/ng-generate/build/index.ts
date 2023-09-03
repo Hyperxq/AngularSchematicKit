@@ -18,14 +18,16 @@ import {externalSchematic} from '@angular-devkit/schematics/src/rules/schematic'
 export function readJSON({ customFilePath }: { customFilePath: string }): Rule {
   return (tree: Tree, _context: SchematicContext) => {
     const calls: Rule[] = [];
-    const { globalSettings, projects, ...schematics } = getJsonFile<WorkspaceStructure>(
-      tree,
-      customFilePath ?? './project-structure.json'
-    );
-    _context.logger.info('log', globalSettings);
-    _context.logger.info('log', projects);
-    _context.logger.info('log', schematics);
-    calls.push(...executeGlobalSchematics(globalSettings ?? {}, schematics));
+    const json = getJsonFile<WorkspaceStructure>(tree, './project-structure.json');
+    _context.logger.info('log', json);
+    // const { globalSettings, projects, ...schematics } = getJsonFile<WorkspaceStructure>(
+    //   tree,
+    //   './project-structure.json' ?? customFilePath
+    // );
+    // _context.logger.info('log', globalSettings);
+    // _context.logger.info('log', projects);
+    // _context.logger.info('log', schematics);
+    // calls.push(...executeGlobalSchematics(globalSettings ?? {}, schematics));
     // Object.entries(projects).forEach((project) => {});
     return chain(calls);
   };
