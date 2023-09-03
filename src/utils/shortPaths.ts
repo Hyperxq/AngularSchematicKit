@@ -128,11 +128,11 @@ export function addExportsToNearestIndex(
   return async (tree: Tree) => {
     const workspace = await readWorkspace(tree);
     const project = getProject(workspace, options.project || '');
-    const clientBuildTarget = getBuildTarget(project);
+    const clientBuildTarget = getBuildTarget(project!);
     const bootstrapModulePath = getMainModulePath(
       tree,
       clientBuildTarget,
-      project.sourceRoot || '',
+      project?.sourceRoot || '',
       structure.parent
     );
     const foundStructure = findStructureWithShortPath(

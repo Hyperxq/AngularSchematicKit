@@ -40,15 +40,18 @@ export function getSourceFile(host: Tree, path: string): ts.SourceFile {
  *  @param projectName
  *  @returns the project by projectName
  */
-export function getProject(workspace: WorkspaceDefinition, projectName: string): ProjectDefinition {
-  const project = workspace.projects.get(projectName);
-  if (!project) {
-    throw new SchematicsException(`The project ${projectName} doesn't exist`);
-  }
+export function getProject(
+  workspace: WorkspaceDefinition,
+  projectName: string
+): ProjectDefinition | undefined {
+  // const project = workspace.projects.get(projectName);
+  // if (!project) {
+  //   throw new SchematicsException(`The project ${projectName} doesn't exist`);
+  // }
   // if (project.extensions.projectType !== 'application') {
   //   throw new SchematicsException(`It's required that the project type be a "application".`);
   // }
-  return project;
+  return workspace.projects.get(projectName);
 }
 
 /**
@@ -169,12 +172,12 @@ export function addRoutingToModule(
   return async (tree: Tree) => {
     const workspace = await readWorkspace(tree);
     const project = getProject(workspace, options.project ?? '');
-    const clientBuildTarget = getBuildTarget(project);
+    const clientBuildTarget = getBuildTarget(project!);
 
     const bootstrapModulePath = getMainModulePath(
       tree,
       clientBuildTarget,
-      project.sourceRoot ?? '',
+      project?.sourceRoot ?? '',
       structure
     );
     const moduleFile = getSourceFile(tree, bootstrapModulePath);
@@ -262,5 +265,5 @@ export function getJsonFile<T>(tree: Tree, path: string): T {
 export async function getClientBuild(tree: Tree, projectName: string) {
   const workspace = await readWorkspace(tree);
   const project = getProject(workspace, projectName);
-  return getBuildTarget(project);
+  return getBuildTarget(project!);
 }

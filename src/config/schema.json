@@ -117,6 +117,9 @@
         "collection": {
           "type": "string"
         },
+        "settings": {
+          "$ref": "#/definitions/settings"
+        },
         "instances": {
           "type": "object",
           "additionalProperties": true
@@ -125,7 +128,7 @@
       "required": [
         "type"
       ],
-      "additionalProperties": true
+      "additionalProperties": false
     }
   }
 }

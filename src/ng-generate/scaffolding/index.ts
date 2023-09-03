@@ -48,11 +48,11 @@ export function scaffolding(options: ScaffoldOptions): Rule {
     patternArchitectureFile.projects.forEach((p: Project) => {
       const projectName = p.name.includes('default') ? getDefaultProjectName(workspace) : p.name;
       let project = getProject(workspace, projectName);
-      const basePath = new FolderPath(project.prefix ?? '', `${project.sourceRoot}/`);
+      const basePath = new FolderPath(project?.prefix ?? '', `${project?.sourceRoot}/`);
 
       const structures: FolderStructure[] = recreateTreeFolderStructure(p.structure, basePath);
       rules.push(
-        scaffoldFoldersFactory(project, patternArchitectureFile.globalSettings ?? {}, structures, {
+        scaffoldFoldersFactory(project!, patternArchitectureFile.globalSettings ?? {}, structures, {
           ...options,
           project: projectName,
         })
