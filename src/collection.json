@@ -24,7 +24,7 @@
     },
     "build": {
       "description": "Execute all the schematics in the json file",
-      "factory": "./ng-generate/build/index#readJSON",
+      "factory": "./ng-generate/build/index#executeWorkspaceSchematics",
       "schema": "./ng-generate/build/schema.json",
       "aliases": [
         "b"

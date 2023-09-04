@@ -20,15 +20,15 @@ export interface IParentSettings {
 }
 
 export type SchematicStructure = {
-  type: 'Schematic';
+  type: 'schematic';
   instances?: { [key: string]: any };
 } & { [key: string]: any };
 
 export type Structure = {
-  type: 'Folder' | 'Schematic';
+  type: 'folder' | 'schematic';
 } & (FolderStructure | SchematicStructure);
 
 export type FolderStructure = {
-  type: 'Folder';
+  type: 'folder';
   [key: string]: FolderStructure | SchematicStructure | string;
 };

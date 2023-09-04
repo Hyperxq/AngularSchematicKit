@@ -2,13 +2,13 @@ import {chain, Rule, SchematicContext, SchematicsException, Tree,} from '@angula
 import {getJsonFile, getProject, readWorkspace} from '../../utils';
 // import {WorkspaceStructure} from './build.interfaces';
 import {
-    FolderStructure,
-    IParentSettings,
-    ISchematic,
-    ISchematicSettings,
-    SchematicStructure,
-    Structure,
-    WorkspaceStructure,
+  FolderStructure,
+  IParentSettings,
+  ISchematic,
+  ISchematicSettings,
+  SchematicStructure,
+  Structure,
+  WorkspaceStructure,
 } from './build.interfaces';
 import {externalSchematic} from '@angular-devkit/schematics/src/rules/schematic';
 
@@ -24,7 +24,12 @@ import {externalSchematic} from '@angular-devkit/schematics/src/rules/schematic'
  * * Check if exist the property instances.
  * * Execute schematic/schematics.
  * */
-export function readJSON(): Rule {
+//executeWorkspaceSchematics
+//getSchematicSettingsByAlias
+//processStructure
+//executeGlobalSchematicRules
+
+export function executeWorkspaceSchematics(): Rule {
   // { customFilePath }: { customFilePath: string }
   return async (tree: Tree, _context: SchematicContext) => {
     const calls: Rule[] = [];
@@ -35,10 +40,9 @@ export function readJSON(): Rule {
     );
     const projectKeys = Object.keys(projects);
 
-    calls.push(...executeGlobalSchematics(_context, schematics, settings ?? {}));
+    calls.push(...executeGlobalSchematicRules(_context, schematics, settings ?? {}));
 
     projectKeys.forEach((projectName) => {
-      _context.logger.log('info', `ProjectName: ${JSON.stringify(projectName)}`);
       let project = getProject(workspace, projectName);
       const path = project?.root;
       const { type, settings: projectSettings, ...structures } = projects[projectName];
@@ -47,7 +51,7 @@ export function readJSON(): Rule {
         .forEach((structure: Structure) => {
           _context.logger.log('info', `Folder structure: ${JSON.stringify(structure)}`);
           calls.push(
-            ...readStructure(
+            ...processStructure(
               path ?? '',
               {
                 globalSettings: settings ?? {},
@@ -65,12 +69,46 @@ export function readJSON(): Rule {
   };
 }
 
-// function buildJSON(): Rule {
-//   return (_tree: Tree, _context: SchematicContext) => {};
-//   // for each project, prepare all the stuff.
-// }
-//
-function readStructure(
+//TODO: try to test what happen when the alias are in many places.
+/**
+ * Retrieves the last occurrence of schematic settings based on the provided alias.
+ *
+ * @param _context - The schematic context.
+ * @param alias - The alias to search for.
+ * @param settings - The collections of schematics settings.
+ * @returns The schematic settings if found, otherwise undefined.
+ */
+function getSchematicSettingsByAlias(
+  _context: SchematicContext,
+  alias: string,
+  settings?: //collections
+  {
+    //schematics
+    [key: string]: { [prop: string]: { alias: string } & { [prop: string]: any } };
+  }
+): ISchematicSettings | undefined {
+  if (!settings) return undefined;
+  //TODO: refactor this.
+  let schematicSetting: ISchematicSettings;
+
+  for (const [collection, schematicObject] of Object.entries(settings).reverse()) {
+    for (const [schematicName, schematicDetails] of Object.entries(schematicObject).reverse()) {
+      const { alias: schematicAlias, ...schematicSettings } = schematicDetails;
+      if (schematicAlias === alias) {
+        schematicSetting = {
+          collection,
+          schematicName,
+          settings: schematicSettings,
+        };
+        return schematicSetting as ISchematicSettings;
+      }
+    }
+  }
+
+  return undefined;
+}
+
+function processStructure(
   path: string,
   parentsSettings: {
     globalSettings?: {
@@ -84,143 +122,183 @@ function readStructure(
   calls: Rule[] = [],
   _context: SchematicContext
 ) {
-  _context.logger.log('info', `Path: ${JSON.stringify(path)}`);
   const { type, ...content } = structure;
 
-  // const schematics = Object.keys(content).filter(
-  //   (key) => (content[key] as FolderStructure | SchematicStructure).type === 'Schematic'
-  // );
-  //
+  // Extract and process schematics
+  const schematics = extractSchematics(content as SchematicStructure | FolderStructure);
   // schematics.forEach((schematicName) => {
-  //   const globalSettings = findSettingsByAlias(
-  //     _context,
-  //     schematicName,
-  //     parentsSettings.globalSettings
-  //   );
-  //
-  //   const projectSettings = findSettingsByAlias(
-  //     _context,
-  //     schematicName,
-  //     parentsSettings.projectSettings
-  //   );
-  //
-  //   const { type, ...schematicSettings } = content[schematicName] as SchematicStructure;
-  //
-  //   const [collectionName, schematic] = schematicName.split(':', 2);
-  //
   //   calls.push(
-  //     ...executeExternalSchematics(
-  //       { globalSettings, projectSettings },
-  //       {
-  //         collection:
-  //           collectionName && schematic
-  //             ? collectionName
-  //             : globalSettings?.collection ?? projectSettings?.collection,
-  //         schematicName:
-  //           schematic ??
-  //           globalSettings?.schematicName ??
-  //           projectSettings?.schematicName ??
-  //           schematicName,
-  //         settings: schematicSettings,
-  //       },
-  //       path,
-  //       _context
-  //     )
+  //     ...processSchematic(schematicName, content[schematicName], parentsSettings, path, _context)
   //   );
   // });
+  schematics.forEach((schematicName) => {
+    const globalSettings = getSchematicSettingsByAlias(
+      _context,
+      schematicName,
+      parentsSettings.globalSettings
+    );
 
-  const folderNames = Object.entries(content)
-    .filter((item) => (item[1] as FolderStructure | SchematicStructure).type === 'Folder')
-    .map((folder) => folder[0]);
+    const projectSettings = getSchematicSettingsByAlias(
+      _context,
+      schematicName,
+      parentsSettings.projectSettings
+    );
 
-  _context.logger.log('info', `FolderNames: ${JSON.stringify(folderNames)}`);
+    const { instances, settings } = content[schematicName] as SchematicStructure;
 
-  folderNames.forEach((folderName) => {
+    const [collectionName, schematic] = schematicName.split(':', 2);
     calls.push(
-      ...readStructure(
-        `${path}/${folderName}`,
-        parentsSettings,
-        content[folderName] as Structure,
-        calls,
+      ...executeExternalSchematicRules(
+        { globalSettings, projectSettings },
+        {
+          collection:
+            collectionName && schematic
+              ? collectionName
+              : globalSettings?.collection ?? projectSettings?.collection,
+          schematicName:
+            schematic ??
+            globalSettings?.schematicName ??
+            projectSettings?.schematicName ??
+            schematicName,
+          instances,
+          settings: settings,
+        },
+        path,
         _context
       )
     );
   });
 
+  const folderNames = extractFolders(content as SchematicStructure | FolderStructure);
+  folderNames.forEach((folderName) => {
+    const newFolderPath = `${path}/${folderName}`;
+    const folderStructure = content[folderName] as FolderStructure;
+
+    calls.push(
+      ...processStructure(newFolderPath, parentsSettings, folderStructure, calls, _context)
+    );
+  });
+
   return calls;
 }
+
+function extractSchematics(content: Structure): string[] {
+  return Object.keys(content).filter(
+    (key) => (content[key] as FolderStructure | SchematicStructure).type === 'schematic'
+  );
+}
+
+function extractFolders(content: Structure): string[] {
+  return Object.keys(content).filter(
+    (folderName) => (content[folderName] as FolderStructure | SchematicStructure).type === 'folder'
+  );
+}
+
+// function processSchematic(
+//   schematicName: string,
+//   content: SchematicStructure,
+//   parentsSettings: any,
+//   path: string,
+//   _context: SchematicContext
+// ) {
+//   const globalSettings = getSchematicSettingsByAlias(
+//     _context,
+//     schematicName,
+//     parentsSettings.globalSettings
+//   );
+//
+//   const projectSettings = getSchematicSettingsByAlias(
+//     _context,
+//     schematicName,
+//     parentsSettings.projectSettings
+//   );
+//
+//   const { instances, settings } = content[schematicName];
+//
+//   const [collectionName, schematic] = schematicName.split(':', 2);
+//
+//   const finalCollectionName =
+//     collectionName && schematic
+//       ? collectionName
+//       : globalSettings?.collection ?? projectSettings?.collection;
+//
+//   const finalSchematicName =
+//     schematic ?? globalSettings?.schematicName ?? projectSettings?.schematicName ?? schematicName;
+//
+//   if (!finalCollectionName) {
+//     throw new Error(`Collection name not found for schematic: ${schematicName}`);
+//   }
+//
+//   if (!finalSchematicName) {
+//     throw new Error(`Schematic name not found for schematic: ${schematicName}`);
+//   }
+//
+//   return executeExternalSchematicRules(
+//     { globalSettings, projectSettings },
+//     {
+//       collection: finalCollectionName,
+//       schematicName: finalSchematicName,
+//       instances: instances,
+//       settings: settings,
+//     },
+//     path,
+//     _context
+//   );
+// }
 
 //Create projects if they don't exist
 // function checkProject(): Rule {
 //   return () => {};
 // }
 
-//TODO: try to test what happen when the alias are in many places.
-function findSettingsByAlias(
-  _context: SchematicContext,
-  alias: string,
-  settings?: //collections
-  {
-    //schematics
-    [key: string]: { [prop: string]: { alias: string } & { [prop: string]: any } };
-  }
-): ISchematicSettings | undefined {
-  if (!settings) return undefined;
-  //TODO: refactor this.
-  const collections = Object.entries(settings).reverse();
-  let schematicSetting: Partial<ISchematicSettings> = {};
-
-  collections.forEach(([collection, schematicObject]) => {
-    const schematics = Object.entries(schematicObject);
-    schematics.forEach(([schematicName, settings]) => {
-      const { alias: schematicAlias, ...schematicSettings } = settings;
-      if (
-        Object.keys(schematicSetting).length === 0 &&
-        schematicAlias &&
-        schematicAlias === alias
-      ) {
-        schematicSetting = {
-          collection,
-          schematicName,
-          settings: schematicSettings,
-        };
-      }
-    });
-  });
-
-  return schematicSetting as ISchematicSettings;
-}
-
-function executeGlobalSchematics(
+function executeGlobalSchematicRules(
   _context: SchematicContext,
   schematics: { [key: string]: { [prop: string]: any } },
   globalSettings?: { [key: string]: { [prop: string]: any } }
 ): Rule[] {
   const calls: Rule[] = [];
-  Object.entries(schematics).forEach(([schematicName, content]) => {
-    const globalSetting = findSettingsByAlias(_context, schematicName, globalSettings);
+  for (const [schematicName, content] of Object.entries(schematics)) {
+    const globalSetting = getSchematicSettingsByAlias(_context, schematicName, globalSettings);
     const { instances, settings } = content;
-    _context.logger.log('info', JSON.stringify(content));
-    //what happen if it doesn't find.
     const [collectionName, schematic] = schematicName.split(':', 2);
+
+    let finalCollectionName = collectionName ?? globalSetting?.collection;
+    let finalSchematicName = schematic ?? globalSetting?.schematicName;
+
+    if (!finalSchematicName) {
+      throw new Error(
+        `Invalid schematic configuration: Unable to determine collection or schematic name for "${schematicName}". Please ensure you are using a valid alias or following the [collection]:[schematic] naming convention.`
+      );
+    }
+
     calls.push(
-      ...executeExternalSchematics(
+      ...executeExternalSchematicRules(
         { globalSettings: globalSetting },
         {
-          collection: collectionName && schematic ? collectionName : globalSetting?.collection,
-          schematicName: schematic ?? globalSetting?.schematicName ?? schematicName,
+          collection: finalCollectionName,
+          schematicName: finalSchematicName,
           instances,
-          settings: settings,
+          settings,
         },
         '/',
         _context
       )
     );
-  });
+  }
   return calls;
 }
 
-function executeExternalSchematics(
+//TODO: Implements a robust error handling.
+/**
+ * Executes external schematic rules based on the provided settings and schematic details.
+ *
+ * @param parentsSettings - The parent settings filtered by the schematic and collection needed.
+ * @param schematic - The schematic details.
+ * @param path - The path where the schematic should be executed.
+ * @param _context - The schematic context.
+ * @returns An array of rules to be executed.
+ */
+function executeExternalSchematicRules(
   //These settings are filtered by the schematic and collection needed.
   parentsSettings: IParentSettings,
   schematic: ISchematic,
@@ -228,99 +306,53 @@ function executeExternalSchematics(
   _context: SchematicContext
 ): Rule[] {
   const calls: Rule[] = [];
-  // const {collection:}
+
+  // Merge settings from various sources
   const settings = {
     ...schematic.settings,
     ...(parentsSettings.projectSettings?.settings ?? {}),
     ...(parentsSettings.globalSettings?.settings ?? {}),
   };
 
-  _context.logger.log(
-    'info',
-    JSON.stringify({
-      schematicName: schematic.schematicName,
-      collection: schematic.collection,
-      options: {
-        path,
-        ...settings,
-      },
-    })
-  );
+  // Validate schematic details
+  if (!schematic.collection) {
+    throw new SchematicsException('Collection is not defined in the schematic.');
+  }
+  if (!schematic.schematicName) {
+    throw new SchematicsException('Schematic name is not defined in the schematic.');
+  }
 
   if (!schematic.instances) {
-    _context.logger.log('info', 'without instances');
-    _context.logger.log(
-      'info',
-      // If schematic.collection doesn't exit, check the other settings but if they don't have it show an error.
-      JSON.stringify({
-        collection: schematic.collection,
-        schematicName: schematic.schematicName,
-        path,
-        ...settings,
-      })
-    );
-    if (!schematic.collection) {
-      throw new SchematicsException(`You need to define a collection`);
-    }
-    if (!schematic.schematicName) {
-      throw new SchematicsException(`You need to define a schematic name`);
-    }
-    calls.push(
-      externalSchematic(schematic.collection, schematic.schematicName, {
-        path,
-        ...settings,
-      })
-    );
+    calls.push(createExternalSchematicCall(schematic, path, settings));
   } else {
-    const instances = Object.entries(schematic.instances);
-    _context.logger.log('info', 'with instances');
-
-    // _context.logger.log(
-    //   'info',
-    //   // If schematic.collection doesn't exit, check the other settings but if they don't have it show an error.
-    //   JSON.stringify({
-    //     collection: schematic.collection,
-    //     schematicName: schematic.schematicName,
-    //     path,
-    //     ...settings,
-    //   })
-    // );
-
-    instances.forEach((instance) => {
-      const [name, instanceSettings] = instance;
-      const schematicSettings = {
-        ...settings,
-        ...instanceSettings,
-      };
-      _context.logger.log(
-        'info',
-        JSON.stringify({
-          schematicName: schematic.schematicName,
-          collection: schematic.collection,
-          options: {
-            name,
-            path,
-            ...schematicSettings,
-          },
-        })
-      );
-      if (!schematic.collection) {
-        throw new SchematicsException(`You need to define a collection`);
-      }
-
-      if (!schematic.schematicName) {
-        throw new SchematicsException(`You need to define a schematic name`);
-      }
-
+    for (const [name, instanceSettings] of Object.entries(schematic.instances)) {
       calls.push(
-        externalSchematic(schematic.collection, schematic.schematicName, {
-          name,
-          path,
-          ...schematicSettings,
-        })
+        createExternalSchematicCall(schematic, path, { ...settings, ...instanceSettings }, name)
       );
-    });
+    }
   }
 
   return calls;
+}
+
+/**
+ * Creates an external schematic call with the provided settings and options.
+ *
+ * @param schematic - The schematic details.
+ * @param path - The path where the schematic should be executed.
+ * @param settings - The merged settings.
+ * @param name - The name of the instance (optional).
+ * @returns A rule representing the external schematic call.
+ */
+function createExternalSchematicCall(
+  schematic: ISchematic,
+  path: string,
+  settings: { [key: string]: any },
+  name?: string
+): Rule {
+  return externalSchematic(schematic.collection!, schematic.schematicName!, {
+    path,
+    ...settings,
+    ...(name ? { name } : {}),
+  });
 }
