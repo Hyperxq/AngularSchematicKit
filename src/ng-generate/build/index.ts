@@ -124,11 +124,9 @@ function processStructure(
 ) {
   const { type, ...content } = structure;
 
-  // const schematics = Object.keys(content).filter(
-  //   (key) => (content[key] as FolderStructure | SchematicStructure).type === 'schematic'
-  // );
-  // Extract and process schematics
-  const schematics = extractSchematics(content as SchematicStructure | FolderStructure);
+  const schematics = Object.keys(content).filter(
+    (key) => (content[key] as FolderStructure | SchematicStructure).type === 'schematic'
+  );
 
   schematics.forEach((schematicName) => {
     const globalSettings = getSchematicSettingsByAlias(
@@ -168,7 +166,9 @@ function processStructure(
     );
   });
 
-  const folderNames = extractFolders(content as SchematicStructure | FolderStructure);
+  const folderNames = Object.keys(content).filter(
+    (folderName) => (content[folderName] as FolderStructure | SchematicStructure).type === 'folder'
+  );
 
   folderNames.forEach((folderName) => {
     calls.push(
@@ -183,18 +183,6 @@ function processStructure(
   });
 
   return calls;
-}
-
-function extractSchematics(content: Structure): string[] {
-  return Object.keys(content).filter(
-    (key) => (content[key] as FolderStructure | SchematicStructure).type === 'schematic'
-  );
-}
-
-function extractFolders(content: Structure): string[] {
-  return Object.keys(content).filter(
-    (folderName) => (content[folderName] as FolderStructure | SchematicStructure).type === 'folder'
-  );
 }
 
 //Create projects if they don't exist
