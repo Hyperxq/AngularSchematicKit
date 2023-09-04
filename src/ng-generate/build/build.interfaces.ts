@@ -15,6 +15,15 @@ export type ISchematic = ISchematicSettings & {
 };
 
 export interface IParentSettings {
+  globalSettings?: {
+    [key: string]: { [prop: string]: { alias: string } & { [prop: string]: any } };
+  };
+  projectSettings?: {
+    [key: string]: { [prop: string]: { alias: string } & { [prop: string]: any } };
+  };
+}
+
+export interface ISchematicParentsSettings {
   globalSettings?: ISchematicSettings;
   projectSettings?: ISchematicSettings;
 }

@@ -5,6 +5,7 @@ import {
   FolderStructure,
   IParentSettings,
   ISchematic,
+  ISchematicParentsSettings,
   ISchematicSettings,
   SchematicStructure,
   Structure,
@@ -15,20 +16,15 @@ import {externalSchematic} from '@angular-devkit/schematics/src/rules/schematic'
 /*
  * Steps
  * * Create projects if they don't exist || this last thing to do.
- * * Extract global settings, projects, schematics.
- * * Iterate over all projects.
- * * Extract project settings if it exists.
- * * Recursively, go through all the project's structure.
- * * When detect schematic, check it and process.
- * * Extract schematic's settings if it exists.
- * * Check if exist the property instances.
- * * Execute schematic/schematics.
+ * * Extract global settings, projects, schematics. (Ready)
+ * * Iterate over all projects. (Ready)
+ * * Extract project settings if it exists. (Ready)
+ * * Recursively, go through all the project's structure. (Ready)
+ * * When detect schematic, check it and process. (Ready)
+ * * Extract schematic's settings if it exists. (Ready)
+ * * Check if exist the property instances. (Ready)
+ * * Execute schematic/schematics. (Ready)
  * */
-//executeWorkspaceSchematics
-//getSchematicSettingsByAlias
-//processStructure
-//executeGlobalSchematicRules
-
 export function executeWorkspaceSchematics(): Rule {
   // { customFilePath }: { customFilePath: string }
   return async (tree: Tree, _context: SchematicContext) => {
@@ -87,7 +83,7 @@ function getSchematicSettingsByAlias(
     [key: string]: { [prop: string]: { alias: string } & { [prop: string]: any } };
   }
 ): ISchematicSettings | undefined {
-  if (!settings) return undefined;
+  if (!settings || Object.keys(settings).length === 0) return undefined;
   //TODO: refactor this.
   let schematicSetting: ISchematicSettings;
 
@@ -110,14 +106,7 @@ function getSchematicSettingsByAlias(
 
 function processStructure(
   path: string,
-  parentsSettings: {
-    globalSettings?: {
-      [key: string]: { [prop: string]: { alias: string } & { [prop: string]: any } };
-    };
-    projectSettings?: {
-      [key: string]: { [prop: string]: { alias: string } & { [prop: string]: any } };
-    };
-  },
+  parentsSettings: IParentSettings,
   structure: Structure,
   calls: Rule[] = [],
   _context: SchematicContext
@@ -156,14 +145,7 @@ function processSchematic(
   _context: SchematicContext,
   schematicName: string,
   structure: SchematicStructure,
-  parentsSettings: {
-    globalSettings?: {
-      [key: string]: { [prop: string]: { alias: string } & { [prop: string]: any } };
-    };
-    projectSettings?: {
-      [key: string]: { [prop: string]: { alias: string } & { [prop: string]: any } };
-    };
-  },
+  parentsSettings: IParentSettings,
   path: string
 ) {
   const globalSettings = getSchematicSettingsByAlias(
@@ -222,33 +204,42 @@ function executeGlobalSchematicRules(
 ): Rule[] {
   const calls: Rule[] = [];
   for (const [schematicName, content] of Object.entries(schematics)) {
-    const globalSetting = getSchematicSettingsByAlias(_context, schematicName, globalSettings);
-    const { instances, settings } = content;
-    const [collectionName, schematic] = schematicName.split(':', 2);
-
-    let finalCollectionName =
-      collectionName && schematic ? collectionName : globalSetting?.collection;
-    let finalSchematicName = schematic ?? globalSetting?.schematicName;
-
-    if (!finalCollectionName || !finalSchematicName) {
-      throw new Error(
-        `Invalid schematic configuration: Unable to determine collection or schematic name for "${schematicName}". Please ensure you are using a valid alias or following the [collection]:[schematic] naming convention.`
-      );
-    }
-
     calls.push(
-      ...executeExternalSchematicRules(
-        { globalSettings: globalSetting },
-        {
-          collection: finalCollectionName,
-          schematicName: finalSchematicName,
-          instances,
-          settings,
-        },
-        '/',
-        _context
+      ...processSchematic(
+        _context,
+        schematicName,
+        content as SchematicStructure,
+        { globalSettings },
+        '/'
       )
     );
+    // const globalSetting = getSchematicSettingsByAlias(_context, schematicName, globalSettings);
+    // const { instances, settings } = content;
+    // const [collectionName, schematic] = schematicName.split(':', 2);
+    //
+    // let finalCollectionName =
+    //   collectionName && schematic ? collectionName : globalSetting?.collection;
+    // let finalSchematicName = schematic ?? globalSetting?.schematicName;
+    //
+    // if (!finalCollectionName || !finalSchematicName) {
+    //   throw new Error(
+    //     `Invalid schematic configuration: Unable to determine collection or schematic name for "${schematicName}". Please ensure you are using a valid alias or following the [collection]:[schematic] naming convention.`
+    //   );
+    // }
+    //
+    // calls.push(
+    //   ...executeExternalSchematicRules(
+    //     { globalSettings: globalSetting },
+    //     {
+    //       collection: finalCollectionName,
+    //       schematicName: finalSchematicName,
+    //       instances,
+    //       settings,
+    //     },
+    //     '/',
+    //     _context
+    //   )
+    // );
   }
   return calls;
 }
@@ -265,7 +256,7 @@ function executeGlobalSchematicRules(
  */
 function executeExternalSchematicRules(
   //These settings are filtered by the schematic and collection needed.
-  parentsSettings: IParentSettings,
+  parentsSettings: ISchematicParentsSettings,
   schematic: ISchematic,
   path: string,
   _context: SchematicContext
