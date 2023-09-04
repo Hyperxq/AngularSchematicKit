@@ -210,6 +210,8 @@ function executeGlobalSchematicRules(
       );
     }
 
+    _context.logger.log('info', finalCollectionName);
+    _context.logger.log('info', finalSchematicName);
     calls.push(
       ...executeExternalSchematicRules(
         { globalSettings: globalSetting },
