@@ -1,9 +1,10 @@
-import {chain, Rule, SchematicContext, SchematicsException, Tree,} from '@angular-devkit/schematics';
+import {chain, noop, Rule, SchematicContext, SchematicsException, Tree,} from '@angular-devkit/schematics';
 import {getJsonFile, getProject, readWorkspace} from '../../utils';
 // import {WorkspaceStructure} from './build.interfaces';
 import {
   FolderStructure,
   IParentSettings,
+  IProjects,
   ISchematic,
   ISchematicParentsSettings,
   ISchematicSettings,
@@ -29,43 +30,90 @@ export function executeWorkspaceSchematics(): Rule {
   // { customFilePath }: { customFilePath: string }
   return async (tree: Tree, _context: SchematicContext) => {
     const calls: Rule[] = [];
-    const workspace = await readWorkspace(tree);
+
     const { $schema, settings, projects, ...schematics } = getJsonFile<WorkspaceStructure>(
       tree,
       './project-structure.json'
     );
-    const projectKeys = Object.keys(projects);
-
+    calls.push(...(await ensureProjectExists(projects as IProjects, tree)));
     calls.push(...executeGlobalSchematicRules(_context, schematics, settings ?? {}));
-
-    projectKeys.forEach((projectName) => {
-      let project = getProject(workspace, projectName);
-      const path = project?.root;
-      const { type, settings: projectSettings, ...structures } = projects[projectName];
-      Object.entries(structures)
-        .map<Structure>((structure) => ({ [structure[0]]: structure[1] } as Structure))
-        .forEach((structure: Structure) => {
-          _context.logger.log('info', `Folder structure: ${JSON.stringify(structure)}`);
-          calls.push(
-            ...processStructure(
-              path ?? '',
-              {
-                globalSettings: settings ?? {},
-                projectSettings: projectSettings ?? {},
-              },
-              structure,
-              [],
-              _context
-            )
-          );
-        });
-      // Path, projectSettings, structure
-    });
+    calls.push(...(await processProjects(_context, projects, settings, tree)));
     return chain(calls);
   };
 }
 
-//TODO: try to test what happen when the alias are in many places.
+async function ensureProjectExists(projects: IProjects, tree: Tree) {
+  const workspace = await readWorkspace(tree);
+  const projectNames = Object.keys(projects);
+  const calls: Rule[] = [];
+  for (const projectName of projectNames) {
+    let project = getProject(workspace, projectName);
+    if (!project) {
+      const { type } = projects[projectName];
+
+      if (!type) {
+        throw new SchematicsException('Type is needed for every project');
+      }
+      calls.push(
+        externalSchematic('@schematics/angular', type, {
+          name: projectName,
+        })
+      );
+    } else {
+      calls.push(noop());
+    }
+  }
+  return calls;
+}
+
+async function processProjects(
+  _context: SchematicContext,
+  projects: {
+    [p: string]: {
+      [p: string]: {
+        [p: string]: any;
+      };
+    };
+  },
+  settings: {
+    [key: string]: {
+      [prop: string]: {
+        alias: string;
+      } & {
+        [prop: string]: any;
+      };
+    };
+  },
+  tree: Tree
+) {
+  const calls: Rule[] = [];
+  const workspace = await readWorkspace(tree);
+  const projectKeys = Object.keys(projects);
+  projectKeys.forEach((projectName) => {
+    let project = getProject(workspace, projectName);
+    const path = project?.root;
+    const { type, settings: projectSettings, ...structures } = projects[projectName];
+    Object.entries(structures)
+      .map<Structure>((structure) => ({ [structure[0]]: structure[1] } as Structure))
+      .forEach((structure: Structure) => {
+        _context.logger.log('info', `Folder structure: ${JSON.stringify(structure)}`);
+        calls.push(
+          ...processStructure(
+            path ?? '',
+            {
+              globalSettings: settings ?? {},
+              projectSettings: projectSettings ?? {},
+            },
+            structure,
+            [],
+            _context
+          )
+        );
+      });
+  });
+  return calls;
+}
+
 /**
  * Retrieves the last occurrence of schematic settings based on the provided alias.
  *
@@ -80,7 +128,13 @@ function getSchematicSettingsByAlias(
   settings?: //collections
   {
     //schematics
-    [key: string]: { [prop: string]: { alias: string } & { [prop: string]: any } };
+    [key: string]: {
+      [prop: string]: {
+        alias: string;
+      } & {
+        [prop: string]: any;
+      };
+    };
   }
 ): ISchematicSettings | undefined {
   if (!settings || Object.keys(settings).length === 0) return undefined;
@@ -192,15 +246,18 @@ function extractStructures(
   );
 }
 
-//Create projects if they don't exist
-// function checkProject(): Rule {
-//   return () => {};
-// }
-
 function executeGlobalSchematicRules(
   _context: SchematicContext,
-  schematics: { [key: string]: { [prop: string]: any } },
-  globalSettings?: { [key: string]: { [prop: string]: any } }
+  schematics: {
+    [key: string]: {
+      [prop: string]: any;
+    };
+  },
+  globalSettings?: {
+    [key: string]: {
+      [prop: string]: any;
+    };
+  }
 ): Rule[] {
   const calls: Rule[] = [];
   for (const [schematicName, content] of Object.entries(schematics)) {
@@ -213,38 +270,10 @@ function executeGlobalSchematicRules(
         '/'
       )
     );
-    // const globalSetting = getSchematicSettingsByAlias(_context, schematicName, globalSettings);
-    // const { instances, settings } = content;
-    // const [collectionName, schematic] = schematicName.split(':', 2);
-    //
-    // let finalCollectionName =
-    //   collectionName && schematic ? collectionName : globalSetting?.collection;
-    // let finalSchematicName = schematic ?? globalSetting?.schematicName;
-    //
-    // if (!finalCollectionName || !finalSchematicName) {
-    //   throw new Error(
-    //     `Invalid schematic configuration: Unable to determine collection or schematic name for "${schematicName}". Please ensure you are using a valid alias or following the [collection]:[schematic] naming convention.`
-    //   );
-    // }
-    //
-    // calls.push(
-    //   ...executeExternalSchematicRules(
-    //     { globalSettings: globalSetting },
-    //     {
-    //       collection: finalCollectionName,
-    //       schematicName: finalSchematicName,
-    //       instances,
-    //       settings,
-    //     },
-    //     '/',
-    //     _context
-    //   )
-    // );
   }
   return calls;
 }
 
-//TODO: Implements a robust error handling.
 /**
  * Executes external schematic rules based on the provided settings and schematic details.
  *
@@ -303,7 +332,9 @@ function executeExternalSchematicRules(
 function createExternalSchematicCall(
   schematic: ISchematic,
   path: string,
-  settings: { [key: string]: any },
+  settings: {
+    [key: string]: any;
+  },
   name?: string
 ): Rule {
   return externalSchematic(schematic.collection!, schematic.schematicName!, {
