@@ -201,10 +201,11 @@ function executeGlobalSchematicRules(
     const { instances, settings } = content;
     const [collectionName, schematic] = schematicName.split(':', 2);
 
-    let finalCollectionName = collectionName ?? globalSetting?.collection;
+    let finalCollectionName =
+      collectionName && schematic ? collectionName : globalSetting?.collection;
     let finalSchematicName = schematic ?? globalSetting?.schematicName;
 
-    if (!finalSchematicName) {
+    if (!finalCollectionName || !finalSchematicName) {
       throw new Error(
         `Invalid schematic configuration: Unable to determine collection or schematic name for "${schematicName}". Please ensure you are using a valid alias or following the [collection]:[schematic] naming convention.`
       );
