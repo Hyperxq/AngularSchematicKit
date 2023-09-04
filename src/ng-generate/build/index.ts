@@ -124,13 +124,12 @@ function processStructure(
 ) {
   const { type, ...content } = structure;
 
+  // const schematics = Object.keys(content).filter(
+  //   (key) => (content[key] as FolderStructure | SchematicStructure).type === 'schematic'
+  // );
   // Extract and process schematics
   const schematics = extractSchematics(content as SchematicStructure | FolderStructure);
-  // schematics.forEach((schematicName) => {
-  //   calls.push(
-  //     ...processSchematic(schematicName, content[schematicName], parentsSettings, path, _context)
-  //   );
-  // });
+
   schematics.forEach((schematicName) => {
     const globalSettings = getSchematicSettingsByAlias(
       _context,
@@ -170,12 +169,16 @@ function processStructure(
   });
 
   const folderNames = extractFolders(content as SchematicStructure | FolderStructure);
-  folderNames.forEach((folderName) => {
-    const newFolderPath = `${path}/${folderName}`;
-    const folderStructure = content[folderName] as FolderStructure;
 
+  folderNames.forEach((folderName) => {
     calls.push(
-      ...processStructure(newFolderPath, parentsSettings, folderStructure, calls, _context)
+      ...processStructure(
+        `${path}/${folderName}`,
+        parentsSettings,
+        content[folderName] as Structure,
+        calls,
+        _context
+      )
     );
   });
 
@@ -193,58 +196,6 @@ function extractFolders(content: Structure): string[] {
     (folderName) => (content[folderName] as FolderStructure | SchematicStructure).type === 'folder'
   );
 }
-
-// function processSchematic(
-//   schematicName: string,
-//   content: SchematicStructure,
-//   parentsSettings: any,
-//   path: string,
-//   _context: SchematicContext
-// ) {
-//   const globalSettings = getSchematicSettingsByAlias(
-//     _context,
-//     schematicName,
-//     parentsSettings.globalSettings
-//   );
-//
-//   const projectSettings = getSchematicSettingsByAlias(
-//     _context,
-//     schematicName,
-//     parentsSettings.projectSettings
-//   );
-//
-//   const { instances, settings } = content[schematicName];
-//
-//   const [collectionName, schematic] = schematicName.split(':', 2);
-//
-//   const finalCollectionName =
-//     collectionName && schematic
-//       ? collectionName
-//       : globalSettings?.collection ?? projectSettings?.collection;
-//
-//   const finalSchematicName =
-//     schematic ?? globalSettings?.schematicName ?? projectSettings?.schematicName ?? schematicName;
-//
-//   if (!finalCollectionName) {
-//     throw new Error(`Collection name not found for schematic: ${schematicName}`);
-//   }
-//
-//   if (!finalSchematicName) {
-//     throw new Error(`Schematic name not found for schematic: ${schematicName}`);
-//   }
-//
-//   return executeExternalSchematicRules(
-//     { globalSettings, projectSettings },
-//     {
-//       collection: finalCollectionName,
-//       schematicName: finalSchematicName,
-//       instances: instances,
-//       settings: settings,
-//     },
-//     path,
-//     _context
-//   );
-// }
 
 //Create projects if they don't exist
 // function checkProject(): Rule {
