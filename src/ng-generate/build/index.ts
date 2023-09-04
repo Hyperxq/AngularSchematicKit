@@ -124,51 +124,18 @@ function processStructure(
 ) {
   const { type, ...content } = structure;
 
-  const schematics = Object.keys(content).filter(
-    (key) => (content[key] as FolderStructure | SchematicStructure).type === 'schematic'
+  const schematics = extractStructures(
+    content as FolderStructure | SchematicStructure,
+    'schematic'
   );
 
   schematics.forEach((schematicName) => {
-    const globalSettings = getSchematicSettingsByAlias(
-      _context,
-      schematicName,
-      parentsSettings.globalSettings
-    );
-
-    const projectSettings = getSchematicSettingsByAlias(
-      _context,
-      schematicName,
-      parentsSettings.projectSettings
-    );
-
-    const { instances, settings } = content[schematicName] as SchematicStructure;
-
-    const [collectionName, schematic] = schematicName.split(':', 2);
     calls.push(
-      ...executeExternalSchematicRules(
-        { globalSettings, projectSettings },
-        {
-          collection:
-            collectionName && schematic
-              ? collectionName
-              : globalSettings?.collection ?? projectSettings?.collection,
-          schematicName:
-            schematic ??
-            globalSettings?.schematicName ??
-            projectSettings?.schematicName ??
-            schematicName,
-          instances,
-          settings: settings,
-        },
-        path,
-        _context
-      )
+      ...processSchematic(_context, schematicName, content[schematicName], parentsSettings, path)
     );
   });
 
-  const folderNames = Object.keys(content).filter(
-    (folderName) => (content[folderName] as FolderStructure | SchematicStructure).type === 'folder'
-  );
+  const folderNames = extractStructures(content as FolderStructure | SchematicStructure, 'folder');
 
   folderNames.forEach((folderName) => {
     calls.push(
@@ -183,6 +150,64 @@ function processStructure(
   });
 
   return calls;
+}
+
+function processSchematic(
+  _context: SchematicContext,
+  schematicName: string,
+  structure: SchematicStructure,
+  parentsSettings: {
+    globalSettings?: {
+      [key: string]: { [prop: string]: { alias: string } & { [prop: string]: any } };
+    };
+    projectSettings?: {
+      [key: string]: { [prop: string]: { alias: string } & { [prop: string]: any } };
+    };
+  },
+  path: string
+) {
+  const globalSettings = getSchematicSettingsByAlias(
+    _context,
+    schematicName,
+    parentsSettings.globalSettings
+  );
+
+  const projectSettings = getSchematicSettingsByAlias(
+    _context,
+    schematicName,
+    parentsSettings.projectSettings
+  );
+
+  const { instances, settings } = structure;
+
+  const [collectionName, schematic] = schematicName.split(':', 2);
+  return executeExternalSchematicRules(
+    { globalSettings, projectSettings },
+    {
+      collection:
+        collectionName && schematic
+          ? collectionName
+          : globalSettings?.collection ?? projectSettings?.collection,
+      schematicName:
+        schematic ??
+        globalSettings?.schematicName ??
+        projectSettings?.schematicName ??
+        schematicName,
+      instances,
+      settings: settings,
+    },
+    path,
+    _context
+  );
+}
+
+function extractStructures(
+  content: FolderStructure | SchematicStructure,
+  type: 'schematic' | 'folder'
+): string[] {
+  return Object.keys(content).filter(
+    (key) => (content[key] as FolderStructure | SchematicStructure).type === type
+  );
 }
 
 //Create projects if they don't exist
@@ -211,8 +236,6 @@ function executeGlobalSchematicRules(
       );
     }
 
-    _context.logger.log('info', finalCollectionName);
-    _context.logger.log('info', finalSchematicName);
     calls.push(
       ...executeExternalSchematicRules(
         { globalSettings: globalSetting },
