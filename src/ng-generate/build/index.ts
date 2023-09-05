@@ -1,4 +1,4 @@
-import {chain, noop, Rule, SchematicContext, SchematicsException, Tree,} from '@angular-devkit/schematics';
+import {chain, noop, Rule, schematic, SchematicContext, SchematicsException, Tree,} from '@angular-devkit/schematics';
 import {getJsonFile, getProject, readWorkspace} from '../../utils';
 // import {WorkspaceStructure} from './build.interfaces';
 import {
@@ -55,7 +55,7 @@ async function ensureProjectExists(projects: IProjects, tree: Tree) {
         throw new SchematicsException('Type is needed for every project');
       }
       calls.push(
-        externalSchematic('@schematics/angular', type, {
+        schematic(type, {
           name: projectName,
         })
       );
@@ -91,7 +91,9 @@ async function processProjects(
   const projectKeys = Object.keys(projects);
   projectKeys.forEach((projectName) => {
     let project = getProject(workspace, projectName);
-    const path = project?.root;
+    //TODO: Workaround, update angular.json are happening at the end.
+    const path = project?.root ?? `${projects}/${projectName}`;
+    _context.logger.log('info', `Project path: ${path}, project: ${projectName}`);
     const { type, settings: projectSettings, ...structures } = projects[projectName];
     Object.entries(structures)
       .map<Structure>((structure) => ({ [structure[0]]: structure[1] } as Structure))
@@ -99,7 +101,7 @@ async function processProjects(
         _context.logger.log('info', `Folder structure: ${JSON.stringify(structure)}`);
         calls.push(
           ...processStructure(
-            path ?? '',
+            path,
             {
               globalSettings: settings ?? {},
               projectSettings: projectSettings ?? {},
