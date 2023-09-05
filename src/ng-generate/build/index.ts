@@ -101,12 +101,11 @@ async function processProjects(
     let project = getProject(workspace, projectName);
     //TODO: Workaround, update angular.json are happening at the end.
     const path = project?.root ?? `projects/${projectName}`;
-    _context.logger.log('info', `Project path: ${path}, project: ${projectName}`);
+    _context.logger.log('info', `Project path: ${project?.root}, project: ${projectName}`);
     const { type, settings: projectSettings, ...structures } = projects[projectName];
     Object.entries(structures)
       .map<Structure>((structure) => ({ [structure[0]]: structure[1] } as Structure))
       .forEach((structure: Structure) => {
-        _context.logger.log('info', `Folder structure: ${JSON.stringify(structure)}`);
         calls.push(
           ...processStructure(
             path,
