@@ -51,7 +51,7 @@ export function executeWorkspaceSchematics(): Rule {
     calls.push(...executeGlobalSchematicRules(_context, schematics, settings ?? {}));
     calls.push(...(await processProjects(_context, projects, settings, tree)));
     // return chain(calls);
-    return chain([mergeWith(apply(empty(), [...projectsRules, move('/')])), ...calls]);
+    return chain([mergeWith(apply(empty(), [...projectsRules, move('./')])), ...calls]);
   };
 }
 
