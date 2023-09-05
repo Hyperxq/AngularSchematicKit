@@ -97,12 +97,10 @@ async function processProjects(
   const calls: Rule[] = [];
   const workspace = await readWorkspace(tree);
   const projectKeys = Object.keys(projects);
-  _context.logger.log('info', `Projects ${projectKeys.toString()}`);
   projectKeys.forEach((projectName) => {
     let project = getProject(workspace, projectName);
     //TODO: Workaround, update angular.json are happening at the end.
-    const path = project?.root ?? `projects/${projectName}`;
-    _context.logger.log('info', `Project path: ${project?.root}, project: ${projectName}`);
+    const path = !!project ? project?.root : `projects/${projectName}`;
     const { type, settings: projectSettings, ...structures } = projects[projectName];
     Object.entries(structures)
       .map<Structure>((structure) => ({ [structure[0]]: structure[1] } as Structure))
