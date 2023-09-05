@@ -51,7 +51,10 @@ export function executeWorkspaceSchematics(): Rule {
     calls.push(...executeGlobalSchematicRules(_context, schematics, settings ?? {}));
     calls.push(...(await processProjects(_context, projects, settings, tree)));
     // return chain(calls);
-    return chain([mergeWith(apply(empty(), [...projectsRules, move('./')])), ...calls]);
+    return chain([
+      mergeWith(apply(empty(), [...projectsRules, move('POC-internal-schematics-B')])),
+      ...calls,
+    ]);
   };
 }
 
@@ -68,9 +71,14 @@ async function ensureProjectExists(projects: IProjects, tree: Tree) {
         throw new SchematicsException('Type is needed for every project');
       }
       calls.push(
-        externalSchematic('@schematics/angular', type, {
-          name: projectName,
-        })
+        externalSchematic(
+          '@schematics/angular',
+          type,
+          {
+            name: projectName,
+          },
+          { interactive: false }
+        )
       );
     } else {
       calls.push(noop());
