@@ -97,6 +97,7 @@ async function processProjects(
   const calls: Rule[] = [];
   const workspace = await readWorkspace(tree);
   const projectKeys = Object.keys(projects);
+  _context.logger.log('info', `Projects ${projectKeys.toString()}`);
   projectKeys.forEach((projectName) => {
     let project = getProject(workspace, projectName);
     //TODO: Workaround, update angular.json are happening at the end.
