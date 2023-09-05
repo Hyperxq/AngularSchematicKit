@@ -3,7 +3,6 @@ import {
   chain,
   empty,
   mergeWith,
-  move,
   noop,
   Rule,
   SchematicContext,
@@ -51,10 +50,7 @@ export function executeWorkspaceSchematics(): Rule {
     calls.push(...executeGlobalSchematicRules(_context, schematics, settings ?? {}));
     calls.push(...(await processProjects(_context, projects, settings, tree)));
     // return chain(calls);
-    return chain([
-      mergeWith(apply(empty(), [...projectsRules, move('POC-internal-schematics-B')])),
-      ...calls,
-    ]);
+    return chain([mergeWith(apply(empty(), [...projectsRules])), ...calls]);
   };
 }
 
