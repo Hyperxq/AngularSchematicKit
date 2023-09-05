@@ -1,14 +1,4 @@
-import {
-  apply,
-  chain,
-  empty,
-  mergeWith,
-  noop,
-  Rule,
-  SchematicContext,
-  SchematicsException,
-  Tree,
-} from '@angular-devkit/schematics';
+import {chain, noop, Rule, SchematicContext, SchematicsException, Tree,} from '@angular-devkit/schematics';
 import {getJsonFile, getProject, readWorkspace} from '../../utils';
 // import {WorkspaceStructure} from './build.interfaces';
 import {
@@ -50,7 +40,8 @@ export function executeWorkspaceSchematics(): Rule {
     calls.push(...executeGlobalSchematicRules(_context, schematics, settings ?? {}));
     calls.push(...(await processProjects(_context, projects, settings, tree)));
     // return chain(calls);
-    return chain([mergeWith(apply(empty(), [...projectsRules])), ...calls]);
+    return chain([...projectsRules, ...calls]);
+    // return chain([mergeWith(apply(empty(), [...projectsRules])), ...calls]);
   };
 }
 
