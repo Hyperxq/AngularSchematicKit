@@ -62,7 +62,7 @@ async function ensureProjectExists(projects: IProjects, tree: Tree, context: Sch
         throw new SchematicsException('Type is needed for every project');
       }
       context.logger.info(`Project ${projectName} does not exist, creating...`);
-      context.addTask(new RunSchematicTask(type, { name: projectName }));
+      context.addTask(new RunSchematicTask('@schematics/angular', type, { name: projectName }));
       // calls.push(
       //   externalSchematic(
       //     '@schematics/angular',
