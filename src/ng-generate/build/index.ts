@@ -47,10 +47,10 @@ export function executeWorkspaceSchematics(): Rule {
     );
     // calls.push();
     const projectsRules = await ensureProjectExists(projects as IProjects, tree, _context);
-    calls.push(...executeGlobalSchematicRules(_context, schematics, settings ?? {}));
-    calls.push(...(await processProjects(_context, projects, settings, tree)));
-    // executeGlobalSchematicRules(_context, schematics, settings ?? {});
-    // await processProjects(_context, projects, settings, tree);
+    // calls.push(...executeGlobalSchematicRules(_context, schematics, settings ?? {}));
+    // calls.push(...(await processProjects(_context, projects, settings, tree)));
+    executeGlobalSchematicRules(_context, schematics, settings ?? {});
+    await processProjects(_context, projects, settings, tree);
     // return chain(calls);
     // return chain([...projectsRules, ...calls]);
     return chain([mergeWith(apply(empty(), projectsRules)), ...calls]);
