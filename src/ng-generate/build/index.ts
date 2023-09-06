@@ -1,4 +1,4 @@
-import {chain, noop, Rule, SchematicContext, SchematicsException, Tree,} from '@angular-devkit/schematics';
+import {chain, Rule, SchematicContext, SchematicsException, Tree,} from '@angular-devkit/schematics';
 import {getJsonFile, getProject, readWorkspace} from '../../utils';
 // import {WorkspaceStructure} from './build.interfaces';
 import {
@@ -38,10 +38,10 @@ export function executeWorkspaceSchematics(): Rule {
     );
     // calls.push();
     await ensureProjectExists(projects as IProjects, tree, _context);
-    // calls.push(...executeGlobalSchematicRules(_context, schematics, settings ?? {}));
-    // calls.push(...(await processProjects(_context, projects, settings, tree)));
-    executeGlobalSchematicRules(_context, schematics, settings ?? {});
-    await processProjects(_context, projects, settings, tree);
+    calls.push(...executeGlobalSchematicRules(_context, schematics, settings ?? {}));
+    calls.push(...(await processProjects(_context, projects, settings, tree)));
+    // executeGlobalSchematicRules(_context, schematics, settings ?? {});
+    // await processProjects(_context, projects, settings, tree);
     return chain(calls);
     // return chain([...projectsRules, ...calls]);
     // return chain([mergeWith(apply(empty(), projectsRules)), ...calls]);
@@ -51,7 +51,7 @@ export function executeWorkspaceSchematics(): Rule {
 async function ensureProjectExists(projects: IProjects, tree: Tree, context: SchematicContext) {
   const workspace = await readWorkspace(tree);
   const projectNames = Object.keys(projects);
-  const calls: Rule[] = [];
+  // const calls: Rule[] = [];
   context.logger.log('info', projectNames.toString());
   for (const projectName of projectNames) {
     let project = getProject(workspace, projectName);
@@ -74,10 +74,10 @@ async function ensureProjectExists(projects: IProjects, tree: Tree, context: Sch
       //   )
       // );
     } else {
-      calls.push(noop());
+      // calls.push(noop());
     }
   }
-  return calls;
+  // return calls;
 }
 
 async function processProjects(
