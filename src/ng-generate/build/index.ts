@@ -1,14 +1,4 @@
-import {
-  apply,
-  chain,
-  empty,
-  mergeWith,
-  noop,
-  Rule,
-  SchematicContext,
-  SchematicsException,
-  Tree,
-} from '@angular-devkit/schematics';
+import {chain, noop, Rule, SchematicContext, SchematicsException, Tree,} from '@angular-devkit/schematics';
 import {getJsonFile, getProject, readWorkspace} from '../../utils';
 // import {WorkspaceStructure} from './build.interfaces';
 import {
@@ -23,6 +13,7 @@ import {
   WorkspaceStructure,
 } from './build.interfaces';
 import {externalSchematic} from '@angular-devkit/schematics/src/rules/schematic';
+import {RunSchematicTask} from '@angular-devkit/schematics/tasks';
 
 /*
  * Steps
@@ -46,22 +37,22 @@ export function executeWorkspaceSchematics(): Rule {
       './project-structure.json'
     );
     // calls.push();
-    const projectsRules = await ensureProjectExists(projects as IProjects, tree, _context);
+    await ensureProjectExists(projects as IProjects, tree, _context);
     // calls.push(...executeGlobalSchematicRules(_context, schematics, settings ?? {}));
     // calls.push(...(await processProjects(_context, projects, settings, tree)));
     executeGlobalSchematicRules(_context, schematics, settings ?? {});
     await processProjects(_context, projects, settings, tree);
-    // return chain(calls);
+    return chain(calls);
     // return chain([...projectsRules, ...calls]);
-    return chain([mergeWith(apply(empty(), projectsRules)), ...calls]);
+    // return chain([mergeWith(apply(empty(), projectsRules)), ...calls]);
   };
 }
 
-async function ensureProjectExists(projects: IProjects, tree: Tree, _context: SchematicContext) {
+async function ensureProjectExists(projects: IProjects, tree: Tree, context: SchematicContext) {
   const workspace = await readWorkspace(tree);
   const projectNames = Object.keys(projects);
   const calls: Rule[] = [];
-  _context.logger.log('info', projectNames.toString());
+  context.logger.log('info', projectNames.toString());
   for (const projectName of projectNames) {
     let project = getProject(workspace, projectName);
     if (!project) {
@@ -70,16 +61,18 @@ async function ensureProjectExists(projects: IProjects, tree: Tree, _context: Sc
       if (!type) {
         throw new SchematicsException('Type is needed for every project');
       }
-      calls.push(
-        externalSchematic(
-          '@schematics/angular',
-          type,
-          {
-            name: projectName,
-          },
-          { interactive: false }
-        )
-      );
+      context.logger.info(`Project ${projectName} does not exist, creating...`);
+      context.addTask(new RunSchematicTask(type, { name: projectName }));
+      // calls.push(
+      //   externalSchematic(
+      //     '@schematics/angular',
+      //     type,
+      //     {
+      //       name: projectName,
+      //     },
+      //     { interactive: false }
+      //   )
+      // );
     } else {
       calls.push(noop());
     }
