@@ -1,4 +1,14 @@
-import {chain, noop, Rule, SchematicContext, SchematicsException, Tree,} from '@angular-devkit/schematics';
+import {
+  apply,
+  chain,
+  empty,
+  mergeWith,
+  noop,
+  Rule,
+  SchematicContext,
+  SchematicsException,
+  Tree,
+} from '@angular-devkit/schematics';
 import {getJsonFile, getProject, readWorkspace} from '../../utils';
 // import {WorkspaceStructure} from './build.interfaces';
 import {
@@ -36,19 +46,22 @@ export function executeWorkspaceSchematics(): Rule {
       './project-structure.json'
     );
     // calls.push();
-    const projectsRules = await ensureProjectExists(projects as IProjects, tree);
+    const projectsRules = await ensureProjectExists(projects as IProjects, tree, _context);
     calls.push(...executeGlobalSchematicRules(_context, schematics, settings ?? {}));
     calls.push(...(await processProjects(_context, projects, settings, tree)));
+    // executeGlobalSchematicRules(_context, schematics, settings ?? {});
+    // await processProjects(_context, projects, settings, tree);
     // return chain(calls);
-    return chain([...projectsRules, ...calls]);
-    // return chain([mergeWith(apply(empty(), [...projectsRules])), ...calls]);
+    // return chain([...projectsRules, ...calls]);
+    return chain([mergeWith(apply(empty(), projectsRules)), ...calls]);
   };
 }
 
-async function ensureProjectExists(projects: IProjects, tree: Tree) {
+async function ensureProjectExists(projects: IProjects, tree: Tree, _context: SchematicContext) {
   const workspace = await readWorkspace(tree);
   const projectNames = Object.keys(projects);
   const calls: Rule[] = [];
+  _context.logger.log('info', projectNames.toString());
   for (const projectName of projectNames) {
     let project = getProject(workspace, projectName);
     if (!project) {
@@ -99,7 +112,8 @@ async function processProjects(
   const projectKeys = Object.keys(projects);
   projectKeys.forEach((projectName) => {
     let project = getProject(workspace, projectName);
-    const path = project?.root ?? '';
+    //TODO: Workaround, update angular.json are happening at the end.
+    const path = !!project ? project?.root : `projects/${projectName}`;
     const { type, settings: projectSettings, ...structures } = projects[projectName];
     Object.entries(structures)
       .map<Structure>((structure) => ({ [structure[0]]: structure[1] } as Structure))
