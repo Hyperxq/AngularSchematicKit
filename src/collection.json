@@ -14,35 +14,6 @@
         "start"
       ]
     },
-    "scan": {
-      "description": "Scan project and represent into a json file",
-      "factory": "./ng-generate/scan-project/index#scan",
-      "schema": "./ng-generate/scan-project/schema.json",
-      "aliases": [
-        "s"
-      ]
-    },
-    "build": {
-      "description": "Execute all the schematics in the json file",
-      "factory": "./ng-generate/build/index#executeWorkspaceSchematics",
-      "schema": "./ng-generate/build/schema.json",
-      "aliases": [
-        "b"
-      ]
-    },
-    "scaffolding": {
-      "description": "recreate scaffold",
-      "factory": "./ng-generate/scaffolding/index#scaffolding",
-      "schema": "./ng-generate/scaffolding/schema.json",
-      "aliases": [
-        "sc"
-      ]
-    },
-    "customScaffold": {
-      "description": "recreate custom scaffold",
-      "factory": "./ng-generate/scaffolding/custom-scaffolding/index#customScaffolding",
-      "schema": "./ng-generate/scaffolding/custom-scaffolding/schema.json"
-    },
     "add-linters": {
       "description": "Add default linters",
       "factory": "./ng-generate/linters/index#addLinters",
@@ -58,11 +29,6 @@
       "aliases": [
         "gh"
       ]
-    },
-    "newFeature": {
-      "description": "Add a new scaffold feature",
-      "factory": "./ng-generate/new-feature-structure/index",
-      "schema": "./ng-generate/new-feature-structure/schema.json"
     }
   }
 }

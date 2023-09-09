@@ -12,14 +12,12 @@
       "minItems": 1,
       "items": {
         "enum": [
-          "scaffolding",
           "add-git-hooks",
           "add-linters"
         ],
         "type": "string"
       },
       "default": [
-        "scaffolding",
         "add-git-hooks",
         "add-linters"
       ],
