@@ -1,0 +1,10 @@
+<%# Prettier Config %>
+<% if(!!options) { %><%= options %><% } else { %>{
+  "printWidth": 120,
+  "singleQuote": true,
+  "useTabs": false,
+  "tabWidth": 2,
+  "semi": true,
+  "bracketSpacing": true,
+  "endOfLine": "auto"
+}<% }%>

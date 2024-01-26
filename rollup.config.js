@@ -108,9 +108,18 @@ export default [
             },
           },
           {
-            src: 'src/**/**/*.template',
+            src: 'src/ng-generate/**/**/*.template',
             dest: 'dist/',
             rename: (name, extension, fullPath) => {
+              console.log(name);
+              return fullPath.replace('src/', ''); // Return the new path
+            },
+          },
+          {
+            src: 'src/ng-generate/**/**/.*.template',
+            dest: 'dist/',
+            rename: (name, extension, fullPath) => {
+              console.log(name);
               return fullPath.replace('src/', ''); // Return the new path
             },
           },
