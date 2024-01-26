@@ -57,6 +57,7 @@ export default [
         preserveModules: true,
       },
     ],
+    external: baseExternal,
     plugins: [
       ...basePlugins,
       cleaner({
