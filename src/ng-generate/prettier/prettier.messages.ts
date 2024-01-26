@@ -2,6 +2,7 @@ import { colors } from '../../utils/color';
 
 export const MESSAGES = {
   WELCOME: `________________________________________
+  
 ${colors.green('Welcome to')}
 ${colors.green(`${colors.bold('Schematic:')} Prettier`)}
 ________________________________________`,

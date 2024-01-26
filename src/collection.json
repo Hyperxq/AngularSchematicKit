@@ -13,6 +13,14 @@
       "aliases": [
         "p"
       ]
+    },
+    "git-hooks": {
+      "description": "Install and configure prettier",
+      "factory": "./ng-generate/git-hooks/git-hooks.factory#gitHooksFactory",
+      "schema": "./ng-generate/git-hooks/schema.json",
+      "aliases": [
+        "gh"
+      ]
     }
   }
 }

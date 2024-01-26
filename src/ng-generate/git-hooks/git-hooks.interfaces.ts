@@ -1,5 +1,4 @@
 export interface PrettierConfig {
-  gitHooks: boolean;
   version?: string;
   arrowParens?: 'always' | 'avoid';
   bracketSameLine?: boolean;

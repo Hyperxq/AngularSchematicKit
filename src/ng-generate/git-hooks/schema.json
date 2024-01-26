@@ -4,12 +4,6 @@
   "title": "Add prettier to a project",
   "type": "object",
   "properties": {
-    "gitHooks": {
-      "type": "boolean",
-      "description": "Would you like to add git hooks?",
-      "default": false,
-      "x-prompt": "Would you like to add git hooks?"
-    },
     "version": {
       "description": "Specify the version that will install prettier",
       "type": "string"
@@ -477,8 +471,5 @@
       }
     }
   },
-  "additionalProperties": false,
-  "required": [
-    "gitHooks"
-  ]
+  "additionalProperties": false
 }

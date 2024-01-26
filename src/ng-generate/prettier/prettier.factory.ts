@@ -6,9 +6,13 @@ import {
   MergeStrategy,
   mergeWith,
   move,
+  noop,
   renameTemplateFiles,
   Rule,
+  schematic,
+  SchematicContext,
   strings,
+  Tree,
   url,
 } from '@angular-devkit/schematics';
 import { MESSAGES } from './prettier.messages';
@@ -17,11 +21,16 @@ import { execSync } from 'child_process';
 import { Spinner } from '../../utils/spinner';
 
 export function prettierFactory(options: PrettierConfig) {
-  return () => {
-    const { version, ...prettierOptions } = options;
+  return (_tree: Tree, context: SchematicContext) => {
+    const { version, gitHooks, ...prettierOptions } = options;
     console.log(MESSAGES.WELCOME);
     console.log(MESSAGES.TASK_TO_BE_DONE);
-    return chain([addPrettierFiles(prettierOptions), installPrettier(version)]);
+
+    return chain([
+      addPrettierFiles(prettierOptions),
+      installPrettier(version),
+      gitHooks ? schematic('git-hooks', {}) : noop(),
+    ]);
   };
 }
 
@@ -40,7 +49,7 @@ function installPrettier(version?: string): Rule {
   };
 }
 
-function addPrettierFiles(options: Omit<PrettierConfig, 'version'>): Rule {
+function addPrettierFiles(options: Omit<PrettierConfig, 'version' | 'gitHooks'>): Rule {
   const urlTemplates = ['.prettierrc.template', '.prettierignore.template'];
   const template = apply(url('./files'), [
     filter((path) => urlTemplates.some((template) => path.includes(template))),
