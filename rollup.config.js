@@ -112,7 +112,6 @@ export default [
             src: 'src/ng-generate/**/**/*.template',
             dest: 'dist/',
             rename: (name, extension, fullPath) => {
-              console.log(name);
               return fullPath.replace('src/', ''); // Return the new path
             },
           },
@@ -120,7 +119,6 @@ export default [
             src: 'src/ng-generate/**/**/.*.template',
             dest: 'dist/',
             rename: (name, extension, fullPath) => {
-              console.log(name);
               return fullPath.replace('src/', ''); // Return the new path
             },
           },
@@ -133,7 +131,11 @@ export default [
   ...Object.entries(tsFilesSrc).map(([name, file]) => ({
     input: { [name]: file },
     output: {
-      dir: `dist\\${file.replace(`\\${name}.ts`, '').replace('src\\', '')}`,
+      dir: `dist/${file
+        .replace(`/${name}.ts`, '')
+        .replace(`\\${name}.ts`, '')
+        .replace('src/', '')
+        .replace('src\\', '')}`,
     },
     plugins: basePlugins,
     external: baseExternal,
@@ -142,7 +144,11 @@ export default [
   ...Object.entries(tsFilesSrc).map(([name, file]) => ({
     input: { [name]: file },
     output: {
-      dir: `dist\\${file.replace(`\\${name}.ts`, '').replace('src\\', '')}`,
+      dir: `dist/${file
+        .replace(`/${name}.ts`, '')
+        .replace(`\\${name}.ts`, '')
+        .replace('src/', '')
+        .replace('src/', '')}`,
     },
     plugins: [dts()],
   })),
