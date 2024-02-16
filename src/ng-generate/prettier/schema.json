@@ -10,6 +10,10 @@
       "default": false,
       "x-prompt": "Would you like to add git hooks?"
     },
+    "defaultOptions": {
+      "type": "boolean",
+      "default": true
+    },
     "version": {
       "description": "Specify the version that will install prettier",
       "type": "string"

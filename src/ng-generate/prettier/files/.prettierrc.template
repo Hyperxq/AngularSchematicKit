@@ -1,5 +1,8 @@
 <%# Prettier Config %>
-<% if(!!options) { %><%= options %><% } else { %>{
+{
+<% if(!!options) { %>
+    <%= Object.entries(options).map(([key, value]) => `"${key}":${value}`).join(',') %>
+<% } else { %>
   "printWidth": 120,
   "singleQuote": true,
   "useTabs": false,
@@ -7,4 +10,5 @@
   "semi": true,
   "bracketSpacing": true,
   "endOfLine": "auto"
-}<% }%>
+<% }%>
+}

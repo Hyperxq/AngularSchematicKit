@@ -24,12 +24,18 @@ function getInputsFromGlob(pattern) {
 }
 
 const tsFilesSrc = getInputsFromGlob('src/**/**/**/**/*.ts');
-const tsJSONFiles = getInputsFromGlob('src/**/**/**/**/*.json');
+const buildFolderPathPattern = /^(src\/)(.*?)([\/][^\/]+\.ts)$/gs;
+const removeSrcPattern = /^(src[\/\\])(.*?)/gs;
+
+const normalizeUrl = (url) => url.replace(/\\/g, '/');
+const removeSrcPath = (string) => normalizeUrl(string).replace(removeSrcPattern, '$2');
+const removeSrcFileNamePath = (string) =>
+  normalizeUrl(string).replace(buildFolderPathPattern, '$2');
 
 const basePlugins = [
+  typescript({ outputToFilesystem: false }),
   peerDepsExternal(),
   nodeResolve(),
-  typescript({ outputToFilesystem: false }),
   commonjs(),
   builtins(),
   globals(),
@@ -105,21 +111,14 @@ export default [
             src: 'src/**/**/*.json',
             dest: 'dist/',
             rename: (name, extension, fullPath) => {
-              return fullPath.replace('src/', ''); // Return the new path
+              return removeSrcPath(fullPath);
             },
           },
           {
-            src: 'src/ng-generate/**/**/*.template',
+            src: ['src/**/**/**/**/*.template', 'src/**/**/**/**/.*.template'],
             dest: 'dist/',
             rename: (name, extension, fullPath) => {
-              return fullPath.replace('src/', ''); // Return the new path
-            },
-          },
-          {
-            src: 'src/ng-generate/**/**/.*.template',
-            dest: 'dist/',
-            rename: (name, extension, fullPath) => {
-              return fullPath.replace('src/', ''); // Return the new path
+              return removeSrcPath(fullPath);
             },
           },
         ],
@@ -131,11 +130,7 @@ export default [
   ...Object.entries(tsFilesSrc).map(([name, file]) => ({
     input: { [name]: file },
     output: {
-      dir: `dist/${file
-        .replace(`/${name}.ts`, '')
-        .replace(`\\${name}.ts`, '')
-        .replace('src/', '')
-        .replace('src\\', '')}`,
+      dir: `dist/${removeSrcFileNamePath(file)}`,
     },
     plugins: basePlugins,
     external: baseExternal,
@@ -144,11 +139,7 @@ export default [
   ...Object.entries(tsFilesSrc).map(([name, file]) => ({
     input: { [name]: file },
     output: {
-      dir: `dist/${file
-        .replace(`/${name}.ts`, '')
-        .replace(`\\${name}.ts`, '')
-        .replace('src/', '')
-        .replace('src/', '')}`,
+      dir: `dist/${removeSrcFileNamePath(file)}`,
     },
     plugins: [dts()],
   })),

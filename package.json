@@ -1,12 +1,11 @@
 {
   "name": "@danils/schematicskit",
-  "version": "4.2.1",
+  "version": "4.2.8",
   "description": "Angular-builder allows the developer to scan their projects and represent into a json.\nNext, they can execute from one to many angular schematics.",
   "private": false,
   "scripts": {
     "build": "rollup -c --bundleConfigAsCjs --treeshake",
-    "testLocal": "npm run build && cd dist && npm link",
-    "build:watch": "tsc -p tsconfig.json --watch",
+    "build:watch": "rollup -c --bundleConfigAsCjs --watch",
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "prettier --write .",
     "publish": "npm run build && cd dist && npm publish --access=public",

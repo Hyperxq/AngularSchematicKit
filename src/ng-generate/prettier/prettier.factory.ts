@@ -22,12 +22,12 @@ import { Spinner } from '../../utils/spinner';
 
 export function prettierFactory(options: PrettierConfig) {
   return (_tree: Tree, context: SchematicContext) => {
-    const { version, gitHooks, ...prettierOptions } = options;
+    const { version, gitHooks, defaultOptions, ...prettierOptions } = options;
     console.log(MESSAGES.WELCOME);
     console.log(MESSAGES.TASK_TO_BE_DONE);
 
     return chain([
-      addPrettierFiles(prettierOptions),
+      addPrettierFiles(defaultOptions ? {} : prettierOptions),
       installPrettier(version),
       gitHooks ? schematic('git-hooks', {}) : noop(),
     ]);
@@ -49,7 +49,9 @@ function installPrettier(version?: string): Rule {
   };
 }
 
-function addPrettierFiles(options: Omit<PrettierConfig, 'version' | 'gitHooks'>): Rule {
+function addPrettierFiles(
+  options: Omit<PrettierConfig, 'version' | 'gitHooks' | 'defaultOptions'>
+): Rule {
   const urlTemplates = ['.prettierrc.template', '.prettierignore.template'];
   const template = apply(url('./files'), [
     filter((path) => urlTemplates.some((template) => path.includes(template))),
