@@ -1,6 +1,6 @@
 {
   "name": "@danils/schematicskit",
-  "version": "4.2.8",
+  "version": "4.3.0",
   "description": "Angular-builder allows the developer to scan their projects and represent into a json.\nNext, they can execute from one to many angular schematics.",
   "private": false,
   "scripts": {
@@ -34,10 +34,10 @@
   "license": "MIT",
   "schematics": "./collection.json",
   "dependencies": {
-    "@angular-devkit/core": "^17.1.1",
-    "@angular-devkit/schematics": "^17.1.1",
-    "@angular-devkit/schematics-cli": "^17.1.1",
-    "@schematics/angular": "^17.1.1",
+    "@angular-devkit/core": "^17.2.0",
+    "@angular-devkit/schematics": "^17.2.0",
+    "@angular-devkit/schematics-cli": "^17.2.0",
+    "@schematics/angular": "^17.2.0",
     "ansi-colors": "^4.1.3",
     "inquirer": "8.2.6",
     "node-emoji": "^2.1.0",

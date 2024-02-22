@@ -1,25 +1,40 @@
 {
   "$schema": "../node_modules/@angular-devkit/schematics/collection-schema.json",
   "schematics": {
-    "ng-add": {
+    "builder-add": {
       "description": "A blank schematic.",
-      "factory": "./ng-add/index",
-      "schema": "./ng-add/schema.json"
+      "factory": "./builder-add/index",
+      "schema": "./builder-add/schema.json"
     },
     "prettier": {
       "description": "Install and configure prettier",
-      "factory": "./ng-generate/prettier/prettier.factory#prettierFactory",
-      "schema": "./ng-generate/prettier/schema.json",
+      "factory": "./builder-generate/prettier/prettier.factory#prettierFactory",
+      "schema": "./builder-generate/prettier/schema.json",
       "aliases": [
         "p"
       ]
     },
     "git-hooks": {
       "description": "Install and configure prettier",
-      "factory": "./ng-generate/git-hooks/git-hooks.factory#gitHooksFactory",
-      "schema": "./ng-generate/git-hooks/schema.json",
+      "factory": "./builder-generate/git-hooks/git-hooks.factory#gitHooksFactory",
       "aliases": [
         "gh"
+      ]
+    },
+    "empty-folder": {
+      "description": "Create an empty folder",
+      "factory": "./builder-generate/empty-folder/empty-folder.factory#emptyFolderFactory",
+      "schema": "./builder-generate/empty-folder/schema.json",
+      "aliases": [
+        "ef"
+      ]
+    },
+    "remove-folder-content": {
+      "description": "Create an empty folder",
+      "factory": "./builder-generate/remove-folder-content/remove-folder-content.factory#removeFolderContent",
+      "schema": "./builder-generate/remove-folder-content/schema.json",
+      "aliases": [
+        "rfc"
       ]
     }
   }

@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "$id": "RemoveFolderContent",
+  "title": "Add an empty folder",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The name of the folder. All the content of this folder will be deleted",
+      "$default": {
+        "$source": "argv",
+        "index": 0
+      },
+      "x-prompt": "What is the path/folderName where do you want to remove the content?"
+    },
+    "excludeFiles": {
+      "type": "string",
+      "description": "Comma-separated list of filenames or patterns to exclude from deletion",
+      "default": "",
+      "x-prompt": "Enter a comma-separated list of filenames or patterns to exclude from deletion (leave empty if none):"
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "name"
+  ]
+}
