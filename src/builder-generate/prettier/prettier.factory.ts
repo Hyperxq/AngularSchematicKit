@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import {
   apply,
   applyTemplates,
@@ -10,18 +11,17 @@ import {
   renameTemplateFiles,
   Rule,
   schematic,
-  SchematicContext,
   strings,
-  Tree,
   url,
 } from '@angular-devkit/schematics';
 import { MESSAGES } from './prettier.messages';
 import { PrettierConfig } from './prettier.interfaces';
 import { execSync } from 'child_process';
 import { Spinner } from '../../utils/spinner';
+import { addScriptToPackageJson } from '../../utils';
 
 export function prettierFactory(options: PrettierConfig) {
-  return (_tree: Tree, context: SchematicContext) => {
+  return () => {
     const { version, gitHooks, defaultOptions, ...prettierOptions } = options;
     console.log(MESSAGES.WELCOME);
     console.log(MESSAGES.TASK_TO_BE_DONE);
@@ -30,6 +30,7 @@ export function prettierFactory(options: PrettierConfig) {
       addPrettierFiles(defaultOptions ? {} : prettierOptions),
       installPrettier(version),
       gitHooks ? schematic('git-hooks', {}) : noop(),
+      addScriptToPackageJson('format', 'prettier --write .')
     ]);
   };
 }

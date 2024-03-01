@@ -3,7 +3,7 @@
   "schematics": {
     "builder-add": {
       "description": "A blank schematic.",
-      "factory": "./builder-add/index",
+      "factory": "./builder-add/builder-add.factory",
       "schema": "./builder-add/schema.json"
     },
     "prettier": {
@@ -35,6 +35,14 @@
       "schema": "./builder-generate/remove-folder-content/schema.json",
       "aliases": [
         "rfc"
+      ]
+    },
+    "schematics-library-bundler": {
+      "description": "Integrate a bundler to compile a schematic library",
+      "factory": "./builder-generate/schematics-library-bundler/schematics-library-bundler.factory#schematicsLibraryBundler",
+      "schema": "./builder-generate/schematics-library-bundler/schema.json",
+      "aliases": [
+        "slb"
       ]
     }
   }

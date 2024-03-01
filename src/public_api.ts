@@ -1,1 +1,1 @@
-export * from './builder-add';
+export * from './builder-add/builder-add.factory';

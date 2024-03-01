@@ -1,0 +1,30 @@
+{
+    "$schema": "http://json-schema.org/schema",
+    "$id": "SchematicsLibraryBundler",
+    "title": "Add all the configuration of a bundler for the schematics libraries",
+    "type": "object",
+    "properties": {
+      "bundler": {
+        "type": "string",
+        "description": "The bundler to use for the project.",
+        "enum": ["rollup", "ts", "ng-packagr"],
+        "$default": {
+            "$source": "argv",
+            "index": 0
+          },
+        "x-prompt": {
+          "message": "Which bundler would you like to use?",
+          "type": "list",
+          "items": [
+            { "value": "rollup", "label": "Rollup" },
+            { "value": "ts", "label": "TypeScript (ts)" },
+            { "value": "ng-packagr", "label": "ng-packagr" }
+          ]
+        }
+      }
+    },
+    "additionalProperties": false,
+    "required": [
+      "bundler"
+    ]
+  }
