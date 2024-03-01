@@ -1,5 +1,5 @@
 import { Rule, Tree, apply, filter, renameTemplateFiles, strings, url, applyTemplates, move, mergeWith, MergeStrategy, chain, noop, SchematicContext } from '@angular-devkit/schematics';
-import { NodeDependencyType, addPackageJsonDependency, addScriptToPackageJson, modifyPackageJson } from "../../utils";
+import { NodeDependencyType, addPackageJsonDependency, addScriptToPackageJson, installDependencies, modifyPackageJson } from "../../utils";
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 
 export function schematicsLibraryBundler({bundler}: {bundler: 'rollup' | 'ts' | 'ng-packagr'}) {
@@ -20,17 +20,13 @@ export function schematicsLibraryBundler({bundler}: {bundler: 'rollup' | 'ts' | 
             installDependencies(context),
             overwriteCollection(),
             modifyPackageJson("schematics", "./collection.json"),
+            modifyPackageJson("engines", {"node": ">= 20"}),
             addScriptToPackageJson('publish', 'npm run build && cd dist && npm publish --access=public'),
             addScriptToPackageJson('publish:verdaccio', 'npm run build && cd dist && npm publish --registry http://localhost:4873'),
             overriteTsConfig(),
             addPublicApiFile()
         ]);
     }
-}
-
-function installDependencies(context: SchematicContext) {
-    context.addTask(new NodePackageInstallTask());
-    return noop();
 }
 
 function addUtils(tree: Tree): Rule {
@@ -157,7 +153,9 @@ function addRollupDependecies(tree: Tree) {
 
 
 function overwriteCollection(): Rule {
-    const urlTemplates = ["collection.json.template"];
+
+    //TODO: move .nvmrc.template and .editorconfig.template to another function
+    const urlTemplates = ["collection.json.template", ".nvmrc.template", ".editorconfig.template"];
     const template = apply(url("./files"), [
       filter((path) => urlTemplates.some((urlTemplate) => path.includes(urlTemplate))),
       applyTemplates({

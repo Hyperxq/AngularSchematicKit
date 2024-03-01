@@ -12,6 +12,8 @@ export function modifyPackageJson(key: string, value: string | object): Rule {
       const packageJson = JSON.parse(packageJsonString);
 
       packageJson[key] = value;
+      
+      tree.overwrite(packageJsonPath, JSON.stringify(packageJson, null, 2));
       return tree;
   }
 }

@@ -6,8 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import { Tree } from '@angular-devkit/schematics';
+import { SchematicContext, Tree, noop } from '@angular-devkit/schematics';
 import { JSONFile } from './json-file';
+import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 
 const PKG_JSON_PATH = '/package.json';
 export enum NodeDependencyType {
@@ -77,4 +78,9 @@ export function getPackageJsonDependency(
   }
 
   return null;
+}
+
+export function installDependencies(context: SchematicContext) {
+  context.addTask(new NodePackageInstallTask());
+  return noop();
 }
