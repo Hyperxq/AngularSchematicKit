@@ -16,7 +16,7 @@ import {
 import { MESSAGES } from './git-hooks.messages';
 import { execSync } from 'child_process';
 import { Spinner } from '../../utils/spinner';
-import { addPackageJsonDependency, addScriptToPackageJson, installDependencies, logger, modifyPackageJson, NodeDependencyType } from 'src/utils';
+import { addPackageJsonDependency, addScriptToPackageJson, installDependencies, logger, modifyPackageJson, NodeDependencyType } from '../../utils';
 
 export function gitHooksFactory() {
   return (tree: Tree, context: SchematicContext) => {
