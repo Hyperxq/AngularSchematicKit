@@ -1,6 +1,6 @@
 <%# Prettier Config %>
 {
-<% if(!!options) { %>
+<% if(!!Object.entries(options).length > 0) { %>
     <%= Object.entries(options).map(([key, value]) => `"${key}":${value}`).join(',') %>
 <% } else { %>
   "printWidth": 120,

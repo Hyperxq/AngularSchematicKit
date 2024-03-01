@@ -1,6 +1,6 @@
 {
   "name": "@danils/schematicskit",
-  "version": "4.4.2",
+  "version": "4.4.3",
   "description": "Angular-builder allows the developer to scan their projects and represent into a json.\nNext, they can execute from one to many angular schematics.",
   "private": false,
   "scripts": {
