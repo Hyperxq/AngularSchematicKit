@@ -44,6 +44,13 @@
       "aliases": [
         "slb"
       ]
+    },
+    "add-utils": {
+      "description": "Add utilities files to the project",
+      "factory": "./builder-generate/add-utils/add-utils.factory#addUtilsFactory",
+      "aliases": [
+        "au"
+      ]
     }
   }
 }
