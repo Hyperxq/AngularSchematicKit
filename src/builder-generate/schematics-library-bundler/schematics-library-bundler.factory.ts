@@ -11,7 +11,6 @@ import {
   mergeWith,
   MergeStrategy,
   chain,
-  noop,
   SchematicContext,
 } from '@angular-devkit/schematics';
 import {
@@ -22,7 +21,13 @@ import {
   modifyPackageJson,
 } from '../../utils';
 
-export function schematicsLibraryBundler({ bundler }: { bundler: 'rollup' | 'ts' | 'ng-packagr' }) {
+export function schematicsLibraryBundler({
+  bundler,
+  packageManager,
+}: {
+  bundler: 'rollup' | 'ts' | 'ng-packagr';
+  packageManager: string;
+}) {
   return (tree: Tree, context: SchematicContext) => {
     //TODO: Add watch mode.
     //TODO: Add type: module to the package.json
@@ -35,7 +40,7 @@ export function schematicsLibraryBundler({ bundler }: { bundler: 'rollup' | 'ts'
     //Add utils
     return chain([
       bundlerFactory[bundler] ?? implementRollup(tree),
-      installDependencies(context),
+      installDependencies(context, packageManager),
       overwriteCollection(),
       modifyPackageJson('schematics', './collection.json'),
       modifyPackageJson('engines', { node: '>= 20' }),

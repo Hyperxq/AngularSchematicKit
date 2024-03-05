@@ -22,27 +22,40 @@ import { addScriptToPackageJson } from '../../utils';
 
 export function prettierFactory(options: PrettierConfig) {
   return () => {
-    const { version, gitHooks, defaultOptions, ...prettierOptions } = options;
+    const { version, gitHooks, defaultOptions, packageManager, ...prettierOptions } = options;
+    console.log(packageManager);
     console.log(MESSAGES.WELCOME);
     console.log(MESSAGES.TASK_TO_BE_DONE);
 
     return chain([
       addPrettierFiles(defaultOptions ? {} : prettierOptions),
       installPrettier(version),
-      gitHooks ? schematic('git-hooks', {}) : noop(),
-      addScriptToPackageJson('format', 'prettier --write .')
+      gitHooks ? schematic('git-hooks', { packageManager }) : noop(),
+      addScriptToPackageJson('format', 'prettier --write .'),
     ]);
   };
 }
 
-function installPrettier(version?: string): Rule {
+function installPrettier(version?: string, packageManager = 'npm'): Rule {
   return () => {
     const spinner = new Spinner('prettier installation');
+    const packageManagerCommands = {
+      npm: 'install',
+      yarn: 'add',
+      pnpm: 'add',
+      cnpm: 'install',
+      bun: 'add',
+    };
     try {
       spinner.start('Installing prettier');
-      execSync(`npm install --save-dev --save-exact prettier${version ? `@${version}` : ''}`, {
-        stdio: 'pipe',
-      });
+      execSync(
+        `${packageManager} ${
+          packageManagerCommands[packageManager]
+        } --save-dev --save-exact prettier${version ? `@${version}` : ''}`,
+        {
+          stdio: 'pipe',
+        }
+      );
       spinner.succeed('Prettier was installed successfully');
     } catch (e) {
       spinner.stop();
@@ -51,7 +64,7 @@ function installPrettier(version?: string): Rule {
 }
 
 function addPrettierFiles(
-  options: Omit<PrettierConfig, 'version' | 'gitHooks' | 'defaultOptions'>
+  options: Omit<PrettierConfig, 'version' | 'gitHooks' | 'defaultOptions' | 'packageManager'>
 ): Rule {
   const urlTemplates = ['.prettierrc.template', '.prettierignore.template'];
   const template = apply(url('./files'), [

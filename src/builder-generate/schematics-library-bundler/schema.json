@@ -21,6 +21,18 @@
             { "value": "ng-packagr", "label": "ng-packagr" }
           ]
         }
+      },
+      "packageManager": {
+        "description": "The package manager used to install dependencies.",
+        "type": "string",
+        "enum": [
+          "npm",
+          "yarn",
+          "pnpm",
+          "cnpm",
+          "bun"
+        ],
+        "default": "npm"
       }
     },
     "additionalProperties": false,
