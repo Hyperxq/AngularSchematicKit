@@ -16,9 +16,8 @@ import {
 } from '@angular-devkit/schematics';
 import { MESSAGES } from './prettier.messages';
 import { PrettierConfig } from './prettier.interfaces';
-import { execSync } from 'child_process';
 import { Spinner } from '../../utils/spinner';
-import { addScriptToPackageJson } from '../../utils';
+import { addScriptToPackageJson, spawnAsync } from '../../utils';
 
 export function prettierFactory(options: PrettierConfig) {
   return () => {
@@ -37,7 +36,7 @@ export function prettierFactory(options: PrettierConfig) {
 }
 
 function installPrettier(version?: string, packageManager = 'npm'): Rule {
-  return () => {
+  return async () => {
     const spinner = new Spinner('prettier installation');
     const packageManagerCommands = {
       npm: 'install',
@@ -48,14 +47,26 @@ function installPrettier(version?: string, packageManager = 'npm'): Rule {
     };
     try {
       spinner.start('Installing prettier');
-      execSync(
-        `${packageManager} ${
-          packageManagerCommands[packageManager]
-        } --save-dev --save-exact prettier${version ? `@${version}` : ''}`,
+      await spawnAsync(
+        packageManager,
+        [
+          packageManagerCommands[packageManager],
+          `--save-dev --save-exact prettier${version ? `@${version}` : ''}`,
+        ],
         {
-          stdio: 'pipe',
+          cwd: process.cwd(),
+          stdio: 'inherit',
+          shell: true,
         }
       );
+      // execSync(
+      //   `${packageManager} ${
+      //     packageManagerCommands[packageManager]
+      //   } --save-dev --save-exact prettier${version ? `@${version}` : ''}`,
+      //   {
+      //     stdio: 'pipe',
+      //   }
+      // );
       spinner.succeed('Prettier was installed successfully');
     } catch (e) {
       spinner.stop();

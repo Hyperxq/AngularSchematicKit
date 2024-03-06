@@ -23,6 +23,7 @@ import {
   logger,
   modifyPackageJson,
   NodeDependencyType,
+  spawnAsync,
 } from '../../utils';
 
 export function gitHooksFactory({ packageManager = 'npm' }: { packageManager: string }) {
@@ -49,7 +50,7 @@ export function gitHooksFactory({ packageManager = 'npm' }: { packageManager: st
 }
 
 function installDevs(packageManager: string): Rule {
-  return () => {
+  return async () => {
     const spinner = new Spinner('husky and lint-staged installation');
     try {
       spinner.start('Installing husky and lint-staged');
@@ -60,12 +61,21 @@ function installDevs(packageManager: string): Rule {
         cnpm: 'install',
         bun: 'add',
       };
-      execSync(
-        `${packageManager} ${packageManagerCommands[packageManager]} --save-dev husky lint-staged`,
+      await spawnAsync(
+        packageManager,
+        [packageManagerCommands[packageManager], `--save-dev husky lint-staged`],
         {
-          stdio: 'pipe',
+          cwd: process.cwd(),
+          stdio: 'inherit',
+          shell: true,
         }
       );
+      // execSync(
+      //   `${packageManager} ${packageManagerCommands[packageManager]} --save-dev husky lint-staged`,
+      //   {
+      //     stdio: 'pipe',
+      //   }
+      // );
       spinner.succeed('Husky and Lint-staged were installed successfully');
     } catch (e) {
       spinner.stop();
