@@ -30,6 +30,11 @@ function addUtilsFiles(tree: Tree): Rule {
     'logger.ts.template',
     'spinner.ts.template',
     'prompt.ts.template',
+    'dependencies.ts.template',
+    'eol.ts.template',
+    'json-file.ts.template',
+    'package-json.ts.template',
+    'commands.ts.template',
   ];
   const template = apply(url('./files/utils'), [
     filter((path) => urlTemplates.some((template) => path.includes(template))),

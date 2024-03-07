@@ -21,7 +21,7 @@ import {
   addScriptToPackageJson,
   installDependencies,
   logger,
-  modifyPackageJson,
+  addElementToPackageJson,
   NodeDependencyType,
   spawnAsync,
 } from '../../utils';
@@ -35,10 +35,10 @@ export function gitHooksFactory({ packageManager = 'npm' }: { packageManager: st
       addLintStagedFiles(),
       addLintFiles(),
       addScriptToPackageJson('prepare', 'husky install'),
-      modifyPackageJson('lint-staged', {
+      addElementToPackageJson('lint-staged', {
         '*.{ts,js,json,md}': ['prettier --write', 'git add'],
       }),
-      modifyPackageJson('husky', {
+      addElementToPackageJson('husky', {
         hooks: {
           'pre-commit': 'lint-staged',
         },

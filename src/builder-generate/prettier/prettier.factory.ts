@@ -59,14 +59,6 @@ function installPrettier(version?: string, packageManager = 'npm'): Rule {
           shell: true,
         }
       );
-      // execSync(
-      //   `${packageManager} ${
-      //     packageManagerCommands[packageManager]
-      //   } --save-dev --save-exact prettier${version ? `@${version}` : ''}`,
-      //   {
-      //     stdio: 'pipe',
-      //   }
-      // );
       spinner.succeed('Prettier was installed successfully');
     } catch (e) {
       spinner.stop();

@@ -18,7 +18,7 @@ import {
   addPackageJsonDependency,
   addScriptToPackageJson,
   installDependencies,
-  modifyPackageJson,
+  addElementToPackageJson,
 } from '../../utils';
 
 export function schematicsLibraryBundler({
@@ -42,8 +42,8 @@ export function schematicsLibraryBundler({
       bundlerFactory[bundler] ?? implementRollup(tree),
       installDependencies(context, packageManager),
       overwriteCollection(),
-      modifyPackageJson('schematics', './collection.json'),
-      modifyPackageJson('engines', { node: '>= 20' }),
+      addElementToPackageJson('schematics', './collection.json'),
+      addElementToPackageJson('engines', { node: '>= 20' }),
       addScriptToPackageJson('publish', 'npm run build && cd dist && npm publish --access=public'),
       addScriptToPackageJson(
         'publish:verdaccio',
