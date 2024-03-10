@@ -1,7 +1,7 @@
 {
   "name": "@danils/schematicskit",
-  "version": "4.7.1",
-  "description": "Angular-builder allows the developer to scan their projects and represent into a json.\nNext, they can execute from one to many angular schematics.",
+  "version": "4.8.1",
+  "description": "A set of schematics useful for javascript projects",
   "private": false,
   "scripts": {
     "build": "rollup -c --bundleConfigAsCjs --treeshake",
@@ -48,10 +48,8 @@
   },
   "devDependencies": {
     "@rollup/plugin-alias": "^5.1.0",
-    "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-node-resolve": "^15.2.3",
-    "@rollup/plugin-terser": "^0.4.4",
-    "@rollup/plugin-typescript": "^11.1.5",
+    "@rollup/plugin-swc": "^0.3.0",
     "@types/inquirer": "^9.0.6",
     "@types/jasmine": "~4.3.0",
     "@types/node": "^16.18.37",
@@ -69,10 +67,8 @@
     "rollup-plugin-cleaner": "^1.0.0",
     "rollup-plugin-copy": "^3.5.0",
     "rollup-plugin-dts": "^6.1.0",
-    "rollup-plugin-node-builtins": "^2.1.2",
-    "rollup-plugin-node-globals": "^1.4.0",
     "rollup-plugin-peer-deps-external": "^2.2.4",
-    "rollup-plugin-typescript-paths": "^1.5.0",
+    "rollup-plugin-tsconfig-paths": "^1.5.2",
     "ts-node": "^10.9.1"
   }
 }

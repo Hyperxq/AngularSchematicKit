@@ -128,45 +128,6 @@ function implementNgPackagr(tree: Tree): Rule {
   return () => {};
 }
 
-function addUtilsDependencies(tree: Tree) {
-  addPackageJsonDependency(tree, {
-    type: NodeDependencyType.Dev,
-    name: 'ora',
-    version: '5.4.1',
-    overwrite: true,
-  });
-  addPackageJsonDependency(tree, {
-    type: NodeDependencyType.Dev,
-    name: 'inquirer',
-    version: '8.2.6',
-    overwrite: true,
-  });
-  addPackageJsonDependency(tree, {
-    type: NodeDependencyType.Dev,
-    name: 'node-emoji',
-    version: '2.1.0',
-    overwrite: true,
-  });
-  addPackageJsonDependency(tree, {
-    type: NodeDependencyType.Dev,
-    name: 'ansi-colors',
-    version: '4.1.3',
-    overwrite: true,
-  });
-  addPackageJsonDependency(tree, {
-    type: NodeDependencyType.Dev,
-    name: 'winston',
-    version: '3.11.0',
-    overwrite: true,
-  });
-  addPackageJsonDependency(tree, {
-    type: NodeDependencyType.Dev,
-    name: 'winston-console-format',
-    version: '1.0.8',
-    overwrite: true,
-  });
-}
-
 function addRollupDependecies(tree: Tree) {
   addPackageJsonDependency(tree, {
     type: NodeDependencyType.Dev,
@@ -182,32 +143,20 @@ function addRollupDependecies(tree: Tree) {
   });
   addPackageJsonDependency(tree, {
     type: NodeDependencyType.Dev,
-    name: '@rollup/plugin-commonjs',
-    version: '^25.0.7',
-    overwrite: true,
-  });
-  addPackageJsonDependency(tree, {
-    type: NodeDependencyType.Dev,
     name: '@rollup/plugin-alias',
     version: '^5.1.0',
     overwrite: true,
   });
   addPackageJsonDependency(tree, {
     type: NodeDependencyType.Dev,
-    name: '@rollup/plugin-typescript',
-    version: '^11.1.5',
+    name: '@rollup/plugin-swc',
+    version: '^0.3.0',
     overwrite: true,
   });
   addPackageJsonDependency(tree, {
     type: NodeDependencyType.Dev,
     name: '@rollup/plugin-node-resolve',
     version: '^15.2.3',
-    overwrite: true,
-  });
-  addPackageJsonDependency(tree, {
-    type: NodeDependencyType.Dev,
-    name: '@rollup/plugin-terser',
-    version: '^0.4.4',
     overwrite: true,
   });
   addPackageJsonDependency(tree, {
@@ -224,18 +173,6 @@ function addRollupDependecies(tree: Tree) {
   });
   addPackageJsonDependency(tree, {
     type: NodeDependencyType.Dev,
-    name: 'rollup-plugin-node-globals',
-    version: '^1.4.0',
-    overwrite: true,
-  });
-  addPackageJsonDependency(tree, {
-    type: NodeDependencyType.Dev,
-    name: 'rollup-plugin-node-builtins',
-    version: '^2.1.2',
-    overwrite: true,
-  });
-  addPackageJsonDependency(tree, {
-    type: NodeDependencyType.Dev,
     name: 'rollup-plugin-peer-deps-external',
     version: '^2.2.4',
     overwrite: true,
@@ -248,8 +185,8 @@ function addRollupDependecies(tree: Tree) {
   });
   addPackageJsonDependency(tree, {
     type: NodeDependencyType.Dev,
-    name: 'rollup-plugin-typescript-paths',
-    version: '^1.5.0',
+    name: 'rollup-plugin-tsconfig-paths',
+    version: '^1.5.2',
     overwrite: true,
   });
 }

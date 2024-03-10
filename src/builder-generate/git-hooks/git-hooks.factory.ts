@@ -14,8 +14,7 @@ import {
   url,
 } from '@angular-devkit/schematics';
 import { MESSAGES } from './git-hooks.messages';
-import { execSync } from 'child_process';
-import { Spinner } from '../../utils/spinner';
+
 import {
   addPackageJsonDependency,
   addScriptToPackageJson,
@@ -23,13 +22,12 @@ import {
   logger,
   addElementToPackageJson,
   NodeDependencyType,
-  spawnAsync,
 } from '../../utils';
 
 export function gitHooksFactory({ packageManager = 'npm' }: { packageManager: string }) {
   return (tree: Tree, context: SchematicContext) => {
     logger.info(MESSAGES.TASK_TO_BE_DONE);
-    addUtilsDependencies(tree);
+    addDependencies(tree);
     return chain([
       addHuskyFiles(),
       addLintStagedFiles(),
@@ -43,43 +41,8 @@ export function gitHooksFactory({ packageManager = 'npm' }: { packageManager: st
           'pre-commit': 'lint-staged',
         },
       }),
-      installDevs(packageManager),
-      installDependencies(context),
+      installDependencies(context, packageManager),
     ]);
-  };
-}
-
-function installDevs(packageManager: string): Rule {
-  return async () => {
-    const spinner = new Spinner('husky and lint-staged installation');
-    try {
-      spinner.start('Installing husky and lint-staged');
-      const packageManagerCommands = {
-        npm: 'install',
-        yarn: 'add',
-        pnpm: 'add',
-        cnpm: 'install',
-        bun: 'add',
-      };
-      await spawnAsync(
-        packageManager,
-        [packageManagerCommands[packageManager], `--save-dev husky lint-staged`],
-        {
-          cwd: process.cwd(),
-          stdio: 'inherit',
-          shell: true,
-        }
-      );
-      // execSync(
-      //   `${packageManager} ${packageManagerCommands[packageManager]} --save-dev husky lint-staged`,
-      //   {
-      //     stdio: 'pipe',
-      //   }
-      // );
-      spinner.succeed('Husky and Lint-staged were installed successfully');
-    } catch (e) {
-      spinner.stop();
-    }
   };
 }
 
@@ -126,7 +89,20 @@ function addLintFiles(): Rule {
   return mergeWith(template, MergeStrategy.Overwrite);
 }
 
-function addUtilsDependencies(tree: Tree) {
+function addDependencies(tree: Tree) {
+  addPackageJsonDependency(tree, {
+    type: NodeDependencyType.Dev,
+    name: 'husky',
+    version: '^8.0.3',
+    overwrite: true,
+  });
+
+  addPackageJsonDependency(tree, {
+    type: NodeDependencyType.Dev,
+    name: 'lint-staged',
+    version: '^13.3.0',
+    overwrite: true,
+  });
   addPackageJsonDependency(tree, {
     type: NodeDependencyType.Dev,
     name: 'eslint',

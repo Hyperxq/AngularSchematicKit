@@ -1,27 +1,33 @@
-import commonjs from '@rollup/plugin-commonjs';
-import typescript from '@rollup/plugin-typescript';
+// import typescript from '@rollup/plugin-typescript';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
-import terser from '@rollup/plugin-terser';
+import tsConfigPaths from "rollup-plugin-tsconfig-paths";
+import alias from "@rollup/plugin-alias";
 
 import glob from 'glob';
 import path from 'node:path';
+import { fileURLToPath } from 'url';
+
 import copy from 'rollup-plugin-copy';
 import cleaner from 'rollup-plugin-cleaner';
-import globals from 'rollup-plugin-node-globals';
-import builtins from 'rollup-plugin-node-builtins';
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 import { dts } from 'rollup-plugin-dts';
-import { typescriptPaths } from 'rollup-plugin-typescript-paths';
-import alias from "@rollup/plugin-alias";
+
+import swc from '@rollup/plugin-swc';
+
+// Convert the import.meta.url to a file path
+const __filename = fileURLToPath(import.meta.url);
+
+// Get the directory name from the file path
+const __dirname = path.dirname(__filename);
+
 
 function getInputsFromGlob(pattern) {
   return glob.sync(pattern).reduce((inputs, file) => {
     const name = path.basename(file, path.extname(file));
     if (name === 'public_api') return inputs;
-    inputs[name] = file;
-
+    inputs.push(file);
     return inputs;
-  }, {});
+  }, []);
 }
 
 const tsFilesSrc = getInputsFromGlob('src/**/**/**/**/*.ts');
@@ -34,14 +40,26 @@ const removeSrcFileNamePath = (string) =>
   normalizeUrl(string).replace(buildFolderPathPattern, '$2');
 
 const basePlugins = [
-  typescript({ outputToFilesystem: false }),
+  // typescript({ outputToFilesystem: false }),
+  tsConfigPaths(),
   peerDepsExternal(),
-  nodeResolve(),
-  commonjs(),
-  builtins(),
-  globals(),
-  typescriptPaths(),
-  terser(),
+  nodeResolve({ extensions: [".ts",".js", ".json"] }),
+  swc({
+    // SWC configuration
+    include: /\.ts?$/,
+    jsc: {
+      parser: {
+        syntax: 'typescript',
+        tsx: false,
+      },
+      baseUrl: '.',
+      target: 'ES2021',
+    },
+    module: {
+      type: 'commonjs',
+    },
+    tsconfig: path.resolve(__dirname, 'tsconfig.json'),
+  }),
 ];
 const baseExternal = [
   'node:module',
@@ -50,13 +68,16 @@ const baseExternal = [
   'inquirer',
   'tty',
   'node-emoji',
+  '@angular-devkit/schematics/tasks',
   '@angular-devkit/schematics-cli',
   '@angular-devkit/schematics',
+  'winston',
+  'winston-console-format'
 ];
 
 export default [
   {
-    input: 'src/public_api.ts', // Replace with the entry point of your CLI
+    input: 'src/public_api.ts',
     output: [
       {
         dir: 'dist',
@@ -85,29 +106,14 @@ export default [
               return JSON.stringify(packageData, null, 2);
             },
           },
-        ],
-        hook: 'writeBundle',
-      }),
-      copy({
-        targets: [
           {
             src: 'README.md',
             dest: 'dist',
           },
-        ],
-        hook: 'writeBundle',
-      }),
-      copy({
-        targets: [
           {
             src: 'src/collection.json',
             dest: 'dist',
           },
-        ],
-        hook: 'writeBundle',
-      }),
-      copy({
-        targets: [
           {
             src: 'src/**/**/*.json',
             dest: 'dist/',
@@ -124,26 +130,28 @@ export default [
           },
         ],
         hook: 'writeBundle',
-        verbose: true,
       }),
     ],
   },
-  ...Object.entries(tsFilesSrc).map(([name, file]) => ({
-    input: { [name]: file },
+  ...tsFilesSrc.map((file) => ({
+    input: file,
     output: {
       dir: `dist/${removeSrcFileNamePath(file)}`,
+      format: 'cjs',
+      exports: 'auto',
     },
     plugins: [...basePlugins,
       alias({
         entries: [
           { find: 'utils', replacement: '../../utils' }
         ]
-      })],
+      })
+    ],
     external: baseExternal,
   })),
 
-  ...Object.entries(tsFilesSrc).map(([name, file]) => ({
-    input: { [name]: file },
+  ...tsFilesSrc.map((file) => ({
+    input: file,
     output: {
       dir: `dist/${removeSrcFileNamePath(file)}`,
     },
