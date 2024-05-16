@@ -11,12 +11,17 @@ import {
   mergeWith,
   MergeStrategy,
   chain,
+  SchematicContext,
 } from '@angular-devkit/schematics';
-import { NodeDependencyType, addPackageJsonDependency } from '../../utils';
+import { NodeDependencyType, addPackageJsonDependency, installDependencies } from '../../utils';
 
-export function addUtilsFactory() {
-  return (tree: Tree) => {
-    return chain([addUtilsFiles(tree), addGeneralFiles()]);
+export function addUtilsFactory({ packageManager }: { packageManager: string }) {
+  return (tree: Tree, context: SchematicContext) => {
+    return chain([
+      addUtilsFiles(tree),
+      addGeneralFiles(),
+      installDependencies(context, packageManager),
+    ]);
   };
 }
 

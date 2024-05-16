@@ -11,12 +11,12 @@ import {
   renameTemplateFiles,
   Rule,
   schematic,
+  SchematicsException,
   strings,
   url,
 } from '@angular-devkit/schematics';
 import { MESSAGES } from './prettier.messages';
 import { PrettierConfig } from './prettier.interfaces';
-import { Spinner } from '../../utils/spinner';
 import { addScriptToPackageJson, spawnAsync } from '../../utils';
 
 export function prettierFactory(options: PrettierConfig) {
@@ -28,7 +28,7 @@ export function prettierFactory(options: PrettierConfig) {
 
     return chain([
       addPrettierFiles(defaultOptions ? {} : prettierOptions),
-      installPrettier(version),
+      installPrettier(version, packageManager),
       gitHooks ? schematic('git-hooks', { packageManager }) : noop(),
       addScriptToPackageJson('format', 'prettier --write .'),
     ]);
@@ -37,7 +37,6 @@ export function prettierFactory(options: PrettierConfig) {
 
 function installPrettier(version?: string, packageManager = 'npm'): Rule {
   return async () => {
-    const spinner = new Spinner('prettier installation');
     const packageManagerCommands = {
       npm: 'install',
       yarn: 'add',
@@ -46,7 +45,6 @@ function installPrettier(version?: string, packageManager = 'npm'): Rule {
       bun: 'add',
     };
     try {
-      spinner.start('Installing prettier');
       await spawnAsync(
         packageManager,
         [
@@ -59,9 +57,8 @@ function installPrettier(version?: string, packageManager = 'npm'): Rule {
           shell: true,
         }
       );
-      spinner.succeed('Prettier was installed successfully');
     } catch (e) {
-      spinner.stop();
+      throw new SchematicsException(e);
     }
   };
 }

@@ -1,6 +1,6 @@
 {
   "name": "@danils/schematicskit",
-  "version": "4.8.1",
+  "version": "4.8.7",
   "description": "A set of schematics useful for javascript projects",
   "private": false,
   "scripts": {

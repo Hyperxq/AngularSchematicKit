@@ -48,6 +48,7 @@
     "add-utils": {
       "description": "Add utilities files to the project",
       "factory": "./builder-generate/add-utils/add-utils.factory#addUtilsFactory",
+      "schema": "./builder-generate/add-utils/schema.json",
       "aliases": [
         "au"
       ]

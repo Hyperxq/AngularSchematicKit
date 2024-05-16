@@ -33,8 +33,8 @@ export function schematicsLibraryBundler({
     //TODO: Add type: module to the package.json
     const bundlerFactory = {
       rollup: implementRollup(tree),
-      ts: implementTs(tree),
-      'ng-packagr': implementNgPackagr(tree),
+      ts: implementTs(),
+      'ng-packagr': implementNgPackagr(),
     };
 
     //Add utils
@@ -108,23 +108,25 @@ function overriteTsConfig() {
   return mergeWith(template, MergeStrategy.Overwrite);
 }
 
-function implementTs(tree: Tree): Rule {
+function implementTs(): Rule {
   /**
    * 1. Install dependecies
    * 2. Create files
    * 3. Update package.json
    * 4. Update tsconfig.json
    */
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   return () => {};
 }
 
-function implementNgPackagr(tree: Tree): Rule {
+function implementNgPackagr(): Rule {
   /**
    * 1. Install dependecies
    * 2. Create files
    * 3. Update package.json
    * 4. Update tsconfig.json
    */
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   return () => {};
 }
 
